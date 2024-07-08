@@ -33,6 +33,8 @@
                 @include('admin.section.partial.staticPageContent')
                 @include('admin.section.partial.ticket')
                 @include('admin.section.partial.setting')
+                @include('admin.section.partial.regularization')
+
             </ul>
         </div>
     </nav>

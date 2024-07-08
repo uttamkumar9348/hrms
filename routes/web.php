@@ -33,6 +33,7 @@ use App\Http\Controllers\Web\QrCodeController;
 use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\RouterController;
 use App\Http\Controllers\Web\AdvanceSalaryController;
+use App\Http\Controllers\Web\RegularizationController;
 use App\Http\Controllers\Web\SalaryComponentController;
 use App\Http\Controllers\Web\SalaryGroupController;
 use App\Http\Controllers\Web\SalaryHeadController;
@@ -168,6 +169,9 @@ Route::group([
         Route::get('employees/attendance/delete/{id}', [AttendanceController::class, 'delete'])->name('attendance.delete');
         Route::get('employees/attendance/change-status/{id}', [AttendanceController::class, 'changeAttendanceStatus'])->name('attendances.change-status');
         Route::get('employees/attendance/{type}', [AttendanceController::class, 'dashboardAttendance'])->name('dashboard.takeAttendance');
+        
+        //Attendance Regularization
+        Route::get('ajax-regularization-modal', [RegularizationController::class, 'dashboardAjaxRegularizationModal'])->name('admin.ajaxDashboardRegularizationModal');
 
         /** Leave route */
         Route::get('employees/leave-request', [LeaveController::class, 'index'])->name('leave-request.index');
