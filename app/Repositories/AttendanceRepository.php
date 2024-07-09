@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Attendance;
+use App\Models\Regularization;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -92,6 +93,12 @@ class AttendanceRepository
     {
 
         return Attendance::create($validatedData)->fresh();
+    }
+
+    public function storeRegularizationDetail($validatedData)
+    {
+
+        return Regularization::create($validatedData)->fresh();
     }
 
     public function updateAttendanceDetail($attendanceDetail,$validatedData)

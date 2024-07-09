@@ -160,6 +160,11 @@ class User extends Authenticatable
         return $this->hasMany(Attendance::class, 'user_id', 'id');
     }
 
+    public function regularization(): HasMany
+    {
+        return $this->hasMany(Regularization::class, 'user_id', 'id');
+    }
+
     public function employeeTodayAttendance(): HasOne
     {
         return $this->hasOne(Attendance::class, 'user_id', 'id')

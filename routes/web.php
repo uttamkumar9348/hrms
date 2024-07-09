@@ -171,7 +171,8 @@ Route::group([
         Route::get('employees/attendance/{type}', [AttendanceController::class, 'dashboardAttendance'])->name('dashboard.takeAttendance');
         
         //Attendance Regularization
-        Route::get('ajax-regularization-modal', [RegularizationController::class, 'dashboardAjaxRegularizationModal'])->name('admin.ajaxDashboardRegularizationModal');
+        Route::post('ajax-regularization', [RegularizationController::class, 'checkAttendance'])->name('ajaxRegularizationModal');
+        Route::post('create-regularization', [RegularizationController::class, 'createRegularization'])->name('createRegularization');
 
         /** Leave route */
         Route::get('employees/leave-request', [LeaveController::class, 'index'])->name('leave-request.index');

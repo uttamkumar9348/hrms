@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
 
     <style>
         /* Modal styles */
@@ -63,17 +65,32 @@
             align-items: center;
             font-size: 28px;
         }
-        .modal-heading,h2 {
-           
+
+        .modal-heading,
+        h2 {
+
             font-size: 28px;
+        }
+
+        .form-container {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .form-group {
+            margin-right: 20px;
+        }
+
+        label {
+            margin-right: 10px;
         }
     </style>
 </head>
 
 <body>
-    <li class="nav-item {{ request()->routeIs('admin.tadas.*')  ? 'active' : '' }}">
+    <li class="nav-item ">
         <a id="myBtn" class="nav-link">
-
             <i class="link-icon" data-feather="file-text"></i>
             <span class="link-title">Regularization</span>
         </a>
@@ -100,15 +117,22 @@
                     <p id="date" class="text-primary fw-bolder mb-3"></p>
 
 
-                    <div class="check-text d-flex align-items-center justify-content-around">
-                        <span>Check In At<p class="text-success fw-bold h5" id="checkInTime">{{$viewCheckIn}} </p></span>
-                        <span>Check Out At<p class="text-danger fw-bold h5" id="checkOutTime">{{$viewCheckOut}} </p></span>
+                    <div class="check-text  align-items-center justify-content-around">
+                        <span> Date:- <input type="date" name="date" id="get_date" onchange="checkAttendance(`{{ route('admin.ajaxRegularizationModal') }}`)"></span>
+                        
+                        <div class="form-container">
+                            <div class="form-group">
+                                <label for="checkin">Check In At</label>
+                                <input type="time" name="checkin" id="checkin_time">
+                            </div>
+                            <div class="form-group">
+                                <label for="checkout">Check Out At</label>
+                                <input type="time" name="checkout" id="checkout_time">
+                            </div>
+                        </div>
                     </div>
                     <div class="punch-btn mt-2 mb-2 d-flex align-items-center justify-content-around">
-                        <button href="{{route('admin.dashboard.takeAttendance','checkIn')}}" class="btn btn-lg btn-success  {{ $checkInAt ? 'd-none' : ''}}" id="startWorkingBtn" data-audio="{{asset('assets/audio/beep.mp3')}}">
-                            Punch In
-                        </button>
-                        <button href="{{route('admin.dashboard.takeAttendance','checkOut')}}" class="btn btn-lg btn-danger {{ $checkOutAt ? 'd-none' : ''}}" id="stopWorkingBtn" data-audio="{{asset('assets/audio/beep.mp3')}}">
+                        <button  class="btn btn-lg btn-danger {{ ''}}" onclick="regularization(`{{ route('admin.createRegularization') }}`)" id="addRegularization" data-audio="{{asset('assets/audio/beep.mp3')}}">
                             Regularize
                         </button>
                     </div>
@@ -121,6 +145,103 @@
     </div>
 
     <script>
+        function checkAttendance(url) {
+            let choose_date = document.getElementById('get_date').value
+            console.log(choose_date);
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    date: choose_date
+                },
+                success: function(data) {
+
+                    if (data?.check_in != null && data?.check_out != null) {
+
+                        $checkin_input = document.getElementById('checkin_time');
+                        $checkout_input = document.getElementById('checkout_time');
+
+                        $checkin_input.disabled = true;
+                        $checkout_input.disabled = true;
+                        Swal.fire({
+                            icon: 'info',
+                            title: data?.message ?? 'Something went wrong.',
+                            timer: 3000,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timerProgressBar: true
+                        });
+                    } else if (data?.check_in != null && data?.check_out == null) {
+
+                        let checkin_time = data.check_in;
+                        let formattedTime = checkin_time.split(':').slice(0, 2).join(':');
+
+                        console.log('formattedTime');
+
+                        document.getElementById('checkin_time').value = formattedTime;
+
+                        Swal.fire({
+                            icon: 'warning',
+                            title: data?.message ?? 'Something went wrong.',
+                            timer: 3000,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timerProgressBar: true
+                        });
+                    } else {
+                        $checkin_input = document.getElementById('checkin_time');
+                        $checkout_input = document.getElementById('checkout_time');
+                        $reason = document.getElementById('reason')
+
+                        $checkin_input.disabled = false;
+                        $checkout_input.disabled = false;
+
+                        Swal.fire({
+                            icon: 'warning',
+                            title: data?.message ?? 'Something went wrong.',
+                            timer: 3000,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timerProgressBar: true
+                        });
+
+                    }
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+
+        }
+
+        function regularization(ur){
+            // addRegularization
+            let choose_date = document.getElementById('get_date').value
+            let check_in_time = document.getElementById('checkin_time').value
+            let check_out_time = document.getElementById('checkout_time').value
+
+            $.ajax({
+                type:'POST',
+                url: ur,
+                data:{
+                    date : choose_date,
+                    checkin : check_in_time,
+                    checkout : check_out_time
+                },
+                success: function(data){
+                    console.log(data);
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            });
+        }
+
+
+
         // Get the modal
         var modal = document.getElementById("myModal");
 

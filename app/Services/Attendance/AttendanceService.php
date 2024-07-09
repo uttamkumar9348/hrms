@@ -231,6 +231,31 @@ class AttendanceService
 
     }
 
+    public function newRgularization($validatedData,$date,$checkin_at,$checkout_at){
+        $employeeLeaveDetail = $this->leaveRepo->findEmployeeApprovedLeaveForCurrentDate($validatedData,['id']);
+        if($employeeLeaveDetail){
+            throw new Exception('Cannot check in when leave request is Approved/Pending.',400);
+        }
+
+        // $checkHolidayAndWeekend = AttendanceHelper::isHolidayOrWeekendOnCurrentDate();
+        // if (!$checkHolidayAndWeekend) {
+        //     throw new Exception('Check In not allowed on holidays or on office Off Days', 403);
+        // }
+
+        $validatedData['attendance_date'] = $date;
+        $validatedData['check_in_at'] = $checkin_at.'00';
+        $validatedData['check_out_at'] = $checkout_at.'00';
+        $validatedData['check_in_latitude'] = $validatedData['latitude'] ?? '';
+        $validatedData['check_in_longitude'] = $validatedData['longitude'] ?? '';
+        //storeRegularizationDetail
+
+        $regularize = $this->attendanceRepo->storeRegularizationDetail($validatedData);
+        if ($regularize) {
+
+            $this->updateUserOnlineStatus($regularize->user_id,User::ONLINE);
+        }
+        return $regularize;
+    }
 
     /**
      * @throws Exception
