@@ -233,6 +233,7 @@ class AttendanceService
 
     public function newRgularization($validatedData,$date,$checkin_at,$checkout_at){
         $employeeLeaveDetail = $this->leaveRepo->findEmployeeApprovedLeaveForCurrentDate($validatedData,['id']);
+        // dd($employeeLeaveDetail);
         if($employeeLeaveDetail){
             throw new Exception('Cannot check in when leave request is Approved/Pending.',400);
         }
@@ -243,12 +244,13 @@ class AttendanceService
         // }
 
         $validatedData['attendance_date'] = $date;
-        $validatedData['check_in_at'] = $checkin_at.'00';
-        $validatedData['check_out_at'] = $checkout_at.'00';
-        $validatedData['check_in_latitude'] = $validatedData['latitude'] ?? '';
-        $validatedData['check_in_longitude'] = $validatedData['longitude'] ?? '';
+        $validatedData['check_in_at'] = $checkin_at;
+        $validatedData['check_out_at'] = $checkout_at;
+        $validatedData['check_in_latitude'] = $validatedData['check_in_latitude'] ?? '';
+        $validatedData['check_in_longitude'] = $validatedData['check_in_longitude'] ?? '';
         //storeRegularizationDetail
 
+        // dd($validatedData);  
         $regularize = $this->attendanceRepo->storeRegularizationDetail($validatedData);
         if ($regularize) {
 

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->double('check_out_longitude')->nullable();
             $table->text('note')->nullable();
             $table->text('edit_remark')->nullable();
-            $table->boolean('attendance_status')->default(1);
+            $table->boolean('regularization_status')->default(0);
 
             $table->bigInteger('created_by')->unsigned();
             $table->bigInteger('updated_by')->unsigned()->nullable();
@@ -35,6 +35,8 @@ return new class extends Migration
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('updated_by')->references('id')->on('users');
+
+            $table->timestamps();
         });
     }
 

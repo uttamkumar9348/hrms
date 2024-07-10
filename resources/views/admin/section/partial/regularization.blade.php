@@ -132,7 +132,7 @@
                         </div>
                     </div>
                     <div class="punch-btn mt-2 mb-2 d-flex align-items-center justify-content-around">
-                        <button  class="btn btn-lg btn-danger {{ ''}}" onclick="regularization(`{{ route('admin.createRegularization') }}`)" id="addRegularization" data-audio="{{asset('assets/audio/beep.mp3')}}">
+                        <button  class="btn btn-lg btn-danger {{ ''}}" onclick="regularization(`{{ route('admin.createAjaxRegularization') }}`)" id="addRegularization" data-audio="{{asset('assets/audio/beep.mp3')}}">
                             Regularize
                         </button>
                     </div>
@@ -214,7 +214,6 @@
                     console.log(data);
                 }
             });
-
         }
 
         function regularization(ur){
@@ -232,15 +231,24 @@
                     checkout : check_out_time
                 },
                 success: function(data){
-                    console.log(data);
+                    console.log(data?.message);
+                    var modal = document.getElementById("myModal");
+                    Swal.fire({
+                            icon: 'success',
+                            title:data?.message ?? 'Something went wrong.',
+                            timer: 3000,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timerProgressBar: true
+                        });
+                        modal.style.display = "none";
                 },
                 error: function(data){
                     console.log(data);
                 }
             });
         }
-
-
 
         // Get the modal
         var modal = document.getElementById("myModal");

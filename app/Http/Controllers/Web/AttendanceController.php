@@ -338,6 +338,34 @@ class AttendanceController extends Controller
         }
     }
 
+    public function prepareDataForRegularization($companyId, $userId,$checkStatus): array|RedirectResponse
+    {
+        try {
+            $with = ['branch:id,branch_location_latitude,branch_location_longitude'];
+            $select = ['routers.*'];
+            $userBranchId = AppHelper::getAuthUserBranchId();
+
+            $routerDetail = $this->routerRepo->findRouterDetailByBranchId($userBranchId,$with,$select);
+            if (!$routerDetail) {
+                throw new Exception('Branch Routers Detail Not Found.',400);
+            }
+            if($checkStatus == 'checkIn'){
+                $validatedData['check_in_latitude'] = $routerDetail->branch->branch_location_latitude;
+                $validatedData['check_in_longitude'] = $routerDetail->branch->branch_location_longitude;
+
+            }else{
+                $validatedData['check_out_latitude'] = $routerDetail->branch->branch_location_latitude;
+                $validatedData['check_out_longitude'] = $routerDetail->branch->branch_location_longitude;
+            }
+            $validatedData['user_id'] = $userId;
+            $validatedData['company_id'] = $companyId;
+            $validatedData['router_bssid'] = $routerDetail->router_ssid;
+            return $validatedData;
+        } catch (Exception $exception) {
+            throw $exception;
+        }
+    }
+
     public function store(AttendanceTimeAddRequest $request)
     {
         $this->authorize('attendance_update');

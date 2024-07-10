@@ -2,30 +2,18 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Exports\AttendanceDayWiseExport;
-use App\Exports\AttendanceExport;
-use App\Helpers\AppHelper;
-use App\Helpers\AttendanceHelper;
-use App\Helpers\NepaliDate;
-use App\Helpers\SMPush\SMPushHelper;
+
+use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Repositories\BranchRepository;
 use App\Repositories\CompanyRepository;
 use App\Repositories\RouterRepository;
 use App\Repositories\UserRepository;
-use App\Requests\Attendance\AttendanceTimeAddRequest;
-use App\Requests\Attendance\AttendanceTimeEditRequest;
 use App\Services\Attendance\AttendanceService;
-use Carbon\Carbon;
-use Exception;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Excel;
 
 class RegularizationController extends Controller
 {
@@ -45,7 +33,7 @@ class RegularizationController extends Controller
                                 RouterRepository  $routerRepo,
                                 UserRepository $userRepository,
                                 BranchRepository $branchRepo,
-                                AttendanceController $attendanceController,
+                                AttendanceController $attendanceController
     )
     {
         $this->attendanceService = $attendanceService;
@@ -88,17 +76,27 @@ class RegularizationController extends Controller
     }
 
     public function createRegularization(Request $request){
+
         $this->authorize('attendance_create');
         $date = $request->date;
         $checkin_at = $request->checkin;
         $checkout_at = $request->checkout ? $request->checkout : null ;
         $user_id = auth()->user()->id;
-        $companyId = auth()->user()->company_id ;
+        $companyId = auth()->user()->company_id;
+        // dd($companyId);
+
 
         try {
-            $this->regularization($user_id, $companyId,$date,$checkin_at,$checkout_at);
-            // return redirect()->back()->with('success', 'Employee Check In Successful');
-            
+            $result = $this->regularization($user_id, $companyId,$date,$checkin_at,$checkout_at);
+            if($result){
+                return response()->json([
+                    'message' => "Regularization Successfull"
+                ]);
+            }else{
+                return response()->json([
+                    'message' => null
+                ]);
+            }
             
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
@@ -110,12 +108,14 @@ class RegularizationController extends Controller
             $select = ['name'];
             $permissionKeyForNotification = 'employee_check_in';
             $userDetail = $this->userRepository->findUserDetailById($userId);
-
+            
             if(!$userDetail){
                 throw new Exception('Employee Detail Not Found',404);
             }
-
-            $validatedData = $this->attendanceController->prepareDataForAttendance($companyId, $userId,'checkIn');
+            
+            // dd($userDetail);
+            $validatedData = $this->attendanceController->prepareDataForRegularization($companyId, $userId,'checkIn');
+            // dd($validatedData);
             if($dashboardAttendance){
                 $validatedData['check_in_latitude'] = $locationData['lat'];
                 $validatedData['check_in_longitude'] = $locationData['long'];

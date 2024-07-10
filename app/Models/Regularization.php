@@ -10,6 +10,7 @@ class Regularization extends Model
 {
     use HasFactory;
 
+    protected $table = 'regularizations';
     protected $fillable = [
         'user_id',
         'company_id',
@@ -22,14 +23,14 @@ class Regularization extends Model
         'check_out_longitude',
         'note',
         'edit_remark',
-        'attendance_status',
+        'regularization_status',
         'created_by',
-        'updated_by',
-        'check_in_type',
-        'check_out_type',
-        'worked_hour',
-        'overtime',
-        'undertime',
+        'updated_by'
+        // 'check_in_type',
+        // 'check_out_type',
+        // 'worked_hour',
+        // 'overtime',
+        // 'undertime',
     ];
 
     const RECORDS_PER_PAGE = 20;
