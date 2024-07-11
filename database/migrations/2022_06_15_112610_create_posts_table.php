@@ -19,7 +19,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(1);
             $table->bigInteger('dept_id')->unsigned();
 
-            $table->foreign('dept_id')->references('id')->on('departments');
+            $table->foreign('dept_id')->references('id')->on('departmentts');
 
             $table->timestamps();
         });

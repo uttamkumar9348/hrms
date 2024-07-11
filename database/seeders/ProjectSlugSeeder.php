@@ -16,10 +16,10 @@ class ProjectSlugSeeder extends Seeder
      */
     public function run()
     {
-        $existingRows = DB::table('projects')->get();
+        $existingRows = DB::table('projectts')->get();
 
         foreach ($existingRows as $row) {
-            DB::table('projects')
+            DB::table('projectts')
                 ->where('id', $row->id)
                 ->update(['slug' => \Illuminate\Support\Str::uuid()]);
         }

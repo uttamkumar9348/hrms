@@ -14,7 +14,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('projects', function (Blueprint $table) {
+        Schema::table('projectts', function (Blueprint $table) {
             $table->string('slug')->default(Str::uuid());
         });
     }
@@ -26,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('projects', function (Blueprint $table) {
+        Schema::table('projectts', function (Blueprint $table) {
             $table->dropColumn('slug');
         });
     }

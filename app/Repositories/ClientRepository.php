@@ -26,8 +26,8 @@ class ClientRepository
            'clients.avatar',
            'clients.address'
        )
-            ->leftJoin('projects', 'clients.id', '=', 'projects.client_id')
-            ->selectRaw('count(projects.id) as project_count')
+            ->leftJoin('projectts', 'clients.id', '=', 'projectts.client_id')
+            ->selectRaw('count(projectts.id) as project_count')
             ->groupBy(
                 'clients.id',
                 'clients.name',

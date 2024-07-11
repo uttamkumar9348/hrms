@@ -159,7 +159,7 @@ class TimeLeaveRepository
             'users.id as user_id',
             'users.name as name',
             'users.avatar as avatar',
-            'departments.dept_name as department',
+            'departmentts.dept_name as department',
             'posts.post_name as post',
             'time_leaves.issue_date',
             'time_leaves.start_time as leave_from',
@@ -170,7 +170,7 @@ class TimeLeaveRepository
                 $join->on('time_leaves.requested_by', '=', 'users.id')
                     ->whereNUll('users.deleted_at');
             })
-            ->join('departments', 'departments.id', '=', 'users.department_id')
+            ->join('departmentts', 'departmentts.id', '=', 'users.department_id')
             ->join('posts', 'posts.id', '=', 'users.post_id')
             ->where(function ($query) use ($filterParameter) {
                 $query->whereDate('time_leaves.issue_date', '=', $filterParameter['leave_date']);

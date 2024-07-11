@@ -17,7 +17,7 @@ class LeaveTypeSeeder extends Seeder
     public function run()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('leave_types')->truncate();
+        DB::table('leave_typees')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $leaveTypes = [
             [
@@ -70,7 +70,7 @@ class LeaveTypeSeeder extends Seeder
 
         ];
 
-        DB::table('leave_types')->insert($leaveTypes);
+        DB::table('leave_typees')->insert($leaveTypes);
 
     }
 }

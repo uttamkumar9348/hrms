@@ -32,7 +32,6 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-
         try {
             $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
 
@@ -43,6 +42,7 @@ class DashboardController extends Controller
                 'completedTask:id,project_id'
             ];
             $companyId = AppHelper::getAuthUserCompanyId();
+            
             if (!$companyId) {
                 throw new Exception('Company Detail Not Found');
             }
@@ -52,7 +52,6 @@ class DashboardController extends Controller
             $taskPieChartData = $this->taskService->getTaskDataForPieChart();
             $projectCardDetail = $this->projectService->getProjectCardData();
             $recentProjects = $this->projectService->getRecentProjectListsForDashboard($projectSelect,$withProject);
-
             return view('admin.dashboard', compact(
                 'dashboardDetail',
                 'topClients',

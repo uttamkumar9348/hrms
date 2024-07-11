@@ -61,12 +61,12 @@ class EmployeePayslipRepository
             'companies.logo as company_logo',
             'companies.address as company_address',
             'companies.email as company_email',
-            'departments.dept_name as department',
+            'departmentts.dept_name as department',
             'over_time_settings.is_active as ot_status',
         )
             ->leftJoin('users','employee_payslips.employee_id','users.id')
             ->leftJoin('companies','users.company_id','companies.id')
-            ->leftJoin('departments','users.department_id','departments.id')
+            ->leftJoin('departmentts','users.department_id','departmentts.id')
             ->leftJoin('employee_salaries','employee_payslips.employee_id','employee_salaries.employee_id')
             ->leftJoin('salary_groups','employee_payslips.salary_group_id','salary_groups.id')
             ->join('posts','users.post_id','posts.id')

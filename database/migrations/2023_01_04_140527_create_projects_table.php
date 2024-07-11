@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('projectts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->bigInteger('client_id')->unsigned()->nullable();
@@ -44,6 +44,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('projectts');
     }
 };

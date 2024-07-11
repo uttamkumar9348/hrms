@@ -113,12 +113,12 @@ class DepartmentRepository
 
     public function getDepartmentListUsingAuthUserBranchId()
     {
-        return DB::table('departments')
-            ->join('branches', 'departments.branch_id', '=', 'branches.id')
+        return DB::table('departmentts')
+            ->join('branches', 'departmentts.branch_id', '=', 'branches.id')
             ->join('users', 'branches.id', '=', 'users.branch_id')
             ->where('users.id', getAuthUserCode())
-            ->where('departments.is_active', Department::IS_ACTIVE)
-            ->get(['departments.id','departments.dept_name']);
+            ->where('departmentts.is_active', Department::IS_ACTIVE)
+            ->get(['departmentts.id','departmentts.dept_name']);
 
     }
 

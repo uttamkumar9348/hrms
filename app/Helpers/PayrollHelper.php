@@ -121,7 +121,7 @@ class PayrollHelper
 
         }
 
-        $leaveTakenByType = LeaveRequestMaster::leftJoin('leave_types','leave_requests_master.leave_type_id','leave_types.id')
+        $leaveTakenByType = LeaveRequestMaster::leftJoin('leave_typees','leave_requests_master.leave_type_id','leave_typees.id')
             ->where('leave_requests_master.requested_by', $employeeId)
             ->where('leave_requests_master.leave_from', '>=', $firstDay)
             ->where('leave_requests_master.leave_to', '<=', $lastDay)
@@ -129,7 +129,7 @@ class PayrollHelper
             ->where('leave_requests_master.early_exit', '=', 0)
             ->selectRaw(
                 'CASE
-                    WHEN leave_types.leave_allocated IS NULL THEN "unpaid"
+                    WHEN leave_typees.leave_allocated IS NULL THEN "unpaid"
                     ELSE "paid"
                 END AS leave_type,
                 SUM(leave_requests_master.no_of_days) as total_days

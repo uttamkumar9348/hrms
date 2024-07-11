@@ -39,7 +39,7 @@ class TaskRequest extends FormRequest
         $rules = [
             'name' => ['required','string','max:400'],
             'project_id' => ['required',
-                Rule::exists('projects','id')
+                Rule::exists('projectts','id')
                     ->where('is_active',1)
             ],
             'priority' => ['nullable',Rule::in(Project::PRIORITY)],

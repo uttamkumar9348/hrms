@@ -15,7 +15,7 @@ class AssignEmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_id' => ['required', Rule::exists('projects','id')],
+            'project_id' => ['required', Rule::exists('projectts','id')],
             'employee' => ['required', 'array', 'min:1'],
             'employee.*' => ['required',
                 Rule::exists('users', 'id')

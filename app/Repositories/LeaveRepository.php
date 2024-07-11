@@ -82,9 +82,9 @@ class LeaveRepository
             'leave_requests_master.early_exit',
             'leave_requests_master.request_updated_by',
             'leave_requests_master.requested_by',
-            'leave_types.name as leave_type_name',
+            'leave_typees.name as leave_type_name',
         )
-            ->join('leave_types', 'leave_types.id', '=', 'leave_requests_master.leave_type_id')
+            ->join('leave_typees', 'leave_typees.id', '=', 'leave_requests_master.leave_type_id')
             ->when(isset($filterParameters['leave_type']), function ($query) use ($filterParameters) {
                 $query->where('leave_requests_master.leave_type_id', $filterParameters['leave_type']);
             })
@@ -193,7 +193,7 @@ class LeaveRepository
             'users.id as user_id',
             'users.name as name',
             'users.avatar as avatar',
-            'departments.dept_name as department',
+            'departmentts.dept_name as department',
             'posts.post_name as post',
             'leave_requests_master.no_of_days as no_of_days',
             'leave_requests_master.leave_from as leave_from',
@@ -204,7 +204,7 @@ class LeaveRepository
                 $join->on('leave_requests_master.requested_by', '=', 'users.id')
                     ->whereNUll('users.deleted_at');
             })
-            ->join('departments', 'departments.id', '=', 'users.department_id')
+            ->join('departmentts', 'departmentts.id', '=', 'users.department_id')
             ->join('posts', 'posts.id', '=', 'users.post_id')
             ->where(function ($query) use ($filterParameter) {
                 $query->whereDate('leave_requests_master.leave_from', '<=', $filterParameter['leave_date'])

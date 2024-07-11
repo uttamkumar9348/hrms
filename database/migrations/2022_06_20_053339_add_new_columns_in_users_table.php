@@ -53,7 +53,7 @@ return new class extends Migration
             $table->foreign('deleted_by')->references('id')->on('users');
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('branch_id')->references('id')->on('branches');
-            $table->foreign('department_id')->references('id')->on('departments');
+            $table->foreign('department_id')->references('id')->on('departmentts');
             $table->foreign('supervisor_id')->references('id')->on('users');
             $table->foreign('office_time_id')->references('id')->on('office_times');
             $table->foreign('role_id')->references('id')->on('roles');

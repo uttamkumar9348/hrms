@@ -26,9 +26,9 @@ class TaskRepository
                     $subQuery->whereIn('id', $filterParameters['members']);
                 });
             })
-            ->when(isset($filterParameters['projects']), function ($query) use ($filterParameters) {
+            ->when(isset($filterParameters['projectts']), function ($query) use ($filterParameters) {
                 $query->whereHas('project',function($subQuery) use ($filterParameters){
-                    $subQuery->where('id', $filterParameters['projects']);
+                    $subQuery->where('id', $filterParameters['projectts']);
                 });
             })
             ->latest()

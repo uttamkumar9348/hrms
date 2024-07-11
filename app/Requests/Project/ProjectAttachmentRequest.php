@@ -25,7 +25,7 @@ class ProjectAttachmentRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'project_id' => ['required',Rule::exists('projects','id')->where('is_active',1)],
+            'project_id' => ['required',Rule::exists('projectts','id')->where('is_active',1)],
             'attachments' => ['required','array','min:1'],
             'attachments.*.' => ['required','file','mimes:pdf,jpeg,png,jpg,docx,doc,xls,txt,webp,zip','max:5048']
         ];

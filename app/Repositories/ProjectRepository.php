@@ -185,26 +185,26 @@ class ProjectRepository
 
     public function getAllLeaderDetailAssignedInProject($projectId)
     {
-        return DB::table('projects')
+        return DB::table('projectts')
             ->select([
                'users.id as id',
             ])
-            ->join('project_team_leaders','projects.id','project_team_leaders.project_id')
+            ->join('project_team_leaders','projectts.id','project_team_leaders.project_id')
             ->join('users','users.id','project_team_leaders.leader_id')
-            ->where('projects.id',$projectId)
+            ->where('projectts.id',$projectId)
             ->get();
     }
 
     public function getAllMemberDetailAssignedInProject($projectId)
     {
 
-        return DB::table('projects')
+        return DB::table('projectts')
             ->select([
                 'users.id as id',
             ])
-            ->join('assigned_members','projects.id','assigned_members.assignable_id')
+            ->join('assigned_members','projectts.id','assigned_members.assignable_id')
             ->join('users','users.id','assigned_members.member_id')
-            ->where('projects.id',$projectId)
+            ->where('projectts.id',$projectId)
             ->where('assigned_members.assignable_type',self::ASSIGNABLE_TYPE)
             ->get();
     }

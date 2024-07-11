@@ -197,17 +197,17 @@ class UserRepository
 
     public function getEmployeeOverviewDetail($employeeId, $date)
     {
-        $totalLeaveAllocated = DB::table('leave_types')
+        $totalLeaveAllocated = DB::table('leave_typees')
             ->select('company_id', DB::raw('sum(leave_allocated) as total_paid_leaves'))
             ->whereNotNull('leave_allocated')
             ->where('is_active', 'self::IS_ACTIVE')
             ->groupBy('company_id');
 
-        $totalAssignedProjectCountQuery = DB::table('projects')
-            ->select(DB::raw('COUNT(DISTINCT projects.id) as total_projects'))
-            ->leftJoin('assigned_members', 'projects.id', '=', 'assigned_members.assignable_id')
-            ->leftJoin('project_team_leaders', 'projects.id', '=', 'project_team_leaders.project_id')
-            ->where('projects.is_active', self::IS_ACTIVE)
+        $totalAssignedProjectCountQuery = DB::table('projectts')
+            ->select(DB::raw('COUNT(DISTINCT projectts.id) as total_projects'))
+            ->leftJoin('assigned_members', 'projectts.id', '=', 'assigned_members.assignable_id')
+            ->leftJoin('project_team_leaders', 'projectts.id', '=', 'project_team_leaders.project_id')
+            ->where('projectts.is_active', self::IS_ACTIVE)
             ->where(function ($query) use ($employeeId) {
                 $query->where('assigned_members.member_id', $employeeId)
                     ->where('assigned_members.assignable_type','project');
@@ -282,7 +282,7 @@ class UserRepository
             'holidays.total_holidays',
             'leave_allocated.total_paid_leaves',
             'pending_leaves.total_pending_leaves',
-            'projects.total_projects',
+            'projectts.total_projects',
             'tasks.total_pending_tasks',
         )
             ->leftJoinSub($presentDays, 'present_days', function ($join) {
@@ -300,7 +300,7 @@ class UserRepository
             ->leftJoinSub($pendingLeaves, 'pending_leaves', function ($join) {
                 $join->on('users.id', '=', 'pending_leaves.requested_by');
             })
-            ->leftJoinSub($totalAssignedProjectCountQuery, 'projects', function ($join) {
+            ->leftJoinSub($totalAssignedProjectCountQuery, 'projectts', function ($join) {
                 $join->on(DB::raw('1'), '=', DB::raw('1'));
             })
             ->leftJoinSub($totalPendingTaskCount, 'tasks', function ($join) {

@@ -1,6 +1,13 @@
 <?php
 
 use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\Farming\CuttingOrderController;
+use App\Http\Controllers\Farming\FarmerLoanController;
+use App\Http\Controllers\Farming\FarmingController;
+use App\Http\Controllers\Farming\FarmingDetailController;
+use App\Http\Controllers\Farming\FarmingPaymentController;
+use App\Http\Controllers\Farming\GuarantorController;
+use App\Http\Controllers\Farming\SeedCategoryController;
 use App\Http\Controllers\Web\AppSettingController;
 use App\Http\Controllers\Web\AssetController;
 use App\Http\Controllers\Web\AssetTypeController;
@@ -389,6 +396,43 @@ Route::group([
 Route::fallback(function() {
     return view('errors.404');
 });
+
+/* Farmer management*/
+Route::group(
+    [
+        'prefix' => 'farmer',
+        'as'=>'farmer.',
+    ], function () {
+        Route::post('location/get_states',[FarmingController::class,'getStates'])->name('location.get_states');   
+        Route::post('location/get_districts',[FarmingController::class,'getDistricts'])->name('location.get_districts');   
+        Route::post('location/get_blocks',[FarmingController::class,'getBlocks'])->name('location.get_blocks');   
+        Route::post('location/get_gram_panchyats',[FarmingController::class,'getGramPanchyats'])->name('location.get_gram_panchyats');   
+        Route::post('location/get_villages',[FarmingController::class,'getVillages'])->name('location.get_villages');   
+        Route::post('location/get_centers',[FarmingController::class,'getCenters'])->name('location.get_centers');   
+        Route::post('location/get_country_state',[FarmingController::class,'get_country_state'])->name('location.get_country_state');   
+        Route::get('farming_registration/validate/{id}',[FarmingController::class,'validateProfile'])->name('farming_registration.validate');   
+        Route::resource('farming_registration',FarmingController::class);   
+        Route::post('registration_id',[FarmingController::class,'registration_id'])->name('registration_id');   
+        Route::resource('guarantor',GuarantorController::class);   
+        Route::get('bank_guarantee',[FarmingPaymentController::class,'bankGuarantee'])->name('bank_guarantee.index');   
+        Route::get('bank_guarantee/{id}',[FarmingPaymentController::class,'editBankGuarantee'])->name('bank_guarantee.edit');   
+        Route::get('bank_guarantee/pdf/{id}',[FarmingPaymentController::class,'pdfBankGuarantee'])->name('bank_guarantee.pdf');   
+        Route::resource('payment',FarmingPaymentController::class);   
+        Route::post('g_code',[FarmingPaymentController::class,'g_code'])->name('g_code');   
+        Route::view('allotment','farmer.allotment.index')->name('allotment.index');
+        Route::post('get_product_service_by_category',[FarmerLoanController::class,'getProductServiceByCategory'])->name('loan.get_product_service_by_category');   
+        Route::post('get_product_service_detail',[FarmerLoanController::class,'getProductServiceDetail'])->name('loan.get_product_service_detail');   
+        Route::post('get_farming_detail',[FarmerLoanController::class,'getFarmingDetail'])->name('loan.get_farming_detail');   
+        Route::resource('loan',FarmerLoanController::class);   
+        Route::get('reimbursement/create',[FarmingPaymentController::class,'reimbursementCreate'])->name('reimbursement.create');   
+        Route::get('reimbursement',[FarmingPaymentController::class,'reimbursement'])->name('reimbursement.index');   
+        Route::resource('seed_category',SeedCategoryController::class); 
+        Route::post('get_detail',[FarmingDetailController::class,'getFarmingDetail'])->name('farming.get_detail');     
+        Route::resource('farming_detail',FarmingDetailController::class); 
+        Route::post('update_cutting_order',[CuttingOrderController::class,'updateCuttingOrder'])->name('farming.update_cutting_order');       
+        Route::resource('cutting_order',CuttingOrderController::class);   
+    }
+);
 
 
 
