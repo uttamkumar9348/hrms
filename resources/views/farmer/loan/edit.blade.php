@@ -1,6 +1,6 @@
 
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
     {{__('Edit Farming Loan')}}
 @endsection
 @section('breadcrumb')
@@ -78,7 +78,7 @@
     </script>
 @endpush
 
-@section('content')
+@section('main-content')
     <div class="row">
         {{ Form::model($loan, array('route' => array('farmer.loan.update',$loan->id), 'method' => 'PUT','class'=>'w-100')) }}
         <div class="col-12">

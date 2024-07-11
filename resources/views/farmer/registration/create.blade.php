@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
 {{__('Farmer Registration Create')}}
 @endsection
 @section('breadcrumb')
@@ -168,7 +168,7 @@
 </script>
 @endpush
 
-@section('content')
+@section('main-content')
 <div class="row">
     {{ Form::open(array('url' => 'farmer/farming_registration','class'=>'w-100')) }}
     <div class="col-12">

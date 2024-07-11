@@ -1,6 +1,6 @@
 
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
     {{__('Edit Farming Bank Guarantee')}}
 @endsection
 @section('breadcrumb')
@@ -13,7 +13,7 @@
     <script src="{{asset('js/jquery.repeater.min.js')}}"></script>
 @endpush
 
-@section('content')
+@section('main-content')
     <div class="row">
         {{ Form::model($payment, array('route' => array('farmer.payment.update',$payment->id), 'method' => 'PUT','class'=>'w-100')) }}
         <div class="col-12">

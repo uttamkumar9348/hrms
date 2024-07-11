@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
     {{__('Seed Category')}}
 @endsection
 @push('script-page')
@@ -8,7 +8,7 @@
     <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('Seed Category')}}</li>
 @endsection
-@section('action-btn')
+@section('button')
     <div class="float-end">
 
         <a href="#" data-size="lg" data-url="{{ route('farmer.seed_category.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Seed Category')}}"  class="btn btn-sm btn-primary">
@@ -18,7 +18,7 @@
     </div>
 @endsection
 
-@section('content')
+@section('main-content')
 
     <div class="row">
         <div class="col-xl-12">

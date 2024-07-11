@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
     {{__('Farmer Registration Detail')}}
 @endsection
 @push('script-page')
@@ -9,7 +9,7 @@
     <li class="breadcrumb-item">{{__('Farmer Registration Detail')}}</li>
 @endsection
 
-@section('content')
+@section('main-content')
 
     <div class="row">
         <div class="col-xl-12">

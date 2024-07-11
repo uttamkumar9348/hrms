@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
     {{__('Farmer Allotments')}}
 @endsection
 @push('script-page')
@@ -8,7 +8,7 @@
     <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('Seeds,Fertiliser & Pesticides Allotment')}}</li>
 @endsection
-@section('action-btn')
+@section('button')
     <div class="float-end">
         @can('create farmer loan')
         <a href="{{ route('farmer.loan.create') }}"  class="btn btn-sm btn-primary">
@@ -19,7 +19,7 @@
     </div>
 @endsection
 
-@section('content')
+@section('main-content')
 
     <div class="row">
         <div class="col-xl-12">

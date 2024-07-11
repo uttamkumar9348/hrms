@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
     {{__('Farmer Allotment')}}
 @endsection
 @push('script-page')
@@ -8,11 +8,11 @@
     <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('Farmer Allotment')}}</li>
 @endsection
-@section('action-btn')
+@section('button')
 
 @endsection
 
-@section('content')
+@section('main-content')
 <div class="row">
 
     <div class="col-lg-6 col-md-6">

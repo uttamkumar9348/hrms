@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
 {{__('Edit Farmer Guarantor')}}
 @endsection
 @section('breadcrumb')
@@ -102,7 +102,7 @@
 </script>
 @endpush
 
-@section('content')
+@section('main-content')
 <div class="row">
     {{ Form::model($guarantor, array('route' => array('farmer.guarantor.update',$guarantor->id), 'method' => 'PUT','class'=>'w-100')) }}
     <div class="col-12">

@@ -197,9 +197,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         'Intervention\Image\ImageServiceProvider',
-
-
-
+        Collective\Html\HtmlServiceProvider::class,
     ],
 
     /*
@@ -219,6 +217,8 @@ return [
         'Image' => 'Intervention\Image\Facades\Image',
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'NumberToWords' => MilanTarami\NumberToWordsConverter\Facades\NumberToWordsFacade::class,
+        'Form' => Collective\Html\FormFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
     ])->toArray(),
 
 ];

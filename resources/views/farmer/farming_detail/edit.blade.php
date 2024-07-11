@@ -1,6 +1,6 @@
 
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
     {{__('Edit Farmer Detail')}}
 @endsection
 @section('breadcrumb')
@@ -67,7 +67,7 @@
     </script>
 @endpush
 
-@section('content')
+@section('main-content')
     <div class="row">
         {{ Form::model($farming_detail, array('route' => array('farmer.farming_detail.update',$farming_detail->id), 'method' => 'PUT','class'=>'w-100')) }}
         <div class="col-12">

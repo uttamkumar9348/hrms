@@ -1,6 +1,6 @@
 
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
     {{__('Farmer Allotments')}}
 @endsection
 @section('breadcrumb')
@@ -80,7 +80,7 @@
     </script>
 @endpush
 
-@section('content')
+@section('main-content')
     <div class="row">
         {{ Form::open(array('url' => 'farmer/loan','class'=>'w-100')) }}
         <div class="col-12">

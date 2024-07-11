@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
 {{__('Farmer Security Deposit Create')}}
 @endsection
 @section('breadcrumb')
@@ -35,7 +35,7 @@
 </script>
 @endpush
 
-@section('content')
+@section('main-content')
 <div class="row">
     {{ Form::open(array('url' => 'farmer/payment','class'=>'w-100')) }}
     <div class="col-12">
