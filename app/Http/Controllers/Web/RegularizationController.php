@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Web;
 
-
+use App\Exports\AttendanceDayWiseExport;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
@@ -14,6 +14,8 @@ use App\Services\Attendance\AttendanceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\AppHelper;
+use App\Models\Regularization;
 
 class RegularizationController extends Controller
 {
@@ -28,24 +30,109 @@ class RegularizationController extends Controller
     private AttendanceController $attendanceController;
 
 
-    public function __construct(CompanyRepository $companyRepo,
-                                AttendanceService $attendanceService,
-                                RouterRepository  $routerRepo,
-                                UserRepository $userRepository,
-                                BranchRepository $branchRepo,
-                                AttendanceController $attendanceController
-    )
-    {
+    public function __construct(
+        CompanyRepository $companyRepo,
+        AttendanceService $attendanceService,
+        RouterRepository  $routerRepo,
+        UserRepository $userRepository,
+        BranchRepository $branchRepo,
+        AttendanceController $attendanceController
+    ) {
         $this->attendanceService = $attendanceService;
         $this->companyRepo = $companyRepo;
         $this->routerRepo = $routerRepo;
         $this->userRepository =  $userRepository;
         $this->branchRepo =  $branchRepo;
         $this->attendanceController = $attendanceController;
-    }   
+    }
 
+    public function index(Request $request)
+    {
 
-    public function checkAttendance(Request $request){
+        try {
+            $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
+            $isBsEnabled = AppHelper::ifDateInBsEnabled();
+            $selectBranch = ['id', 'name'];
+            $companyId = AppHelper::getAuthUserCompanyId();
+
+            $filterParameter = [
+                'attendance_date' => $request->attendance_date ?? AppHelper::getCurrentDateInYmdFormat(),
+                'company_id' => $companyId,
+                'branch_id' => $request->branch_id ?? null,
+                'department_id' => $request->department_id ?? null,
+                'download_excel' => $request->download_excel,
+                'date_in_bs' => false,
+            ];
+
+            if (AppHelper::ifDateInBsEnabled()) {
+                $filterParameter['attendance_date'] = $request->attendance_date ?? AppHelper::getCurrentDateInBS();
+                $filterParameter['date_in_bs'] = true;
+            }
+
+            $regularizationDetails = $this->attendanceService->getAllCompanyEmployeeRegularizationDetailOfTheDay($filterParameter);
+            $branch = $this->branchRepo->getLoggedInUserCompanyBranches($companyId, $selectBranch);
+            if ($filterParameter['download_excel']) {
+                return \Maatwebsite\Excel\Facades\Excel::download(new AttendanceDayWiseExport($regularizationDetails, $filterParameter), 'attendance-' . $filterParameter['attendance_date'] . '-report.xlsx');
+            }
+            return view('admin.regularization.index', compact('regularizationDetails', 'filterParameter', 'branch', 'isBsEnabled', 'appTimeSetting'));
+        } catch (Exception $exception) {
+            return redirect()->back()->with('danger', $exception->getMessage());
+        }
+    }
+
+    public function approveRegularization($id)
+    {
+        $regularization_data = Regularization::find($id);
+        $regularization_data->regularization_status = 1;
+        $result = $regularization_data->save();
+        if ($result) {
+            $attendance_data = Attendance::where('user_id', $regularization_data->user_id)->where('attendance_date', $regularization_data->regularization_date)->first();
+            $data = [
+                'user_id' => $regularization_data->user_id,
+                'company_id' => $regularization_data->company_id,
+                'attendance_date' => $regularization_data->regularization_date,
+                'check_in_at' => $regularization_data->check_in_at,
+                'check_out_at' => $regularization_data->check_out_at,
+                'check_in_latitude' => $regularization_data->check_in_latitude,
+                'check_out_latitude' => $regularization_data->check_out_latitude,
+                'check_in_longitude' => $regularization_data->check_in_longitude,
+                'check_out_longitude' => $regularization_data->check_out_longitude,
+                'created_by' => $regularization_data->created_by,
+                'updated_by' => $regularization_data->updated_by
+            ];
+
+            if ($attendance_data) {
+                $attendance_data->update($data);
+                return response()->json([
+                    'message' => "The Request has been Approved"
+                ]);
+            } else {
+                Attendance::create($data);
+                return response()->json([
+                    'message' => "The Request has been Approved"
+                ]);
+            }
+        }
+    }
+
+    public function rejectRegularization($id){
+        $regularization_data = Regularization::find($id);
+        $regularization_data->regularization_status = 0;
+        $result = $regularization_data->save();
+
+        if ($result) {
+            return response()->json([
+                'message' => "The Request has been Rejected"
+            ]);
+        } else {
+            return response()->json([
+                'message' => "Request Failed"
+            ]);
+        }
+    }
+
+    public function checkAttendance(Request $request)
+    {
         $date = $request->date;
         $user_id = auth()->user()->id;
         // dd($date);
@@ -75,59 +162,60 @@ class RegularizationController extends Controller
         }
     }
 
-    public function createRegularization(Request $request){
+    public function createRegularization(Request $request)
+    {
 
         $this->authorize('attendance_create');
         $date = $request->date;
         $checkin_at = $request->checkin;
-        $checkout_at = $request->checkout ? $request->checkout : null ;
+        $checkout_at = $request->checkout ? $request->checkout : null;
         $user_id = auth()->user()->id;
         $companyId = auth()->user()->company_id;
         // dd($companyId);
 
 
         try {
-            $result = $this->regularization($user_id, $companyId,$date,$checkin_at,$checkout_at);
-            if($result){
+            $result = $this->regularization($user_id, $companyId, $date, $checkin_at, $checkout_at);
+            if ($result) {
                 return response()->json([
                     'message' => "Regularization Successfull"
                 ]);
-            }else{
+            } else {
                 return response()->json([
                     'message' => null
                 ]);
             }
-            
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
         }
     }
 
-    public function regularization($userId,$companyId,$date,$checkin_at,$checkout_at,$dashboardAttendance=false,$locationData=[]){
-        try{
+    public function regularization($userId, $companyId, $date, $checkin_at, $checkout_at, $dashboardAttendance = false, $locationData = [])
+    {
+        try {
             $select = ['name'];
             $permissionKeyForNotification = 'employee_check_in';
             $userDetail = $this->userRepository->findUserDetailById($userId);
-            
-            if(!$userDetail){
-                throw new Exception('Employee Detail Not Found',404);
+
+            if (!$userDetail) {
+                throw new Exception('Employee Detail Not Found', 404);
             }
-            
+
             // dd($userDetail);
-            $validatedData = $this->attendanceController->prepareDataForRegularization($companyId, $userId,'checkIn');
+            $validatedData = $this->attendanceController->prepareDataForRegularization($companyId, $userId, 'checkIn');
             // dd($validatedData);
-            if($dashboardAttendance){
+            if ($dashboardAttendance) {
                 $validatedData['check_in_latitude'] = $locationData['lat'];
                 $validatedData['check_in_longitude'] = $locationData['long'];
             }
             DB::beginTransaction();
 
-            $regularization_data =  $this->attendanceService->newRgularization($validatedData,$date,$checkin_at,$checkout_at);
-            $this->userRepository->updateUserOnlineStatus($userDetail,1);
+            $regularization_data =  $this->attendanceService->newRgularization($validatedData, $date, $checkin_at, $checkout_at);
+            $this->userRepository->updateUserOnlineStatus($userDetail, 1);
             DB::commit();
 
             return $regularization_data;
-        }catch(Exception $exception){
+        } catch (Exception $exception) {
             DB::rollBack();
             throw $exception;
         }

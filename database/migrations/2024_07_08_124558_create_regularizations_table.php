@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('company_id')->unsigned();
-            $table->date('attendance_date');
+            $table->date('regularization_date');
             $table->time('check_in_at');
             $table->time('check_out_at')->nullable();
             $table->double('check_in_latitude')->nullable();
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->double('check_out_longitude')->nullable();
             $table->text('note')->nullable();
             $table->text('edit_remark')->nullable();
-            $table->boolean('regularization_status')->default(0);
+            $table->boolean('regularization_status')->default(null);
 
             $table->bigInteger('created_by')->unsigned();
             $table->bigInteger('updated_by')->unsigned()->nullable();

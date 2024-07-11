@@ -14,7 +14,7 @@ class Regularization extends Model
     protected $fillable = [
         'user_id',
         'company_id',
-        'attendance_date',
+        'regularization_date',
         'check_in_at',
         'check_out_at',
         'check_in_latitude',

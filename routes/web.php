@@ -171,6 +171,9 @@ Route::group([
         Route::get('employees/attendance/{type}', [AttendanceController::class, 'dashboardAttendance'])->name('dashboard.takeAttendance');
         
         //Attendance Regularization
+        Route::resource('regularization',RegularizationController::class);
+        Route::get('regularization/approve/{id}',[RegularizationController::class,'approveRegularization'])->name('regularization.approveRegularization');
+        Route::get('regularization/reject/{id}',[RegularizationController::class,'rejectRegularization'])->name('regularization.rejectRegularization');
         Route::post('ajax-regularization', [RegularizationController::class, 'checkAttendance'])->name('ajaxRegularizationModal');
         Route::post('create-regularization', [RegularizationController::class, 'createRegularization'])->name('createAjaxRegularization');
 

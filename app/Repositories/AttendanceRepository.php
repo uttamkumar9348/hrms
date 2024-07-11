@@ -17,6 +17,7 @@ class AttendanceRepository
 
     public function getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter)
     {
+        
         return User::select(
             'attendances.id AS attendance_id',
             'users.id AS user_id',
@@ -40,6 +41,41 @@ class AttendanceRepository
         )->leftJoin('attendances', function ($join) use ($filterParameter) {
             $join->on('users.id', '=', 'attendances.user_id')
                 ->where('attendances.attendance_date', '=', $filterParameter['attendance_date']);
+        })
+            ->join('companies', 'users.company_id', '=', 'companies.id')
+            ->join('branches', 'users.branch_id', '=', 'branches.id')
+            ->when(isset($filterParameter['branch_id']), function ($query) use ($filterParameter) {
+                $query->where('users.branch_id', $filterParameter['branch_id']);
+            })
+            ->when(isset($filterParameter['department_id']), function ($query) use ($filterParameter) {
+                $query->where('users.department_id', $filterParameter['department_id']);
+            })
+            ->get();
+    }
+
+    public function getAllCompanyEmployeeregularizationDetailOfTheDay($filterParameter){
+        return User::select(
+            'regularizations.id AS regularizations_id',
+            'users.id AS user_id',
+            'users.name AS user_name',
+            'users.company_id AS company_id',
+            'users.branch_id AS branch_id',
+            'companies.name AS company_name',
+            'regularizations.regularization_date',
+            'regularizations.regularization_status',
+            'regularizations.check_in_at',
+            'regularizations.check_out_at',
+            'regularizations.check_in_latitude',
+            'regularizations.check_out_latitude',
+            'regularizations.check_in_longitude',
+            'regularizations.check_out_longitude',
+            'regularizations.edit_remark',
+            // 'regularizations.check_in_type',
+            // 'regularizations.check_out_type',
+            'regularizations.created_by',
+            'regularizations.updated_by',
+        )->leftJoin('regularizations', function ($join) use ($filterParameter) {
+            $join->on('users.id', '=', 'regularizations.user_id');
         })
             ->join('companies', 'users.company_id', '=', 'companies.id')
             ->join('branches', 'users.branch_id', '=', 'branches.id')
@@ -94,12 +130,12 @@ class AttendanceRepository
 
     public function storeAttendanceDetail($validatedData)
     {
-
         return Attendance::create($validatedData)->fresh();
     }
     
     public function storeRegularizationDetail($validatedData)
     {
+        dd(date('Y-m-d', strtotime($validatedData['attendance_date'])));
         try {
             return Regularization::create([
                 'user_id' => $validatedData['user_id'],
