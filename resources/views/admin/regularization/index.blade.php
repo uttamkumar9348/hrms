@@ -64,7 +64,7 @@ use Carbon\Carbon;
                 <table id="dataTableExample" class="table">
                     <thead>
                         <tr>
-                            <th>Attendance Date</th>
+                            <th>Regularization Date</th>
                             <th>Employee Name</th>
                             <th class="text-center">Check In At</th>
                             <th class="text-center">Check Out At</th>
@@ -83,7 +83,8 @@ use Carbon\Carbon;
                         ]
                         ?>
                         {{Log::info($regularizationDetails)}}
-                        @forelse($regularizationDetails as $key => $value)
+                        @foreach($regularizationDetails as $key => $value)
+                        @if($value->regularizations_id != null)
                         <tr>
                             <td>
                                 {{ \Carbon\Carbon::parse($value->regularization_date)->format('d-m-Y') }}
@@ -177,13 +178,14 @@ use Carbon\Carbon;
                             </td>
                             @endcanany
                         </tr>
-                        @empty
+                        @else
                         <tr>
                             <td colspan="100%">
                                 <p class="text-center"><b>No records found!</b></p>
                             </td>
                         </tr>
-                        @endforelse
+                        @endif
+                        @endforeach
                     </tbody>
                 </table>
             </div>
