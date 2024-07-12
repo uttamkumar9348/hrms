@@ -80,7 +80,7 @@ Route::group([
     Route::get('login', [AdminAuthController::class, 'showAdminLoginForm'])->name('login');
     Route::post('login', [AdminAuthController::class, 'login'])->name('login.process');
 
-    Route::group(['middleware' => ['admin.auth','permission']], function () {
+    Route::group(['middleware' => ['admin.auth', 'permission']], function () {
 
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -250,7 +250,7 @@ Route::group([
         Route::get('task-comment/reply/delete/{replyId}', [TaskCommentController::class, 'deleteReply'])->name('reply.delete');
 
         /** Support route */
-        Route::get('supports/get-all-query',[SupportController::class,'getAllQueriesPaginated'])->name('supports.index');
+        Route::get('supports/get-all-query', [SupportController::class, 'getAllQueriesPaginated'])->name('supports.index');
         Route::get('supports/change-seen-status/{queryId}', [SupportController::class, 'changeIsSeenStatus'])->name('supports.changeSeenStatus');
         Route::put('supports/update-status/{id}', [SupportController::class, 'changeQueryStatus'])->name('supports.updateStatus');
         Route::get('supports/delete/{id}', [SupportController::class, 'delete'])->name('supports.delete');
@@ -273,28 +273,28 @@ Route::group([
         Route::get('attendance-detail-export', [DataExportController::class, 'exportAttendanceDetail'])->name('attendance-lists-export');
 
         /** Asset Management route */
-        Route::resource('asset-types', AssetTypeController::class,[
+        Route::resource('asset-types', AssetTypeController::class, [
             'except' => ['destroy']
         ]);
         Route::get('asset-types/delete/{id}', [AssetTypeController::class, 'delete'])->name('asset-types.delete');
         Route::get('asset-types/toggle-status/{id}', [AssetTypeController::class, 'toggleIsActiveStatus'])->name('asset-types.toggle-status');
 
-        Route::resource('assets', AssetController::class,[
+        Route::resource('assets', AssetController::class, [
             'except' => ['destroy']
         ]);
         Route::get('assets/delete/{id}', [AssetController::class, 'delete'])->name('assets.delete');
         Route::get('assets/toggle-status/{id}', [AssetController::class, 'changeAvailabilityStatus'])->name('assets.change-Availability-status');
 
         /** Salary Component route */
-        Route::resource('salary-components', SalaryComponentController::class,[
-            'except' => ['destroy','show']
+        Route::resource('salary-components', SalaryComponentController::class, [
+            'except' => ['destroy', 'show']
         ]);
         Route::get('salary-components/delete/{id}', [SalaryComponentController::class, 'delete'])->name('salary-components.delete');
         Route::get('salary-components/change-status/{id}', [SalaryComponentController::class, 'toggleSalaryComponentStatus'])->name('salary-components.toggle-status');
 
         /** Payment Methods route */
-        Route::resource('payment-methods', PaymentMethodController::class,[
-            'except' => ['destroy','show','edit']
+        Route::resource('payment-methods', PaymentMethodController::class, [
+            'except' => ['destroy', 'show', 'edit']
         ]);
         Route::get('payment-methods/delete/{id}', [PaymentMethodController::class, 'deletePaymentMethod'])->name('payment-methods.delete');
         Route::get('payment-methods/change-status/{id}', [PaymentMethodController::class, 'togglePaymentMethodStatus'])->name('payment-methods.toggle-status');
@@ -304,22 +304,22 @@ Route::group([
         Route::post('payment-currency', [PaymentCurrencyController::class, 'updateOrSetPaymentCurrency'])->name('payment-currency.save');
 
         /** Salary TDS route */
-        Route::resource('salary-tds', SalaryTDSController::class,[
-            'except' => ['destroy','show']
+        Route::resource('salary-tds', SalaryTDSController::class, [
+            'except' => ['destroy', 'show']
         ]);
         Route::get('salary-tds/delete/{id}', [SalaryTDSController::class, 'deleteSalaryTDS'])->name('salary-tds.delete');
         Route::get('salary-tds/change-status/{id}', [SalaryTDSController::class, 'toggleSalaryTDSStatus'])->name('salary-tds.toggle-status');
 
         /** Salary Group route */
-        Route::resource('salary-groups', SalaryGroupController::class,[
-            'except' => ['destroy','show']
+        Route::resource('salary-groups', SalaryGroupController::class, [
+            'except' => ['destroy', 'show']
         ]);
         Route::get('salary-groups/delete/{id}', [SalaryGroupController::class, 'deleteSalaryGroup'])->name('salary-groups.delete');
         Route::get('salary-groups/change-status/{id}', [SalaryGroupController::class, 'toggleSalaryGroupStatus'])->name('salary-groups.toggle-status');
 
         /** Employee Salary route */
-        Route::resource('employee-salaries', EmployeeSalaryController::class,[
-            'except' =>['destroy','create','edit','update','store','show']
+        Route::resource('employee-salaries', EmployeeSalaryController::class, [
+            'except' => ['destroy', 'create', 'edit', 'update', 'store', 'show']
         ]);
         Route::get('employee-salaries/update-cycle/{employeeId}/{cycle}', [EmployeeSalaryController::class, 'changeSalaryCycle'])->name('employee-salaries.update-salary-cycle');
         Route::post('employee-salaries/payroll-create', [EmployeeSalaryController::class, 'payrollCreate'])->name('employee-salaries.payroll-create');
@@ -350,8 +350,8 @@ Route::group([
         Route::get('advance-salaries/setting/', [AdvanceSalaryController::class, 'setting'])->name('advance-salaries.setting');
 
         /** Advance Salary route */
-        Route::resource('advance-salaries', AdvanceSalaryController::class,[
-            'except' => ['destroy','store','edit']
+        Route::resource('advance-salaries', AdvanceSalaryController::class, [
+            'except' => ['destroy', 'store', 'edit']
         ]);
         Route::get('advance-salaries/delete/{id}', [AdvanceSalaryController::class, 'delete'])->name('advance-salaries.delete');
 
@@ -359,23 +359,23 @@ Route::group([
 
         /** Payroll OverTime Setting route */
 
-        Route::resource('overtime', OverTimeSettingController::class,[
-        'except' => ['destroy']
+        Route::resource('overtime', OverTimeSettingController::class, [
+            'except' => ['destroy']
         ]);
         Route::get('overtime/delete/{id}', [OverTimeSettingController::class, 'delete'])->name('overtime.delete');
         Route::get('overtime/change-status/{id}', [OverTimeSettingController::class, 'toggleOTStatus'])->name('overtime.toggle-status');
 
 
         /** Payroll UnderTime Setting route */
-        Route::resource('under-time', UnderTimeSettingController::class,[
+        Route::resource('under-time', UnderTimeSettingController::class, [
             'except' => ['destroy']
         ]);
         Route::get('under-time/delete/{id}', [UnderTimeSettingController::class, 'delete'])->name('under-time.delete');
         Route::get('under-time/change-status/{id}', [UnderTimeSettingController::class, 'toggleUTStatus'])->name('under-time.toggle-status');
 
 
-        Route::resource('qr', QrCodeController::class,[
-            'except' => ['destroy','show']
+        Route::resource('qr', QrCodeController::class, [
+            'except' => ['destroy', 'show']
         ]);
         Route::get('qr/delete/{id}', [QrCodeController::class, 'delete'])->name('qr.destroy');
         Route::get('qr/print/{id}', [QrCodeController::class, 'print'])->name('qr.print');
@@ -389,52 +389,47 @@ Route::group([
 
         /** delete employee leave type */
         Route::get('employees/leave_type/delete/{id}', [UserController::class, 'deleteEmployeeLeaveType'])->name('employee_leave_type.delete');
-
     });
+
+    /* Farmer management*/
+    Route::group(
+        [
+            'prefix' => 'farmer',
+            'as' => 'farmer.',
+        ],
+        function () {
+            Route::post('location/get_states', [FarmingController::class, 'getStates'])->name('location.get_states');
+            Route::post('location/get_districts', [FarmingController::class, 'getDistricts'])->name('location.get_districts');
+            Route::post('location/get_blocks', [FarmingController::class, 'getBlocks'])->name('location.get_blocks');
+            Route::post('location/get_gram_panchyats', [FarmingController::class, 'getGramPanchyats'])->name('location.get_gram_panchyats');
+            Route::post('location/get_villages', [FarmingController::class, 'getVillages'])->name('location.get_villages');
+            Route::post('location/get_centers', [FarmingController::class, 'getCenters'])->name('location.get_centers');
+            Route::post('location/get_country_state', [FarmingController::class, 'get_country_state'])->name('location.get_country_state');
+            Route::get('farming_registration/validate/{id}', [FarmingController::class, 'validateProfile'])->name('farming_registration.validate');
+            Route::resource('farming_registration', FarmingController::class);
+            Route::post('registration_id', [FarmingController::class, 'registration_id'])->name('registration_id');
+            Route::resource('guarantor', GuarantorController::class);
+            Route::get('bank_guarantee', [FarmingPaymentController::class, 'bankGuarantee'])->name('bank_guarantee.index');
+            Route::get('bank_guarantee/{id}', [FarmingPaymentController::class, 'editBankGuarantee'])->name('bank_guarantee.edit');
+            Route::get('bank_guarantee/pdf/{id}', [FarmingPaymentController::class, 'pdfBankGuarantee'])->name('bank_guarantee.pdf');
+            Route::resource('payment', FarmingPaymentController::class);
+            Route::post('g_code', [FarmingPaymentController::class, 'g_code'])->name('g_code');
+            Route::view('allotment', 'farmer.allotment.index')->name('allotment.index');
+            Route::post('get_product_service_by_category', [FarmerLoanController::class, 'getProductServiceByCategory'])->name('loan.get_product_service_by_category');
+            Route::post('get_product_service_detail', [FarmerLoanController::class, 'getProductServiceDetail'])->name('loan.get_product_service_detail');
+            Route::post('get_farming_detail', [FarmerLoanController::class, 'getFarmingDetail'])->name('loan.get_farming_detail');
+            Route::resource('loan', FarmerLoanController::class);
+            Route::get('reimbursement/create', [FarmingPaymentController::class, 'reimbursementCreate'])->name('reimbursement.create');
+            Route::get('reimbursement', [FarmingPaymentController::class, 'reimbursement'])->name('reimbursement.index');
+            Route::resource('seed_category', SeedCategoryController::class);
+            Route::post('get_detail', [FarmingDetailController::class, 'getFarmingDetail'])->name('farming.get_detail');
+            Route::resource('farming_detail', FarmingDetailController::class);
+            Route::post('update_cutting_order', [CuttingOrderController::class, 'updateCuttingOrder'])->name('farming.update_cutting_order');
+            Route::resource('cutting_order', CuttingOrderController::class);
+        }
+    );
 });
 
-Route::fallback(function() {
+Route::fallback(function () {
     return view('errors.404');
 });
-
-/* Farmer management*/
-Route::group(
-    [
-        'prefix' => 'farmer',
-        'as'=>'farmer.',
-    ], function () {
-        Route::post('location/get_states',[FarmingController::class,'getStates'])->name('location.get_states');   
-        Route::post('location/get_districts',[FarmingController::class,'getDistricts'])->name('location.get_districts');   
-        Route::post('location/get_blocks',[FarmingController::class,'getBlocks'])->name('location.get_blocks');   
-        Route::post('location/get_gram_panchyats',[FarmingController::class,'getGramPanchyats'])->name('location.get_gram_panchyats');   
-        Route::post('location/get_villages',[FarmingController::class,'getVillages'])->name('location.get_villages');   
-        Route::post('location/get_centers',[FarmingController::class,'getCenters'])->name('location.get_centers');   
-        Route::post('location/get_country_state',[FarmingController::class,'get_country_state'])->name('location.get_country_state');   
-        Route::get('farming_registration/validate/{id}',[FarmingController::class,'validateProfile'])->name('farming_registration.validate');   
-        Route::resource('farming_registration',FarmingController::class);   
-        Route::post('registration_id',[FarmingController::class,'registration_id'])->name('registration_id');   
-        Route::resource('guarantor',GuarantorController::class);   
-        Route::get('bank_guarantee',[FarmingPaymentController::class,'bankGuarantee'])->name('bank_guarantee.index');   
-        Route::get('bank_guarantee/{id}',[FarmingPaymentController::class,'editBankGuarantee'])->name('bank_guarantee.edit');   
-        Route::get('bank_guarantee/pdf/{id}',[FarmingPaymentController::class,'pdfBankGuarantee'])->name('bank_guarantee.pdf');   
-        Route::resource('payment',FarmingPaymentController::class);   
-        Route::post('g_code',[FarmingPaymentController::class,'g_code'])->name('g_code');   
-        Route::view('allotment','farmer.allotment.index')->name('allotment.index');
-        Route::post('get_product_service_by_category',[FarmerLoanController::class,'getProductServiceByCategory'])->name('loan.get_product_service_by_category');   
-        Route::post('get_product_service_detail',[FarmerLoanController::class,'getProductServiceDetail'])->name('loan.get_product_service_detail');   
-        Route::post('get_farming_detail',[FarmerLoanController::class,'getFarmingDetail'])->name('loan.get_farming_detail');   
-        Route::resource('loan',FarmerLoanController::class);   
-        Route::get('reimbursement/create',[FarmingPaymentController::class,'reimbursementCreate'])->name('reimbursement.create');   
-        Route::get('reimbursement',[FarmingPaymentController::class,'reimbursement'])->name('reimbursement.index');   
-        Route::resource('seed_category',SeedCategoryController::class); 
-        Route::post('get_detail',[FarmingDetailController::class,'getFarmingDetail'])->name('farming.get_detail');     
-        Route::resource('farming_detail',FarmingDetailController::class); 
-        Route::post('update_cutting_order',[CuttingOrderController::class,'updateCuttingOrder'])->name('farming.update_cutting_order');       
-        Route::resource('cutting_order',CuttingOrderController::class);   
-    }
-);
-
-
-
-
-

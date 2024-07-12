@@ -59,7 +59,7 @@ class DashboardRepository
             ->where('is_active', '1')
             ->groupBy('company_id');
             
-        $totalHolidaysInYear = DB::table('holidayys')
+        $totalHolidaysInYear = DB::table('holidays')
             ->select('company_id', DB::raw('count(id) as total_holidays'))
             ->where('is_active', '1');
         if (isset($date['start_date'])) {
@@ -81,7 +81,7 @@ class DashboardRepository
             'company_employee.total_employee',
             'checked_in_employee.total_checked_in_employee',
             'checked_out_employee.total_checked_out_employee',
-            'holidayys.total_holidays',
+            'holidays.total_holidays',
             'on_leave_today.total_on_leave',
             'paid_leaves.total_paid_leaves',
             'pending_leave_requests.total_pending_leave_requests',
@@ -101,8 +101,8 @@ class DashboardRepository
             ->leftJoinSub($totalCheckedOutEmployee, 'checked_out_employee', function ($join) {
                 $join->on('companies.id', '=', 'checked_out_employee.company_id');
             })
-            ->leftJoinSub($totalHolidaysInYear, 'holidayys', function ($join) {
-                $join->on('companies.id', '=', 'holidayys.company_id');
+            ->leftJoinSub($totalHolidaysInYear, 'holidays', function ($join) {
+                $join->on('companies.id', '=', 'holidays.company_id');
             })
             ->leftJoinSub($onLeaveEmployee, 'on_leave_today', function ($join) {
                 $join->on('companies.id', '=', 'on_leave_today.company_id');
