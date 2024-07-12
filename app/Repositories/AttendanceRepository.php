@@ -76,7 +76,10 @@ class AttendanceRepository
             'regularizations.created_by',
             'regularizations.updated_by',
         )->leftJoin('regularizations', function ($join) use ($filterParameter) {
-            $join->on('users.id', '=', 'regularizations.user_id');
+            $join->on('users.id', '=', 'regularizations.user_id'); 
+            if($filterParameter['attendance_date'] != null){
+                $join->where('regularizations.regularization_date', '=', $filterParameter['attendance_date']);
+            }
         })
             ->join('companies', 'users.company_id', '=', 'companies.id')
             ->join('branches', 'users.branch_id', '=', 'branches.id')

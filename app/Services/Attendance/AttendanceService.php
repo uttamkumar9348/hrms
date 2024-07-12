@@ -57,7 +57,7 @@ class AttendanceService
     {
 
         if($filterParameter['date_in_bs']){
-            $filterParameter['attendance_date'] = AppHelper::dateInYmdFormatNepToEng($filterParameter['attendance_date']);
+            $filterParameter['attendance_date'] = $filterParameter['attendance_date'] != null?AppHelper::dateInYmdFormatNepToEng($filterParameter['attendance_date']):$filterParameter['attendance_date'];
         }
         return $this->attendanceRepo->getAllCompanyEmployeeregularizationDetailOfTheDay($filterParameter);
 

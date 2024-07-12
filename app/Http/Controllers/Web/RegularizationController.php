@@ -56,7 +56,8 @@ class RegularizationController extends Controller
             $companyId = AppHelper::getAuthUserCompanyId();
 
             $filterParameter = [
-                'attendance_date' => $request->attendance_date ?? AppHelper::getCurrentDateInYmdFormat(),
+                // 'attendance_date' => $request->attendance_date ?? AppHelper::getCurrentDateInYmdFormat(),
+                'attendance_date' => $request->attendance_date ?? null,
                 'company_id' => $companyId,
                 'branch_id' => $request->branch_id ?? null,
                 'department_id' => $request->department_id ?? null,
@@ -65,7 +66,8 @@ class RegularizationController extends Controller
             ];
 
             if (AppHelper::ifDateInBsEnabled()) {
-                $filterParameter['attendance_date'] = $request->attendance_date ?? AppHelper::getCurrentDateInBS();
+                // $filterParameter['attendance_date'] = $request->attendance_date ?? AppHelper::getCurrentDateInBS();
+                $filterParameter['attendance_date'] = $request->attendance_date ?? null;
                 $filterParameter['date_in_bs'] = true;
             }
 
