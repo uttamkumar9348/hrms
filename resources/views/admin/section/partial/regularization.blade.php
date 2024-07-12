@@ -85,6 +85,11 @@
         label {
             margin-right: 10px;
         }
+
+        #clockContainer {
+            background: url(http://127.0.0.1:8000/assets/images/clock.jpg) no-repeat;
+            background-size: cover;
+        }
     </style>
 </head>
 
@@ -119,7 +124,7 @@
 
                     <div class="check-text  align-items-center justify-content-around">
                         <span> Date:- <input type="date" name="date" id="get_date" onchange="checkAttendance(`{{ route('admin.ajaxRegularizationModal') }}`)"></span>
-                        
+
                         <div class="form-container">
                             <div class="form-group">
                                 <label for="checkin">Check In At</label>
@@ -132,7 +137,7 @@
                         </div>
                     </div>
                     <div class="punch-btn mt-2 mb-2 d-flex align-items-center justify-content-around">
-                        <button  class="btn btn-lg btn-danger {{ ''}}" onclick="regularization(`{{ route('admin.createAjaxRegularization') }}`)" id="addRegularization" data-audio="{{asset('assets/audio/beep.mp3')}}">
+                        <button class="btn btn-lg btn-danger {{ ''}}" onclick="regularization(`{{ route('admin.createAjaxRegularization') }}`)" id="addRegularization" data-audio="{{asset('assets/audio/beep.mp3')}}">
                             Regularize
                         </button>
                     </div>
@@ -158,11 +163,18 @@
 
                     if (data?.check_in != null && data?.check_out != null) {
 
-                        $checkin_input = document.getElementById('checkin_time');
-                        $checkout_input = document.getElementById('checkout_time');
+                        let checkin_time = data.check_in;
+                        let formattedCheckInTime = checkin_time.split(':').slice(0, 2).join(':');
+                        let checkout_time = data.check_out;
+                        let formattedCheckOutTime = checkout_time.split(':').slice(0, 2).join(':');
 
-                        $checkin_input.disabled = true;
-                        $checkout_input.disabled = true;
+                        document.getElementById('checkin_time').value = formattedCheckInTime;
+                        document.getElementById('checkout_time').value = formattedCheckOutTime;
+
+                        document.getElementById('checkin_time').disabled = true;
+                        document.getElementById('checkout_time').disabled = true;
+                        document.getElementById('addRegularization').disabled = true;
+
                         Swal.fire({
                             icon: 'info',
                             title: data?.message ?? 'Something went wrong.',
@@ -172,6 +184,7 @@
                             showConfirmButton: false,
                             timerProgressBar: true
                         });
+
                     } else if (data?.check_in != null && data?.check_out == null) {
 
                         let checkin_time = data.check_in;
@@ -180,6 +193,12 @@
                         console.log('formattedTime');
 
                         document.getElementById('checkin_time').value = formattedTime;
+                        document.getElementById('checkout_time').value = null;
+
+                        document.getElementById('checkin_time').disabled = false;
+                        document.getElementById('checkout_time').disabled = false;
+                        document.getElementById('addRegularization').disabled = false;
+
 
                         Swal.fire({
                             icon: 'warning',
@@ -195,8 +214,13 @@
                         $checkout_input = document.getElementById('checkout_time');
                         $reason = document.getElementById('reason')
 
+                        document.getElementById('checkin_time').value = null;
+                        document.getElementById('checkout_time').value = null;
+
                         $checkin_input.disabled = false;
                         $checkout_input.disabled = false;
+                        document.getElementById('addRegularization').disabled = false;
+
 
                         Swal.fire({
                             icon: 'warning',
@@ -216,35 +240,35 @@
             });
         }
 
-        function regularization(ur){
+        function regularization(ur) {
             // addRegularization
             let choose_date = document.getElementById('get_date').value
             let check_in_time = document.getElementById('checkin_time').value
             let check_out_time = document.getElementById('checkout_time').value
 
             $.ajax({
-                type:'POST',
+                type: 'POST',
                 url: ur,
-                data:{
-                    date : choose_date,
-                    checkin : check_in_time,
-                    checkout : check_out_time
+                data: {
+                    date: choose_date,
+                    checkin: check_in_time,
+                    checkout: check_out_time
                 },
-                success: function(data){
+                success: function(data) {
                     console.log(data?.message);
                     var modal = document.getElementById("myModal");
                     Swal.fire({
-                            icon: 'success',
-                            title:data?.message ?? 'Something went wrong.',
-                            timer: 3000,
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timerProgressBar: true
-                        });
-                        modal.style.display = "none";
+                        icon: 'success',
+                        title: data?.message ?? 'Something went wrong.',
+                        timer: 3000,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timerProgressBar: true
+                    });
+                    modal.style.display = "none";
                 },
-                error: function(data){
+                error: function(data) {
                     console.log(data);
                 }
             });

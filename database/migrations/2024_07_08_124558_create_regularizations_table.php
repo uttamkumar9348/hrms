@@ -26,7 +26,7 @@ return new class extends Migration
             $table->double('check_out_longitude')->nullable();
             $table->text('note')->nullable();
             $table->text('edit_remark')->nullable();
-            $table->boolean('regularization_status')->default(null);
+            $table->boolean('regularization_status')->nullable();
 
             $table->bigInteger('created_by')->unsigned();
             $table->bigInteger('updated_by')->unsigned()->nullable();

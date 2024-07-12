@@ -135,12 +135,12 @@ class AttendanceRepository
     
     public function storeRegularizationDetail($validatedData)
     {
-        dd(date('Y-m-d', strtotime($validatedData['attendance_date'])));
+        // dd(date('Y-m-d', strtotime($validatedData['attendance_date'])),Carbon::createFromFormat('H:i', $validatedData['check_in_at'])->format('H:i:s'),Carbon::createFromFormat('H:i', $validatedData['check_out_at'])->format('H:i:s'),);
         try {
             return Regularization::create([
                 'user_id' => $validatedData['user_id'],
                 'company_id' => $validatedData['company_id'],
-                'attendance_date' => date('Y-m-d', strtotime($validatedData['attendance_date'])),
+                'regularization_date' => date('Y-m-d', strtotime($validatedData['attendance_date'])),
                 'check_in_at' => Carbon::createFromFormat('H:i', $validatedData['check_in_at'])->format('H:i:s'),
                 'check_out_at' => Carbon::createFromFormat('H:i', $validatedData['check_out_at'])->format('H:i:s'),
                 'check_in_latitude' => $validatedData['check_in_latitude'],
