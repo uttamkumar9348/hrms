@@ -28,12 +28,12 @@
                 <td>{{ $bank_guarantee->amount }}</td>
                 <td class="Action">
                     <div class="action-btn bg-info ms-2">
-                        <a href="{{route('farmer.bank_guarantee.edit',$bank_guarantee->id)}}" class="mx-3 btn btn-sm  align-items-center">
+                        <a href="{{route('admin.farmer.bank_guarantee.edit',$bank_guarantee->id)}}" class="mx-3 btn btn-sm  align-items-center">
                             <i class="ti ti-pencil text-white"></i>
                         </a>
                     </div>
                     <div class="action-btn bg-success ms-2">
-                        <a href="{{route('farmer.bank_guarantee.pdf',$bank_guarantee->id)}}" class="mx-3 btn btn-sm  align-items-center">
+                        <a href="{{route('admin.farmer.bank_guarantee.pdf',$bank_guarantee->id)}}" class="mx-3 btn btn-sm  align-items-center">
                             <i class="ti ti-download text-white"></i>
                         </a>
                     </div>

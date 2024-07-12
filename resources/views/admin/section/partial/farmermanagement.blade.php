@@ -1,4 +1,4 @@
-<li class="nav-item  {{ request()->routeIs('admin/farmer*') ? 'active' : '' }}   ">
+<li class="nav-item  {{ request()->routeIs('admin.farmer*') ? 'active' : '' }}   ">
     <a data-href="#" class="nav-link" data-bs-toggle="collapse" href="#farmermanagement" role="button" aria-expanded="false"
         aria-controls="company">
         <i class="link-icon" data-feather="users"></i>
@@ -6,31 +6,28 @@
         <i class="link-arrow" data-feather="chevron-down"></i>
     </a>
 
-    <div class="{{ request()->routeIs('admin/farmer*') ? '' : 'collapse' }}" id="farmermanagement">
+    <div class="{{ request()->routeIs('admin.farmer*') ? '' : 'collapse' }}" id="farmermanagement">
         <ul class="nav sub-menu">
             <li class="nav-item">
-                <a href="{{ route('admin.farmer.farming_registration.index') }}" class="nav-link {{ request()->routeIs('admin/farmer/farming_registration*') ? 'active' : '' }}">{{ __('Farmer Registration') }}</a>
+                <a href="{{ route('admin.farmer.farming_registration.index') }}" class="nav-link {{ request()->routeIs('admin.farmer.farming_registration*') ? 'active' : '' }}">{{ __('Farmer Registration') }}</a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('admin.farmer.guarantor.index') }}" class="nav-link {{ request()->routeIs('admin/farmer/guarantor*') ? 'active' : '' }}">{{ __('Farmer Guarantor') }}</a>
+                <a href="{{ route('admin.farmer.guarantor.index') }}" class="nav-link {{ request()->routeIs('admin.farmer.guarantor*') ? 'active' : '' }}">{{ __('Farmer Guarantor') }}</a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('admin.farmer.guarantor.index') }}" class="nav-link {{ request()->routeIs('admin/farmer/guarantor*') ? 'active' : '' }}">{{ __('Farmer Guarantor') }}</a>
+                <a class="nav-link {{ Request::is('admin/farmer/payment*') ? ' active' : '' }}" href="{{ route('admin.farmer.payment.index') }}">{{ __('Security Deposit') }}</a>
             </li>
-            <li class="nav-item {{ Request::is('admin/farmer/payment*') ? ' active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.farmer.payment.index') }}">{{ __('Security Deposit') }}</a>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/farmer/allotment*') ? ' active' : '' }}" href="{{ route('admin.farmer.allotment.index') }}">{{ __('Allotment') }}</a>
             </li>
-            <li class="nav-item {{ Request::is('admin/farmer/allotment*') ? ' active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.farmer.allotment.index') }}">{{ __('Allotment') }}</a>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/farmer/reimbursement*') ? ' active' : '' }}" href="{{ route('admin.farmer.reimbursement.index') }}">{{ __('Reimbursement') }}</a>
             </li>
-            <li class="nav-item {{ Request::is('admin/farmer/reimbursement*') ? ' active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.farmer.reimbursement.index') }}">{{ __('Reimbursement') }}</a>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/farmer/farming_detail*') ? ' active' : '' }}" href="{{ route('admin.farmer.farming_detail.index') }}">{{ __('Farmer Detail') }}</a>
             </li>
-            <li class="nav-item {{ Request::is('admin/farmer/farming_detail*') ? ' active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.farmer.farming_detail.index') }}">{{ __('Farmer Detail') }}</a>
-            </li>
-            <li class="nav-item {{ Request::is('admin/farmer/cutting_order*') ? ' active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.farmer.cutting_order.index') }}">{{ __('Issue Cutting Order') }}</a>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/farmer/cutting_order*') ? ' active' : '' }}" href="{{ route('admin.farmer.cutting_order.index') }}">{{ __('Issue Cutting Order') }}</a>
             </li>
         </ul>
     </div>

@@ -18,7 +18,7 @@ class CuttingOrderController extends Controller
     public function index(Request $request)
     {
         $query = FarmingDetail::query()->select('farming_details.*')
-                    ->join('users','users.id','farming_details.created_by');
+                    ->join('users','users.id','farming_details.created_by');     
         if($request->block_id)
         {
             $query->where('farming_details.block_id',$request->block_id);

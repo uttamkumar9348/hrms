@@ -1,4 +1,4 @@
-{{ Form::open(array('url' => 'farmer/seed_category')) }}
+{{ Form::open(array('url' => 'admin/farmer/seed_category')) }}
 <div class="modal-body">
     {{-- start for ai module--}}
     @php

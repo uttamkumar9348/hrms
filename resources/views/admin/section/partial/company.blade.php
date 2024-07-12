@@ -1,4 +1,3 @@
-
 @canany(['view_company','list_branch','list_department','list_department'])
     <li class="nav-item  {{
                            request()->routeIs('admin.company.*') ||

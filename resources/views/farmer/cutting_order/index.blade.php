@@ -2,7 +2,7 @@
 @section('title')
     {{ __('Issue Cutting Order') }}
 @endsection
-@push('script-page')
+@section('scripts')
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
     <script>
@@ -29,7 +29,7 @@
                     }
                 });
                 $.ajax({
-                    url: "{{ route('farmer.farming.update_cutting_order') }}",
+                    url: "{{ route('admin.farmer.farming.update_cutting_order') }}",
                     method: 'post',
                     data: formData,
                     headers: {
@@ -42,11 +42,8 @@
             });
         });
     </script>
-@endpush
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-    <li class="breadcrumb-item">{{ __('Issue Cutting Order') }}</li>
 @endsection
+
 @section('button')
     <div class="float-end">
         {{-- @can('create farmer detail') --}}
@@ -73,15 +70,20 @@
             <li class="breadcrumb-item active" aria-current="page">{{ __('Issue Cutting Order') }}</li>
         </ol>
 
-        <button type="button" class="btn btn-sm btn-info" id="select-all">
-            Select All
-        </button>
-        <button type="button" class="btn btn-sm btn-danger" hidden id="unselect-all">
-            Un-select All
-        </button>
-        <button type="button" class="btn btn-sm btn-success" id="issue-cutting-order">
-            Issue Cutting Order
-        </button>
+        <div class="float-end">
+            {{-- @can('create farmer detail') --}}
+            <button type="button" class="btn btn-sm btn-info" id="select-all">
+                Select All
+            </button>
+            <button type="button" class="btn btn-sm btn-danger" hidden id="unselect-all">
+                Un-select All
+            </button>
+            <button type="button" class="btn btn-sm btn-success" id="issue-cutting-order">
+                Issue Cutting Order
+            </button>
+            {{-- @endcan --}}
+    
+        </div>
     </nav>
 
     <div class="row">
