@@ -65,6 +65,7 @@ class AttendanceRepository
             'regularizations.regularization_status',
             'regularizations.check_in_at',
             'regularizations.check_out_at',
+            'regularizations.reason',
             'regularizations.check_in_latitude',
             'regularizations.check_out_latitude',
             'regularizations.check_in_longitude',
@@ -135,6 +136,7 @@ class AttendanceRepository
     
     public function storeRegularizationDetail($validatedData)
     {
+        // dd($validatedData);
         // dd(date('Y-m-d', strtotime($validatedData['attendance_date'])),Carbon::createFromFormat('H:i', $validatedData['check_in_at'])->format('H:i:s'),Carbon::createFromFormat('H:i', $validatedData['check_out_at'])->format('H:i:s'),);
         try {
             return Regularization::create([
@@ -143,6 +145,7 @@ class AttendanceRepository
                 'regularization_date' => date('Y-m-d', strtotime($validatedData['attendance_date'])),
                 'check_in_at' => Carbon::createFromFormat('H:i', $validatedData['check_in_at'])->format('H:i:s'),
                 'check_out_at' => Carbon::createFromFormat('H:i', $validatedData['check_out_at'])->format('H:i:s'),
+                'reason' =>  $validatedData['reason'],
                 'check_in_latitude' => $validatedData['check_in_latitude'],
                 'check_out_latitude' => $validatedData['check_in_latitude'],
                 'check_in_longitude' => $validatedData['check_in_longitude'],

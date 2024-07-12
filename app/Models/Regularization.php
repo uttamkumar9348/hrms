@@ -17,6 +17,7 @@ class Regularization extends Model
         'regularization_date',
         'check_in_at',
         'check_out_at',
+        'reason',
         'check_in_latitude',
         'check_out_latitude',
         'check_in_longitude',

@@ -1,9 +1,8 @@
-use Carbon\Carbon;
 @extends('layouts.master')
 
 @section('title','Attendance')
 
-@section('action','Employee Attendance Lists')
+@section('action','Employee Regularization Lists')
 
 
 @section('main-content')
@@ -19,7 +18,7 @@ use Carbon\Carbon;
 
     @include('admin.section.flash_message')
 
-    @include('admin.attendance.common.breadcrumb')
+    @include('admin.attendance.common.regularizationBreadCrumb')
     <div class="search-box p-4 pb-0 bg-white rounded mb-3 box-shadow">
         <form class="forms-sample" action="{{route('admin.regularization.index')}}" method="get">
             <h5 class="mb-3">Attendance Of The Day</h5>
@@ -90,7 +89,7 @@ use Carbon\Carbon;
                                 {{ \Carbon\Carbon::parse($value->regularization_date)->format('d-m-Y') }}
                             </td>
                             <td>
-                                {{Log::info($value)}}
+                                {{Log::info($value->reason)}}
                                 {{ucfirst($value->user_name)}}
                             </td>
 
@@ -99,6 +98,9 @@ use Carbon\Carbon;
                                 <span class="btn btn-outline-secondary btn-xs checkLocation" title="{{ $value->check_in_type == \App\Enum\EmployeeAttendanceTypeEnum::wifi->value ? 'Show checkin location' : strtoupper($value->check_in_type).' checkin' }}" data-bs-toggle="modal" data-href="{{ $value->check_in_type == \App\Enum\EmployeeAttendanceTypeEnum::wifi->value ? 'https://maps.google.com/maps?q='.$value->check_in_latitude.','.$value->check_in_longitude.'&t=&z=20&ie=UTF8&iwloc=&output=embed' : '' }} " data-bs-target="{{ $value->check_in_type == \App\Enum\EmployeeAttendanceTypeEnum::wifi->value ? '#addslider' : '' }} ">
                                     {{ ($value->check_in_at) ? \App\Helpers\AttendanceHelper::changeTimeFormatForAttendanceAdminView($appTimeSetting, $value->check_in_at):''}}
                                 </span>
+                                <!-- @if($value->reason)
+                                <p style="float: left;">{{$value->reason}}</p>
+                                @endif -->
                             </td>
                             @else
                             <td class="text-center"></td>
@@ -117,8 +119,8 @@ use Carbon\Carbon;
 
                             @if(!is_null($value->regularization_status))
                             <td class="text-center">
-                                <a class="changeAttendanceStatus btn btn-{{$changeColor[$value->regularization_status]}} btn-xs" data-href="{{route('admin.attendances.change-status',$value->regularizations_id)}}" title="Change Attendance Status">
-                                    {{($value->regularization_status == \App\Models\Attendance::ATTENDANCE_APPROVED) ? 'Approved':'Rejected'}}
+                                <a class=" disabled changeAttendanceStatus btn btn-{{$changeColor[$value->regularization_status]}} btn-xs" data-href="{{route('admin.attendances.change-status',$value->regularizations_id)}}" title="Change Regularization Status ">
+                                    {{($value->regularization_status == \App\Models\Regularization::ATTENDANCE_APPROVED) ? 'Approved':'Rejected'}}
                                 </a>
                             </td>
                             @else

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('regularization_date');
             $table->time('check_in_at');
             $table->time('check_out_at')->nullable();
+            $table->string('reason')->nullable();
             $table->double('check_in_latitude')->nullable();
             $table->double('check_out_latitude')->nullable();
             $table->double('check_in_longitude')->nullable();

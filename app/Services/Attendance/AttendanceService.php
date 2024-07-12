@@ -241,7 +241,7 @@ class AttendanceService
 
     }
 
-    public function newRgularization($validatedData,$date,$checkin_at,$checkout_at){
+    public function newRgularization($reason,$validatedData,$date,$checkin_at,$checkout_at){
         $employeeLeaveDetail = $this->leaveRepo->findEmployeeApprovedLeaveForCurrentDate($validatedData,['id']);
         // dd($employeeLeaveDetail);
         if($employeeLeaveDetail){
@@ -258,6 +258,8 @@ class AttendanceService
         $validatedData['check_out_at'] = $checkout_at;
         $validatedData['check_in_latitude'] = $validatedData['check_in_latitude'] ?? '';
         $validatedData['check_in_longitude'] = $validatedData['check_in_longitude'] ?? '';
+        $validatedData['reason'] = $reason;
+
         //storeRegularizationDetail
 
         // dd($validatedData);  

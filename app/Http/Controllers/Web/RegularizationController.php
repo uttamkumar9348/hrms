@@ -164,9 +164,9 @@ class RegularizationController extends Controller
 
     public function createRegularization(Request $request)
     {
-
         $this->authorize('attendance_create');
         $date = $request->date;
+        $reason = $request->reason;
         $checkin_at = $request->checkin;
         $checkout_at = $request->checkout ? $request->checkout : null;
         $user_id = auth()->user()->id;
@@ -175,7 +175,7 @@ class RegularizationController extends Controller
 
 
         try {
-            $result = $this->regularization($user_id, $companyId, $date, $checkin_at, $checkout_at);
+            $result = $this->regularization($reason,$user_id, $companyId, $date, $checkin_at, $checkout_at);
             if ($result) {
                 return response()->json([
                     'message' => "Regularization Successfull"
@@ -190,7 +190,7 @@ class RegularizationController extends Controller
         }
     }
 
-    public function regularization($userId, $companyId, $date, $checkin_at, $checkout_at, $dashboardAttendance = false, $locationData = [])
+    public function regularization($reason,$userId, $companyId, $date, $checkin_at, $checkout_at, $dashboardAttendance = false, $locationData = [])
     {
         try {
             $select = ['name'];
@@ -210,7 +210,7 @@ class RegularizationController extends Controller
             }
             DB::beginTransaction();
 
-            $regularization_data =  $this->attendanceService->newRgularization($validatedData, $date, $checkin_at, $checkout_at);
+            $regularization_data =  $this->attendanceService->newRgularization($reason,$validatedData, $date, $checkin_at, $checkout_at);
             $this->userRepository->updateUserOnlineStatus($userDetail, 1);
             DB::commit();
 

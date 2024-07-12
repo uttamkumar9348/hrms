@@ -78,8 +78,8 @@
             margin-top: 0.5rem;
         }
 
-        .form-group {
-            margin-right: 20px;
+        #late_reason {
+            margin-top: 0.5rem;
         }
 
         label {
@@ -135,6 +135,7 @@
                                 <input type="time" name="checkout" id="checkout_time">
                             </div>
                         </div>
+                        <span><textarea required name="reason" id="late_reason" cols="29" rows="3"></textarea></span>
                     </div>
                     <div class="punch-btn mt-2 mb-2 d-flex align-items-center justify-content-around">
                         <button class="btn btn-lg btn-danger {{ ''}}" onclick="regularization(`{{ route('admin.createAjaxRegularization') }}`)" id="addRegularization" data-audio="{{asset('assets/audio/beep.mp3')}}">
@@ -245,33 +246,49 @@
             let choose_date = document.getElementById('get_date').value
             let check_in_time = document.getElementById('checkin_time').value
             let check_out_time = document.getElementById('checkout_time').value
+            let reason = document.getElementById('late_reason').value
+            if (reason) {
+                console.log(reason);
+                $.ajax({
+                    type: 'POST',
+                    url: ur,
+                    data: {
+                        date: choose_date,
+                        checkin: check_in_time,
+                        checkout: check_out_time,
+                        reason: reason
+                    },
+                    success: function(data) {
+                        console.log(data?.message);
+                        var modal = document.getElementById("myModal");
+                        Swal.fire({
+                            icon: 'success',
+                            title: data?.message ?? 'Something went wrong.',
+                            timer: 3000,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timerProgressBar: true
+                        });
+                        modal.style.display = "none";
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: "Please Add Reason",
+                    timer: 3000,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timerProgressBar: true
+                });
+            }
 
-            $.ajax({
-                type: 'POST',
-                url: ur,
-                data: {
-                    date: choose_date,
-                    checkin: check_in_time,
-                    checkout: check_out_time
-                },
-                success: function(data) {
-                    console.log(data?.message);
-                    var modal = document.getElementById("myModal");
-                    Swal.fire({
-                        icon: 'success',
-                        title: data?.message ?? 'Something went wrong.',
-                        timer: 3000,
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timerProgressBar: true
-                    });
-                    modal.style.display = "none";
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
+
         }
 
         // Get the modal
