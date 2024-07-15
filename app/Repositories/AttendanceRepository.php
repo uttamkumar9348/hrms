@@ -90,13 +90,11 @@ class AttendanceRepository
 
     public function storeAttendanceDetail($validatedData)
     {
-
         return Attendance::create($validatedData)->fresh();
     }
 
     public function updateAttendanceDetail($attendanceDetail,$validatedData)
     {
-
         $attendanceDetail->update($validatedData);
         return $attendanceDetail;
     }

@@ -13,15 +13,6 @@
 
 @section('nav-head','Welcome to Attendance Dashboard : ' .ucfirst($dashboardDetail?->company_name) )
 
-@section('styles')
-    <style>
-        #clockContainer {
-            background: url({{asset('assets/images/clock.jpg') }}) no-repeat;
-            background-size: 100%;
-        }
-    </style>
-@endsection
-
 @section('main-content')
 
     <section class="content">
@@ -214,7 +205,7 @@
                 <div class="col-xxl-3 col-xl-4 mb-4 d-flex">
                     <div class="card w-100">
                         <div class="card-body text-center clock-display">
-                            <div id="clockContainer" class="mb-3">
+                            <div id="clockContainer" class="mb-3" style="background: url({{asset('assets/images/clock.jpg') }}) no-repeat;background-size: 100%;">
                                 <div id="hour"></div>
                                 <div id="minute"></div>
                                 <div id="second"></div>

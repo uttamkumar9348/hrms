@@ -38,8 +38,8 @@
                             <tbody>
                                 @foreach ($payments as $payment)
                                     <tr class="font-style">
-                                        <td>{{ @$payment->type }}</td>
-                                        <td>{{ @$payment->farming->name }}</td>
+                                        <td>{{ $payment->type }}</td>
+                                        <td>{{ $payment->farming->name }}</td>
                                         <td>{{ $payment->registration_number }}</td>
                                         <td>{{ $payment->agreement_number }}</td>
                                         <td>{{ $payment->date }}</td>

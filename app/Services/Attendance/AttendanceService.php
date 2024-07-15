@@ -219,8 +219,8 @@ class AttendanceService
 
         $validatedData['attendance_date'] = Carbon::now()->format('Y-m-d');
         $validatedData['check_in_at'] = $checkInAt;
-        $validatedData['check_in_latitude'] = $validatedData['latitude'] ?? '';
-        $validatedData['check_in_longitude'] = $validatedData['longitude'] ?? '';
+        $validatedData['check_in_latitude'] = $validatedData['check_in_latitude'] ?? '';
+        $validatedData['check_in_longitude'] = $validatedData['check_in_longitude'] ?? '';
 
         $attendance = $this->attendanceRepo->storeAttendanceDetail($validatedData);
         if ($attendance) {
@@ -280,8 +280,8 @@ class AttendanceService
 
         }
 
-        $validatedData['check_out_latitude'] = $validatedData['latitude'] ?? '';
-        $validatedData['check_out_longitude'] = $validatedData['longitude'] ?? '';
+        $validatedData['check_out_latitude'] = $validatedData['check_out_latitude'] ?? '';
+        $validatedData['check_out_longitude'] = $validatedData['check_out_longitude'] ?? '';
 
         //calculate worked_hours
         $workedData = AttendanceHelper::calculateWorkedHour($checkOut, $attendanceData->check_in_at,$attendanceData->user_id );

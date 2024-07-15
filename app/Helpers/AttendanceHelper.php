@@ -146,60 +146,55 @@ class AttendanceHelper
         return floor($productiveTimeInMin / 60) . ' hrs and ' . ($productiveTimeInMin - floor($productiveTimeInMin / 60) * 60) . ' min(s)';
     }
 
-    public static function formattedAttendanceDate($isBsEnabled, $date, $changeEngToNep=true): string
+    public static function formattedAttendanceDate($isBsEnabled, $date, $changeEngToNep = true): string
     {
-        if($isBsEnabled && $changeEngToNep){
+        if ($isBsEnabled && $changeEngToNep) {
             return  AppHelper::dateInNepaliFormatEngToNep($date);
         }
-        return date('d M Y (l)',strtotime($date));
+        return date('d M Y (l)', strtotime($date));
     }
 
-    public static function getHolidayOrLeaveDetail($date,$userId)
+    public static function getHolidayOrLeaveDetail($date, $userId)
     {
 
         $leaveStatus = [
-           'pending' => 'P',
-           'rejected' => 'R',
-           'approved' => 'A',
+            'pending' => 'P',
+            'rejected' => 'R',
+            'approved' => 'A',
         ];
 
-        if(Carbon::parse($date) < Carbon::today())
-        {
+        if (Carbon::parse($date) < Carbon::today()) {
 
 
 
-            $holidayDetail = Holiday::whereDate('event_date',$date)->first();
+            $holidayDetail = Holiday::whereDate('event_date', $date)->first();
 
-            if($holidayDetail)
-            {
-                return 'Holiday ('.(ucfirst($holidayDetail->event)). ')';
+            if ($holidayDetail) {
+                return 'Holiday (' . (ucfirst($holidayDetail->event)) . ')';
             }
 
             $weekday = date('w', strtotime($date));
 
-            $companyWeekend = Company::whereJsonContains('weekend',$weekday)->exists();
+            $companyWeekend = Company::whereJsonContains('weekend', $weekday)->exists();
 
-            if($companyWeekend)
-            {
+            if ($companyWeekend) {
                 return 'Weekend';
             }
 
             $leaveDetail = LeaveRequestMaster::where('requested_by', $userId)
-                ->where('status','=','approved')
+                ->where('status', '=', 'approved')
                 ->where(function ($query) use ($date) {
                     $query->whereRaw('DATE(leave_from) <= ?', [$date])
                         ->whereRaw('DATE(leave_to) >= ?', [$date]);
                 })
-                ->where('early_exit',0)
+                ->where('early_exit', 0)
                 ->first();
 
-            if($leaveDetail)
-            {
-                return 'Leave ('.($leaveStatus[$leaveDetail['status']]).')';
-            }else{
+            if ($leaveDetail) {
+                return 'Leave (' . ($leaveStatus[$leaveDetail['status']]) . ')';
+            } else {
                 return 'Absent';
             }
-
         }
     }
 
@@ -216,45 +211,42 @@ class AttendanceHelper
         $totalWorkingHours = '';
 
 
-        if($date_in_bs)
-        {
+        if ($date_in_bs) {
             $dateInAD = AppHelper::findAdDatesFromNepaliMonthAndYear($year, $month);
-            $startDate = date('Y-m-d',strtotime($dateInAD['start_date'])) ?? null;
-            $endDate = date('Y-m-d',strtotime($dateInAD['end_date'])) ?? null;
+            $startDate = date('Y-m-d', strtotime($dateInAD['start_date'])) ?? null;
+            $endDate = date('Y-m-d', strtotime($dateInAD['end_date'])) ?? null;
             $days = AppHelper::getTotalDaysInNepaliMonth($year, $month);
 
             $currentMonthYear = AppHelper::getCurrentNepaliYearMonth();
-            if($currentMonthYear['year'] == $year && $currentMonthYear['month'] == $month){
+            if ($currentMonthYear['year'] == $year && $currentMonthYear['month'] == $month) {
                 $isCurrentMonth = true;
             }
+        } else {
 
-        }else{
-
-            $days = AttendanceHelper::getTotalNumberOfDaysInSpecificMonth($month,$year);
+            $days = AttendanceHelper::getTotalNumberOfDaysInSpecificMonth($month, $year);
             $firstDayOfMonth  = Carbon::create($year, $month, 1)->startOfDay();;
-            $startDate = date('Y-m-d',strtotime($firstDayOfMonth));
-            $endDate = date('Y-m-d',strtotime($firstDayOfMonth->endOfMonth()));
+            $startDate = date('Y-m-d', strtotime($firstDayOfMonth));
+            $endDate = date('Y-m-d', strtotime($firstDayOfMonth->endOfMonth()));
 
-            if(date('Y') == $year && date('m' == $month)){
+            if (date('Y') == $year && date('m' == $month)) {
                 $isCurrentMonth = true;
             }
         }
 
 
-        if($isCurrentMonth){
+        if ($isCurrentMonth) {
             $endDate = $today;
         }
 
-        if($startDate <= $endDate)
-        {
+        if ($startDate <= $endDate) {
             // get weekend counts
             $weekendCount = self::countWeekdaysInMonth($startDate, $endDate);
 
-            $leaveDays = LeaveRequestMaster::where('status','=','approved')
+            $leaveDays = LeaveRequestMaster::where('status', '=', 'approved')
                 ->where('requested_by', $userId)
-                ->whereBetween('leave_from', [$startDate,$endDate])
-                ->whereBetween('leave_to', [$startDate,$endDate])
-                ->where('early_exit',0)
+                ->whereBetween('leave_from', [$startDate, $endDate])
+                ->whereBetween('leave_to', [$startDate, $endDate])
+                ->where('early_exit', 0)
                 ->sum('no_of_days');
 
             $leaveCount = intval($leaveDays);
@@ -279,7 +271,7 @@ class AttendanceHelper
             $WorkedHours = $worked_time[0]->total_minutes;
             $presentCount = $worked_time[0]->present_days;
 
-//            $holidayCount = Holiday::whereBetween('event_date',[$startDate, $endDate])->count();
+            //            $holidayCount = Holiday::whereBetween('event_date',[$startDate, $endDate])->count();
 
             $holidayCounts = Holiday::whereBetween('event_date', [$startDate, $endDate])
                 ->selectRaw('COUNT(*) AS total_count, SUM(DAYOFWEEK(event_date) = 7) AS weekend_count')
@@ -288,19 +280,19 @@ class AttendanceHelper
             $holidayCount = $holidayCounts->total_count ?? 0;
             $weekendHolidayCount = $holidayCounts->weekend_count ?? 0;
 
-            $weekendCount = $weekendCount-$weekendHolidayCount;
+            $weekendCount = $weekendCount - $weekendHolidayCount;
 
             $shift =  User::select(
                 DB::raw("TIME_FORMAT(TIMEDIFF(office_times.closing_time, office_times.opening_time), '%l') as hours")
             )
                 ->leftJoin('office_times', function ($join) {
                     $join->on('users.office_time_id', '=', 'office_times.id')
-                        ->where('office_times.is_active','=',1);
+                        ->where('office_times.is_active', '=', 1);
                 })
-                ->where('users.id',$userId)->first();
+                ->where('users.id', $userId)->first();
 
             $workingHours = $shift['hours'];
-            $totalWorkingHours = $workingHours * ($days-($weekendCount+$holidayCount)) .'h';
+            $totalWorkingHours = $workingHours * ($days - ($weekendCount + $holidayCount)) . 'h';
 
             $totalWorkedHours = floor($WorkedHours / 60) . 'h ' . round(($WorkedHours - floor($WorkedHours / 60) * 60)) . 'm';
 
@@ -311,15 +303,14 @@ class AttendanceHelper
             $diffInDays = $start->diffInDays($end) + 1;
 
             $absentCount = $diffInDays - ($presentCount + $weekendCount + $leaveCount + $holidayCount);
-
         }
 
         return array(
             'totalDays' => $days,
             'totalWeekend' => $weekendCount,
-            'totalPresent' => $presentCount ,
-            'totalHoliday' => $holidayCount ,
-            'totalAbsent' => $absentCount ,
+            'totalPresent' => $presentCount,
+            'totalHoliday' => $holidayCount,
+            'totalAbsent' => $absentCount,
             'totalLeave' => $leaveCount,
             'totalWorkedHours' => $totalWorkedHours,
             'totalWorkingHours' => $totalWorkingHours,
@@ -340,8 +331,8 @@ class AttendanceHelper
         $weekendValue = str_replace(['[', ']', '"'], '', $companyWeekend);
         $desiredWeekday = intval($weekendValue);
 
-        $start = date('Y-m-d',strtotime($startDate));
-        $end = date('Y-m-d',strtotime($endDate));
+        $start = date('Y-m-d', strtotime($startDate));
+        $end = date('Y-m-d', strtotime($endDate));
         $count = 0;
 
         while ($start <= $end) {
@@ -362,7 +353,7 @@ class AttendanceHelper
      */
     public static function checkEmployeeSalary($employeeId): mixed
     {
-        return EmployeeSalary::where('employee_id',$employeeId)->count();
+        return EmployeeSalary::where('employee_id', $employeeId)->count();
     }
 
 
@@ -371,13 +362,11 @@ class AttendanceHelper
         $days = 7;
 
 
-        if($date_in_bs)
-        {
+        if ($date_in_bs) {
 
-            $startDate = date('Y-m-d',strtotime($start_date)) ?? null;
-            $endDate = date('Y-m-d',strtotime($end_date)) ?? null;
-
-        }else{
+            $startDate = date('Y-m-d', strtotime($start_date)) ?? null;
+            $endDate = date('Y-m-d', strtotime($end_date)) ?? null;
+        } else {
 
 
             $startDate = $start_date;
@@ -390,11 +379,11 @@ class AttendanceHelper
         $desiredWeekday = intval($weekendValue);
         $weekendCount = self::countWeekdaysInMonth($startDate, $endDate, $desiredWeekday);
 
-        $leaveDays = LeaveRequestMaster::where('status','=','approved')
+        $leaveDays = LeaveRequestMaster::where('status', '=', 'approved')
             ->where('requested_by', $userId)
-            ->whereBetween('leave_from', [$startDate,$endDate])
-            ->whereBetween('leave_to', [$startDate,$endDate])
-            ->where('early_exit',0)
+            ->whereBetween('leave_from', [$startDate, $endDate])
+            ->whereBetween('leave_to', [$startDate, $endDate])
+            ->where('early_exit', 0)
             ->sum('no_of_days');
 
         $leaveCount = intval($leaveDays);
@@ -426,7 +415,7 @@ class AttendanceHelper
         $holidayCount = $holidayCounts->total_count ?? 0;
         $weekendHolidayCount = $holidayCounts->weekend_count ?? 0;
 
-        $weekendCount = $weekendCount-$weekendHolidayCount;
+        $weekendCount = $weekendCount - $weekendHolidayCount;
 
         $totalWorkedHours = floor($WorkedHours / 60) . 'h ' . round(($WorkedHours - floor($WorkedHours / 60) * 60)) . 'm';
 
@@ -440,9 +429,9 @@ class AttendanceHelper
         return array(
             'totalDays' => $days,
             'totalWeekend' => $weekendCount,
-            'totalPresent' => $presentCount ,
-            'totalHoliday' => $holidayCount ,
-            'totalAbsent' => $absentCount ,
+            'totalPresent' => $presentCount,
+            'totalHoliday' => $holidayCount,
+            'totalAbsent' => $absentCount,
             'totalLeave' => $leaveCount,
             'totalWorkedHours' => $totalWorkedHours,
             'totalOverTime' =>  $worked_time[0]->total_overtime,
@@ -455,67 +444,61 @@ class AttendanceHelper
      */
     public static function calculateWorkedHour($checkOutTime, $checkInTime, $employeeId): array
     {
-        $shift =  User::
-        select(
-            'office_times.closing_time','office_times.opening_time'
+        $shift =  User::select(
+            'office_times.closing_time',
+            'office_times.opening_time'
         )
             ->leftJoin('office_times', function ($join) {
                 $join->on('users.office_time_id', '=', 'office_times.id')
-                    ->where('office_times.is_active','=',1);
+                    ->where('office_times.is_active', '=', 1);
             })
-            ->where('users.id',$employeeId)->first();
+            ->where('users.id', $employeeId)->first();
 
-
-        $workingTime = self::calculateTime($shift['closing_time'],$shift['opening_time']);
-
+        $workingTime = self::calculateTime($shift['closing_time'], $shift['opening_time']);
 
         $workedTime = self::calculateTime($checkOutTime, $checkInTime);
-
-
 
         // calculate overTime
         $overTime = OverTimeEmployee::select('over_time_settings.*')
             ->leftJoin('over_time_settings', function ($join) {
                 $join->on('over_time_employees.over_time_setting_id', '=', 'over_time_settings.id')
-                    ->where('over_time_settings.is_active',1);
+                    ->where('over_time_settings.is_active', 1);
             })
             ->where('over_time_employees.employee_id', $employeeId)
             ->first();
         $extraWorkedTime = 0;
-        if(isset($overTime)){
-            if($workedTime > $workingTime){
+        if (isset($overTime)) {
+            if ($workedTime > $workingTime) {
 
                 $extraTime = $workedTime - $workingTime;
-                if($extraTime >= ($overTime->valid_after_hour * 60)){
+                if ($extraTime >= ($overTime->valid_after_hour * 60)) {
 
-                    if($extraWorkedTime > ($overTime->max_daily_ot_hours *60)){
-                        $extraWorkedTime = ($overTime->max_daily_ot_hours *60);
+                    if ($extraWorkedTime > ($overTime->max_daily_ot_hours * 60)) {
+                        $extraWorkedTime = ($overTime->max_daily_ot_hours * 60);
                     }
-                }else{
-                    $extraWorkedTime =0;
+                } else {
+                    $extraWorkedTime = 0;
                 }
             }
         }
 
         // calculate underTime
-        $underTime = UnderTimeSetting::where('is_active',1)->first();
+        $underTime = UnderTimeSetting::where('is_active', 1)->first();
 
 
-        if(isset($underTime))
-        {
+        if (isset($underTime)) {
 
             $timeToWork = $workingTime - $underTime->applied_after_minutes;
 
-            if($workedTime < $timeToWork){
-                $workTimeDeficiency = $timeToWork- $workedTime;
+            if ($workedTime < $timeToWork) {
+                $workTimeDeficiency = $timeToWork - $workedTime;
             }
-
         }
 
         return [
-            'workedHours'=> round($workedTime,2),
-            'overtime'=> isset($extraWorkedTime) ? round($extraWorkedTime,2) : 0,
-            'undertime'=> isset($workTimeDeficiency) ? round($workTimeDeficiency,2) : 0,
+            'workedHours' => round($workedTime, 2),
+            'overtime' => isset($extraWorkedTime) ? round($extraWorkedTime, 2) : 0,
+            'undertime' => isset($workTimeDeficiency) ? round($workTimeDeficiency, 2) : 0,
         ];
     }
 
@@ -541,10 +524,10 @@ class AttendanceHelper
 
         $isBsEnabled = AppHelper::ifDateInBsEnabled();
 
-        if($isBsEnabled ){
+        if ($isBsEnabled) {
             return  AppHelper::dateInYmdFormatEngToNep($date);
         }
-        return date('Y-m-d',strtotime($date));
+        return date('Y-m-d', strtotime($date));
     }
 
     public static function payslipDuration($startDate, $endDate): string
@@ -552,18 +535,18 @@ class AttendanceHelper
         $isBsEnabled = AppHelper::ifDateInBsEnabled();
 
 
-        if($isBsEnabled ){
+        if ($isBsEnabled) {
             $fromMonth =   AppHelper::getMonthYear($startDate);
             $toMonth  = AppHelper::getMonthYear($endDate);
 
-            $sMonth = explode(' ',$fromMonth);
-            $eMonth = explode(' ',$fromMonth);
+            $sMonth = explode(' ', $fromMonth);
+            $eMonth = explode(' ', $fromMonth);
             if ($fromMonth != $toMonth) {
                 $duration = $sMonth[0] . '/' . $eMonth[0] . ' ' . $eMonth[1];
             } else {
                 $duration = $fromMonth;
             }
-        }else{
+        } else {
             $fromMonth = date('F', strtotime($startDate));
             $toMonth = date('F', strtotime($endDate));
 
@@ -572,7 +555,6 @@ class AttendanceHelper
             } else {
                 $duration = $fromMonth . ' ' . date('Y', strtotime($startDate));
             }
-
         }
         return $duration;
     }
@@ -581,10 +563,9 @@ class AttendanceHelper
     {
         $isBsEnabled = AppHelper::ifDateInBsEnabled();
 
-        if($isBsEnabled ){
+        if ($isBsEnabled) {
             return  AppHelper::formatDateForView($date);
         }
-        return date('d/m/Y',strtotime($date));
+        return date('d/m/Y', strtotime($date));
     }
-
 }
