@@ -35,7 +35,10 @@
                                     class="form-control"
                                     type="date"
                                 @endif
-                        />
+                                @if($filterParameter['attendance_date'] != null )
+                                value="{{$filterParameter['attendance_date']}}"
+                                @endif
+                        /> 
                     </div>
 
                     <div class="col-lg col-md-4 mb-4">

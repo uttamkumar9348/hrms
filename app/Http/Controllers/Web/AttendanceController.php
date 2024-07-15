@@ -59,7 +59,7 @@ class AttendanceController extends Controller
             $selectBranch = ['id','name'];
             $companyId = AppHelper::getAuthUserCompanyId();
             $filterParameter = [
-                'attendance_date' => $request->attendance_date ?? null,
+                'attendance_date' => $request->attendance_date ?? AppHelper::getCurrentDateInYmdFormat(),
                 'company_id' => $companyId,
                 'branch_id' => $request->branch_id ?? null,
                 'department_id' => $request->department_id ?? null,
@@ -68,7 +68,7 @@ class AttendanceController extends Controller
             ];
 
             if(AppHelper::ifDateInBsEnabled()){
-                $filterParameter['attendance_date'] = $$request->attendance_date ?? null;
+                $filterParameter['attendance_date'] = $request->attendance_date ?? AppHelper::getCurrentDateInBS();
                 $filterParameter['date_in_bs'] = true;
             }
             $attendanceDetail = $this->attendanceService->getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter);
