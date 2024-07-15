@@ -17,7 +17,7 @@ class AttendanceRepository
 
     public function getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter)
     {
-        
+
         return User::select(
             'attendances.id AS attendance_id',
             'users.id AS user_id',
@@ -39,8 +39,10 @@ class AttendanceRepository
             'attendances.created_by',
             'attendances.updated_by',
         )->leftJoin('attendances', function ($join) use ($filterParameter) {
-            $join->on('users.id', '=', 'attendances.user_id')
-                ->where('attendances.attendance_date', '=', $filterParameter['attendance_date']);
+            $join->on('users.id', '=', 'attendances.user_id');
+            if ($filterParameter['attendance_date'] != null) {
+                $join->where('attendances.attendance_date', '=', $filterParameter['attendance_date']);
+            }
         })
             ->join('companies', 'users.company_id', '=', 'companies.id')
             ->join('branches', 'users.branch_id', '=', 'branches.id')
@@ -53,7 +55,8 @@ class AttendanceRepository
             ->get();
     }
 
-    public function getAllCompanyEmployeeregularizationDetailOfTheDay($filterParameter){
+    public function getAllCompanyEmployeeregularizationDetailOfTheDay($filterParameter)
+    {
         return User::select(
             'regularizations.id AS regularizations_id',
             'users.id AS user_id',
@@ -76,9 +79,10 @@ class AttendanceRepository
             'regularizations.created_by',
             'regularizations.updated_by',
         )->leftJoin('regularizations', function ($join) use ($filterParameter) {
-            $join->on('users.id', '=', 'regularizations.user_id'); 
-            if($filterParameter['attendance_date'] != null){
-                $join->where('regularizations.regularization_date', '=', $filterParameter['attendance_date']);
+            $join->on('users.id', '=', 'regularizations.user_id');
+            // dd($filterParameter);
+            if ($filterParameter['regularization_date'] != null) {
+                $join->where('regularizations.regularization_date', '=', $filterParameter['regularization_date']);
             }
         })
             ->join('companies', 'users.company_id', '=', 'companies.id')
@@ -136,11 +140,9 @@ class AttendanceRepository
     {
         return Attendance::create($validatedData)->fresh();
     }
-    
+
     public function storeRegularizationDetail($validatedData)
     {
-        // dd($validatedData);
-        // dd(date('Y-m-d', strtotime($validatedData['attendance_date'])),Carbon::createFromFormat('H:i', $validatedData['check_in_at'])->format('H:i:s'),Carbon::createFromFormat('H:i', $validatedData['check_out_at'])->format('H:i:s'),);
         try {
             return Regularization::create([
                 'user_id' => $validatedData['user_id'],

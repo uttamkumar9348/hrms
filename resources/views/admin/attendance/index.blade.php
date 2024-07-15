@@ -27,7 +27,6 @@
                     <div class="col-lg col-md-4 mb-4">
                         <input id="attendance_date"
                                 name="attendance_date"
-                                value="{{$filterParameter['attendance_date']}}"
                                 @if($isBsEnabled)
                                     class="form-control dayAttendance"
                                     type="text"

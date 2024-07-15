@@ -146,7 +146,7 @@
                             @canany(['attendance_create','attendance_update','attendance_delete'])
                             <td class="text-center">
                                 <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                    @if($filterParameter['attendance_date'] == $currentDate)
+                                    @if($filterParameter['regularization_date'] == $currentDate)
                                     @if(!$value->check_in_at)
                                     @can('attendance_create')
                                     <li class="me-2">
