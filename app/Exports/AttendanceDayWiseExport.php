@@ -56,14 +56,13 @@ class AttendanceDayWiseExport implements FromView, ShouldAutoSize
                 }
            }
         }
-        // dd($this->attendanceDayWiseRecord);
         return view('admin.attendance.export.attendance-day-wise-export', [
             'attendanceDayWiseRecord' => $this->attendanceDayWiseRecord,
             'dayDetail' => $this->filterParameter,
             'appTimeSetting'=>$appTimeSetting,
             'dates' => $dates,
             'weekends' => $weekends,
-            '$holidayDates' => $holidayDates
+            'holidayDates' => $holidayDates
         ]);
     }
 }
