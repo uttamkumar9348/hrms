@@ -25,20 +25,7 @@
                 <div class="row align-items-center">
 
                     <div class="col-lg col-md-4 mb-4">
-                        <input id="attendance_date"
-                                name="attendance_date"
-                                @if($isBsEnabled)
-                                    class="form-control dayAttendance"
-                                    type="text"
-                                    placeholder="yy/mm/dd"
-                                @else
-                                    class="form-control"
-                                    type="date"
-                                @endif
-                                @if($filterParameter['attendance_date'] != null )
-                                value="{{$filterParameter['attendance_date']}}"
-                                @endif
-                        /> 
+                        @include('admin.attendance.dateRangeFilter')
                     </div>
 
                     <div class="col-lg col-md-4 mb-4">
