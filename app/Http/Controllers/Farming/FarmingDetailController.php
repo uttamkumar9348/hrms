@@ -22,7 +22,7 @@ class FarmingDetailController extends Controller
             ->join('users', 'users.id', 'farming_details.created_by')
             ->where('farming_details.created_by', Auth::user()->id)
             ->orWhere('users.supervisor_id', Auth::user()->id)->get();
-        return view('farmer.farming_detail.index', compact('farming_details'));
+        return view('admin.farmer.farming_detail.index', compact('farming_details'));
     }
 
     /**
@@ -47,7 +47,7 @@ class FarmingDetailController extends Controller
             $plot_number = "001";
         }
         $seed_categories = SeedCategory::all();
-        return view('farmer.farming_detail.create', compact('farmings', 'seed_categories', 'plot_number'));
+        return view('admin.farmer.farming_detail.create', compact('farmings', 'seed_categories', 'plot_number'));
     }
 
     /**
@@ -92,7 +92,7 @@ class FarmingDetailController extends Controller
             ->where('farmings.created_by', Auth::user()->id)
             ->orWhere('users.supervisor_id', Auth::user()->id)->get();
         $seed_categories = SeedCategory::all();
-        return view('farmer.farming_detail.edit', compact('farming_detail', 'farmings', 'seed_categories'));
+        return view('admin.farmer.farming_detail.edit', compact('farming_detail', 'farmings', 'seed_categories'));
     }
 
     /**

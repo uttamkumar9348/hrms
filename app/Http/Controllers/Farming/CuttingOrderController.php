@@ -56,7 +56,7 @@ class CuttingOrderController extends Controller
         $farming_details = $query->where('farming_details.is_cutting_order',0)
                     ->where('farming_details.created_by',Auth::user()->id)
                     ->orWhere('users.supervisor_id',Auth::user()->id)->get();
-        return view('farmer.cutting_order.index',compact('farming_details'));
+        return view('admin.farmer.cutting_order.index',compact('farming_details'));
     }
 
     /**

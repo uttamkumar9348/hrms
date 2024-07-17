@@ -15,7 +15,7 @@ class SeedCategoryController extends Controller
     public function index()
     {
         $seed_categories = SeedCategory::all();
-        return view('farmer.seed_category.index',compact('seed_categories'));
+        return view('admin.farmer.seed_category.index',compact('seed_categories'));
     }
 
     /**
@@ -23,7 +23,7 @@ class SeedCategoryController extends Controller
      */
     public function create()
     {
-        return view('farmer.seed_category.create');
+        return view('admin.farmer.seed_category.create');
     }
 
     /**
@@ -56,7 +56,7 @@ class SeedCategoryController extends Controller
      */
     public function edit(SeedCategory $seedCategory)
     {
-        return view('farmer.seed_category.edit', compact('seedCategory'));
+        return view('admin.farmer.seed_category.edit', compact('seedCategory'));
     }
 
     /**

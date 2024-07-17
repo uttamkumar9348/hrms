@@ -34,6 +34,7 @@
                 @include('admin.section.partial.ticket')
                 @include('admin.section.partial.setting')
                 @include('admin.section.partial.farmermanagement')
+                @include('admin.section.partial.inventory')
             </ul>
         </div>
     </nav>

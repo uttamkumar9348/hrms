@@ -30,7 +30,7 @@ class FarmingController extends Controller
         $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
             ->where('farmings.created_by', Auth::user()->id)
             ->orWhere('users.supervisor_id', Auth::user()->id)->get();
-        return view('farmer.registration.index', compact('farmings'));
+        return view('admin.farmer.registration.index', compact('farmings'));
     }
 
     /**
@@ -40,7 +40,7 @@ class FarmingController extends Controller
     {
         $countries = Country::all();
         $zones = Zone::all();
-        return view('farmer.registration.create', compact('countries', 'zones'));
+        return view('admin.farmer.registration.create', compact('countries', 'zones'));
     }
 
     /**
@@ -100,7 +100,7 @@ class FarmingController extends Controller
         $bank_guarantees = FarmingPayment::where('farming_id', $farming->id)
             ->where('type', FarmingPayment::BANK_GUARANTEE)->get();
         $loans = FarmerLoan::where('farming_id', $farming->id)->get();
-        return view('farmer.registration.show', compact('farming', 'guarantors', 'security_deposits', 'bank_guarantees', 'loans'));
+        return view('admin.farmer.registration.show', compact('farming', 'guarantors', 'security_deposits', 'bank_guarantees', 'loans'));
     }
 
     /**
@@ -117,7 +117,7 @@ class FarmingController extends Controller
         $villages = Village::where('gram_panchyat_id', $farming->gram_panchyat_id)->get();
         $zones = Zone::all();
         $centers = Center::where('zone_id', $farming->zone_id)->get();
-        return view('farmer.registration.edit', compact(
+        return view('admin.farmer.registration.edit', compact(
             'farming',
             'countries',
             'states',

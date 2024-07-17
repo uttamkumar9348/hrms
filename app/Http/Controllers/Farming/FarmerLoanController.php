@@ -19,7 +19,7 @@ class FarmerLoanController extends Controller
     public function index()
     {
         $loans = FarmerLoan::where('created_by', Auth::user()->id)->get();
-        return view('farmer.loan.index', compact('loans'));
+        return view('admin.farmer.loan.index', compact('loans'));
     }
 
     /**
@@ -33,7 +33,7 @@ class FarmerLoanController extends Controller
             ->where('farmings.is_validate', 1)
             ->get();
         $categories = ProductServiceCategory::all();
-        return view('farmer.loan.create', compact('categories', 'farmings'));
+        return view('admin.farmer.loan.create', compact('categories', 'farmings'));
     }
 
     /**
@@ -75,7 +75,7 @@ class FarmerLoanController extends Controller
         $loan = FarmerLoan::find($id);
         $categories = ProductServiceCategory::all();
         $types = ProductService::where('category_id', $loan->loan_type_id)->get();
-        return view('farmer.loan.edit', compact(
+        return view('admin.farmer.loan.edit', compact(
             'farmings',
             'loan',
             'categories',

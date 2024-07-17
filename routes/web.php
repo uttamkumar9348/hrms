@@ -8,6 +8,11 @@ use App\Http\Controllers\Farming\FarmingDetailController;
 use App\Http\Controllers\Farming\FarmingPaymentController;
 use App\Http\Controllers\Farming\GuarantorController;
 use App\Http\Controllers\Farming\SeedCategoryController;
+use App\Http\Controllers\PosController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SystemController;
+use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\WarehouseTransferController;
 use App\Http\Controllers\Web\AppSettingController;
 use App\Http\Controllers\Web\AssetController;
 use App\Http\Controllers\Web\AssetTypeController;
@@ -428,6 +433,53 @@ Route::group([
             Route::resource('cutting_order', CuttingOrderController::class);
         }
     );
+
+    //warehouse
+    Route::resource('warehouse', WarehouseController::class)->middleware(['auth', 'XSS', 'revalidate']);
+
+    //purchase
+    Route::get('purchase/items', [PurchaseController::class, 'items'])->name('purchase.items');
+    Route::resource('purchase', PurchaseController::class);
+    //    Route::get('/bill/{id}/', 'PurchaseController@purchaseLink')->name('purchase.link.copy');
+    Route::get('purchase/{id}/payment', [PurchaseController::class, 'payment'])->name('purchase.payment');
+    Route::post('purchase/{id}/payment', [PurchaseController::class, 'createPayment'])->name('purchase.payment');
+    Route::post('purchase/{id}/payment/{pid}/destroy', [PurchaseController::class, 'paymentDestroy'])->name('purchase.payment.destroy');
+    Route::post('purchase/product/destroy', [PurchaseController::class, 'productDestroy'])->name('purchase.product.destroy');
+    Route::post('purchase/vender', [PurchaseController::class, 'vender'])->name('purchase.vender');
+    Route::post('purchase/product', [PurchaseController::class, 'product'])->name('purchase.product');
+    Route::get('purchase/create/{cid}', [PurchaseController::class, 'create'])->name('purchase.create');
+    Route::get('purchase/{id}/sent', [PurchaseController::class, 'sent'])->name('purchase.sent');
+    Route::get('purchase/{id}/resent', [PurchaseController::class, 'resent'])->name('purchase.resent');
+
+    //warehouse-transfer
+    Route::resource('warehouse-transfer', WarehouseTransferController::class)->middleware(['auth', 'XSS', 'revalidate']);
+    Route::post('warehouse-transfer/getproduct', [WarehouseTransferController::class, 'getproduct'])->name('warehouse-transfer.getproduct')->middleware(['auth', 'XSS']);
+    Route::post('warehouse-transfer/getquantity', [WarehouseTransferController::class, 'getquantity'])->name('warehouse-transfer.getquantity')->middleware(['auth', 'XSS']);
+
+    //pos barcode
+    Route::get('barcode/pos', [PosController::class, 'barcode'])->name('pos.barcode')->middleware(['auth', 'XSS']);
+    Route::get('setting/pos', [PosController::class, 'setting'])->name('pos.setting')->middleware(['auth', 'XSS']);
+    Route::post('barcode/settings', [PosController::class, 'BarcodesettingStore'])->name('barcode.setting');
+    Route::get('print/pos', [PosController::class, 'printBarcode'])->name('pos.print')->middleware(['auth', 'XSS']);
+    Route::post('pos/getproduct', [PosController::class, 'getproduct'])->name('pos.getproduct')->middleware(['auth', 'XSS']);
+    Route::any('pos-receipt', [PosController::class, 'receipt'])->name('pos.receipt')->middleware(['auth', 'XSS']);
+    Route::post('/cartdiscount', [PosController::class, 'cartdiscount'])->name('cartdiscount')->middleware(['auth', 'XSS']);
+
+    Route::get('pos-print-setting', [SystemController::class, 'posPrintIndex'])->name('pos.print.setting')->middleware(['auth', 'XSS']);
+    Route::get('purchase/preview/{template}/{color}', [PurchaseController::class, 'previewPurchase'])->name('purchase.preview')->middleware(['auth', 'XSS']);
+    Route::get('pos/preview/{template}/{color}', [PosController::class, 'previewPos'])->name('pos.preview')->middleware(['auth', 'XSS']);
+    
+    Route::post('/purchase/template/setting', [PurchaseController::class, 'savePurchaseTemplateSettings'])->name('purchase.template.setting');
+    Route::post('/pos/template/setting', [PosController::class, 'savePosTemplateSettings'])->name('pos.template.setting');
+    
+    Route::get('purchase/pdf/{id}', [PurchaseController::class, 'purchase'])->name('purchase.pdf')->middleware(['auth', 'XSS', 'revalidate']);
+    Route::get('pos/pdf/{id}', [PosController::class, 'pos'])->name('pos.pdf')->middleware(['auth', 'XSS', 'revalidate']);
+    Route::get('pos/data/store', [PosController::class, 'store'])->name('pos.data.store')->middleware(['auth', 'XSS', 'revalidate']);
+    //for pos print
+    Route::get('printview/pos', [PosController::class, 'printView'])->name('pos.printview')->middleware(['auth', 'XSS', 'revalidate']);
+    
+    Route::resource('pos', PosController::class)->middleware(['auth', 'XSS', 'revalidate']);
+    
 });
 
 Route::fallback(function () {

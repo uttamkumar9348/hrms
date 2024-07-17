@@ -23,7 +23,7 @@ class GuarantorController extends Controller
     public function index()
     {
         $guarantors = Guarantor::where('created_by', Auth::user()->id)->get();
-        return view('farmer.guarantor.index', compact('guarantors'));
+        return view('admin.farmer.guarantor.index', compact('guarantors'));
     }
 
     /**
@@ -38,7 +38,7 @@ class GuarantorController extends Controller
             ->get();
 
         $countries = Country::all();
-        return view('farmer.guarantor.create', compact('countries', 'farmings'));
+        return view('admin.farmer.guarantor.create', compact('countries', 'farmings'));
     }
 
     /**
@@ -95,7 +95,7 @@ class GuarantorController extends Controller
             ->orWhere('users.supervisor_id', Auth::user()->id)
             ->where('farmings.is_validate', 1)
             ->get();
-        return view('farmer.guarantor.edit', compact(
+        return view('admin.farmer.guarantor.edit', compact(
             'guarantor',
             'countries',
             'states',
