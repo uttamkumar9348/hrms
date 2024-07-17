@@ -23,9 +23,11 @@ class AttendanceDayWiseExport implements FromView, ShouldAutoSize
     }
 
     public function view(): View
-    {
+    {   
         $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
-        $startDate = Carbon::today()->subDays(30);
+        $startDate = $this->filterParameter['start_date'];
+        $endDate = $this->filterParameter['end_date'];
+
         $endDate = Carbon::today();
          // Create a period from the start date to the end date
          $period = CarbonPeriod::create($startDate, $endDate);

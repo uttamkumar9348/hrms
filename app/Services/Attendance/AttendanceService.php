@@ -45,10 +45,11 @@ class AttendanceService
      */
     public function getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter): mixed
     {
-
+        
         if($filterParameter['date_in_bs']){
             $filterParameter['attendance_date'] = AppHelper::dateInYmdFormatNepToEng($filterParameter['attendance_date']);
         }
+        // dd($filterParameter);
         return $this->attendanceRepo->getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter);
 
     }

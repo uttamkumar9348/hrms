@@ -40,8 +40,9 @@ class AttendanceRepository
             'attendances.updated_by',
         )->leftJoin('attendances', function ($join) use ($filterParameter) {
             $join->on('users.id', '=', 'attendances.user_id');
-            if ($filterParameter['attendance_date'] != null) {
-                $join->where('attendances.attendance_date', '=', $filterParameter['attendance_date']);
+            if (!empty($filterParameter['start_date']) && !empty($filterParameter['end_date'])) {
+
+                $join->whereBetween('attendances.attendance_date',[$filterParameter['start_date'],$filterParameter['end_date']]);
             }
         })
             ->join('companies', 'users.company_id', '=', 'companies.id')
@@ -53,6 +54,7 @@ class AttendanceRepository
                 $query->where('users.department_id', $filterParameter['department_id']);
             })
             ->get();
+            // dd($result);
     }
 
     public function getAllCompanyEmployeeregularizationDetailOfTheDay($filterParameter)
