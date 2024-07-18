@@ -90,10 +90,9 @@ class AttendanceController extends Controller
             // }
             $attendanceDetail = $this->attendanceService->getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter);
             // dd($attendanceDetail,$filterParameter);
-            Log::info($filterParameter['download_excel']);
+            Log::info($filterParameter);
             $branch = $this->branchRepo->getLoggedInUserCompanyBranches($companyId, $selectBranch);
             if ($filterParameter['download_excel']) {
-                dd("comming");
                 return \Maatwebsite\Excel\Facades\Excel::download(new AttendanceDayWiseExport($attendanceDetail, $filterParameter), 'attendance- from' . $filterParameter['start_date'] . 'to' . $filterParameter['end_date'] .  '-report.xlsx');
             }
             return view($this->view . 'index', compact('attendanceDetail', 'filterParameter', 'branch', 'isBsEnabled', 'appTimeSetting'));

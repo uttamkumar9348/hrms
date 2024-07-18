@@ -2,12 +2,14 @@
     <thead>
         <tr>
             <th align="center" colspan="5" style="text-align: center"><strong>
+            Attendance Report From 
                     @if(\App\Helpers\AppHelper::ifDateInBsEnabled())
-                    {{\App\Helpers\AppHelper::getFormattedNepaliDate($dayDetail['attendance_date'])}}
+                    {{\App\Helpers\AppHelper::getFormattedNepaliDate($dayDetail['start_date'])}} to {{\App\Helpers\AppHelper::getFormattedNepaliDate($dayDetail['end_date'])}}
+                    
                     @else
-                    {{ date('M d Y',strtotime($dayDetail['attendance_date']))}}
+                    {{ date('M d Y',strtotime($dayDetail['start_date']))}}
                     @endif
-                    Attendance Report </strong></th>
+                    </strong></th>
         </tr>
         <tr>
             <th><b>Employee Name</b></th>
@@ -56,6 +58,8 @@
             <td align="center">
                 @if($value['check_out_at'])
                 {{ \App\Helpers\AttendanceHelper::getWorkedHourInHourAndMinute($value['check_in_at'], $value['check_out_at']) }}
+                @else
+                    0
                 @endif
             </td>
 

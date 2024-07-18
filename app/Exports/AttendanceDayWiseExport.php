@@ -16,30 +16,32 @@ class AttendanceDayWiseExport implements FromView, ShouldAutoSize
     protected $attendanceDayWiseRecord;
     protected $filterParameter;
 
-    function __construct($attendanceDayWiseRecord,$filterParameter)
+    function __construct($attendanceDayWiseRecord, $filterParameter)
     {
         $this->attendanceDayWiseRecord = $attendanceDayWiseRecord;
         $this->filterParameter = $filterParameter;
     }
 
     public function view(): View
-    {   
+    {
         $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
         $startDate = $this->filterParameter['start_date'];
         $endDate = $this->filterParameter['end_date'];
-
-        $endDate = Carbon::today();
-         // Create a period from the start date to the end date
-         $period = CarbonPeriod::create($startDate, $endDate);
-        $holidays = Holiday::get('event_date')->toArray();
         
-         // Convert the period to an array of dates
-         $dates = [];
-         foreach ($period as $date) {
-             $dates[] = $date->format('d-m-Y');
-         }
+        $startDate = Carbon::parse($startDate);
+        $endDate = Carbon::parse($endDate);
 
-          // Initialize arrays for weekends and holidays
+        $period = CarbonPeriod::create($startDate, $endDate);
+        $holidays = Holiday::get('event_date')->toArray();
+
+        // Convert the period to an array of dates
+        $dates = [];
+        foreach ($period as $date) {
+            Log::info($date);
+            $dates[] = $date->format('d-m-Y');
+        }
+
+        // Initialize arrays for weekends and holidays
         $weekends = [];
         $holidayDates = [];
 
@@ -51,17 +53,17 @@ class AttendanceDayWiseExport implements FromView, ShouldAutoSize
             }
 
             // Check if the date is a holiday
-           foreach ($holidays as $holiday){
-                if($date->format('Y-m-d') == $holiday['event_date'] ){
+            foreach ($holidays as $holiday) {
+                if ($date->format('Y-m-d') == $holiday['event_date']) {
 
                     $holidayDates[] = $date->format('d-m-Y');
                 }
-           }
+            }
         }
         return view('admin.attendance.export.attendance-day-wise-export', [
             'attendanceDayWiseRecord' => $this->attendanceDayWiseRecord,
             'dayDetail' => $this->filterParameter,
-            'appTimeSetting'=>$appTimeSetting,
+            'appTimeSetting' => $appTimeSetting,
             'dates' => $dates,
             'weekends' => $weekends,
             'holidayDates' => $holidayDates
