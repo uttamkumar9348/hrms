@@ -17,7 +17,9 @@
         <!-- <div id="daterange" class="float-start" style="background: #fff; cursor:pointer; padding: 5px 10px; border:1px solid #ccc; width:100%; text-align:center ">
             <span></span>
         </div> -->
-        <input id="dateRange" name="datetimes" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+        <input type="text" placeholder="Select Date" id="dateRange" name="datetimes" style="background: #fff; cursor: pointer; border: 1px solid #ccc; width: 100%;padding: 12px 15px;
+    font-size: 1rem;
+    border-radius: 10px;">
 
 
     </div>
@@ -34,6 +36,8 @@
 
             function cb(start, end) {
                 document.getElementById('dateRange').value = start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY');
+                document.getElementById('dateRange').placeholder = "Select Date";
+
             }
 
             $('input[name="datetimes"]').daterangepicker({

@@ -1,7 +1,7 @@
 <script>
     function getDayWiseAttendanceFilterParam() {
         let params = {
-            attendance_date: $('#dateRange').val(),
+            datetimes: $('#dateRange').val(),
         }
         return params;
     }
