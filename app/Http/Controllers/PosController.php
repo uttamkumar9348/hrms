@@ -45,7 +45,7 @@ class PosController extends Controller
             ];
 
 
-            return view('pos.index',compact('customers','warehouses','details'));
+            return view('admin.pos.index',compact('customers','warehouses','details'));
         }
         else
         {
@@ -143,7 +143,7 @@ class PosController extends Controller
             $sales['total'] = Auth::user()->priceFormat($total);
 
 
-            return view('pos.show', compact('sales', 'details'));
+            return view('admin.pos.show', compact('sales', 'details'));
         } else {
             return response()->json(
                 [
@@ -297,7 +297,7 @@ class PosController extends Controller
                 $customer             = $pos->customer;
                 $iteams               = $pos->items;
 
-                return view('pos.view', compact('pos', 'customer','iteams','posPayment'));
+                return view('admin.pos.view', compact('pos', 'customer','iteams','posPayment'));
             }
             else
             {
@@ -328,7 +328,7 @@ class PosController extends Controller
         {
 
             $posPayments = Pos::where('created_by', '=', \Auth::user()->creatorId())->with(['customer','warehouse'])->get();
-            return view('pos.report',compact('posPayments'));
+            return view('admin.pos.report',compact('posPayments'));
         }
         else
         {
@@ -339,20 +339,20 @@ class PosController extends Controller
 
     function barcode()
     {
-        if(\Auth::user()->can('manage pos'))
-        {
+        // if(\Auth::user()->can('manage pos'))
+        // {
             $productServices = ProductService::where('created_by', '=', \Auth::user()->creatorId())->get();
             $barcode  = [
                 'barcodeType' => Auth::user()->barcodeType() ,
                 'barcodeFormat' => Auth::user()->barcodeFormat(),
             ];
 
-            return view('pos.barcode',compact('productServices','barcode'));
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Permission Denied.'));
-        }
+            return view('admin.pos.barcode',compact('productServices','barcode'));
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission Denied.'));
+        // }
 
     }
 
@@ -362,7 +362,7 @@ class PosController extends Controller
         {
             $settings                = Utility::settings();
 
-            return view('pos.setting',compact('settings'));
+            return view('admin.pos.setting',compact('settings'));
         }
         else
         {
@@ -409,7 +409,7 @@ class PosController extends Controller
             $warehouses = warehouse::select('*', \DB::raw("CONCAT(name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
 
-            return view('pos.print',compact('warehouses'));
+            return view('admin.pos.print',compact('warehouses'));
         }
         else
         {
@@ -451,7 +451,7 @@ class PosController extends Controller
 
         }
 
-        return view('pos.receipt',compact('productServices','barcode','quantity'));
+        return view('admin.pos.receipt',compact('productServices','barcode','quantity'));
 
     }
 
@@ -579,7 +579,7 @@ class PosController extends Controller
             $color      = '#' . $settings['pos_color'];
             $font_color = Utility::getFontColor($color);
 
-            return view('pos.templates.' . $settings['pos_template'], compact('pos','posPayment', 'color', 'settings', 'customer', 'img', 'font_color'));
+            return view('admin.pos.templates.' . $settings['pos_template'], compact('pos','posPayment', 'color', 'settings', 'customer', 'img', 'font_color'));
         }
         else
         {
@@ -689,7 +689,7 @@ class PosController extends Controller
         }
 
 
-        return view('pos.templates.' . $template, compact('pos', 'preview', 'color', 'img', 'settings', 'customer', 'font_color','posPayment'));
+        return view('admin.pos.templates.' . $template, compact('pos', 'preview', 'color', 'img', 'settings', 'customer', 'font_color','posPayment'));
     }
 
 
@@ -822,7 +822,7 @@ class PosController extends Controller
             'barcodeFormat' => Auth::user()->barcodeFormat(),
         ];
 
-        return view('pos.printview', compact('details', 'sales', 'customer','productServices','barcode'));
+        return view('admin.pos.printview', compact('details', 'sales', 'customer','productServices','barcode'));
 
     }
 

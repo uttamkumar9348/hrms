@@ -1,24 +1,23 @@
-@extends('layouts.admin')
+@extends('layouts.master')
 @section('page-title')
     {{ __('Warehouse Transfer') }}
 @endsection
-@push('script-page')
-@endpush
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
-    <li class="breadcrumb-item">{{ __('Warehouse Transfer') }}</li>
-@endsection
-@section('action-btn')
-    <div class="float-end">
-        <a href="#" data-size="lg" data-url="{{ route('warehouse-transfer.create') }}" data-ajax-popup="true"
-            data-bs-toggle="tooltip" title="{{ __('Create') }}" data-title="{{ __('Create Warehouse Transfer') }}"
-            class="btn btn-sm btn-primary">
-            <i class="ti ti-plus"></i>
-        </a>
-    </div>
-@endsection
 
-@section('content')
+@section('main-content')
+    @include('admin.section.flash_message')
+    <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
+            <li class="breadcrumb-item">{{ __('Warehouse Transfer') }}</li>
+        </ol>
+        <div class="float-end">
+            <a href="#" data-size="lg" data-url="{{ route('admin.warehouse-transfer.create') }}" data-ajax-popup="true"
+                data-bs-toggle="tooltip" title="{{ __('Create') }}" data-title="{{ __('Create Warehouse Transfer') }}"
+                class="btn btn-sm btn-primary">
+                Add
+            </a>
+        </div>
+    </nav>
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
@@ -54,7 +53,7 @@
                                             <td class="Action">
                                                 {{--                                            @can('edit warehouse') --}}
                                                 {{--                                                <div class="action-btn bg-info ms-2"> --}}
-                                                {{--                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center" data-url="{{ route('warehouse-transfer.edit',$warehouse_transfer->id) }}" data-ajax-popup="true"  data-size="lg " data-bs-toggle="tooltip" title="{{__('Edit')}}"  data-title="{{__('Edit Warehouse')}}"> --}}
+                                                {{--                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center" data-url="{{ route('admin.warehouse-transfer.edit',$warehouse_transfer->id) }}" data-ajax-popup="true"  data-size="lg " data-bs-toggle="tooltip" title="{{__('Edit')}}"  data-title="{{__('Edit Warehouse')}}"> --}}
                                                 {{--                                                        <i class="ti ti-pencil text-white"></i> --}}
                                                 {{--                                                    </a> --}}
                                                 {{--                                                </div> --}}
@@ -87,7 +86,7 @@
     </div>
 @endsection
 
-@push('script-page')
+@push('script')
     <script>
         $(document).ready(function() {
             var w_id = $('#warehouse_id').val();
@@ -100,7 +99,7 @@
 
         function getProduct(wid) {
             $.ajax({
-                url: '{{ route('warehouse-transfer.getproduct') }}',
+                url: '{{ route('admin.warehouse-transfer.getproduct') }}',
                 type: 'POST',
                 data: {
                     "warehouse_id": wid,
@@ -138,7 +137,7 @@
 
         function getQuantity(pid, wid) {
             $.ajax({
-                url: '{{ route('warehouse-transfer.getquantity') }}',
+                url: '{{ route('admin.warehouse-transfer.getquantity') }}',
                 type: 'POST',
                 data: {
                     "product_id": pid,

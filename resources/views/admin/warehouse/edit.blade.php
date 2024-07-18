@@ -1,22 +1,19 @@
-{{ Form::model($warehouse, array('route' => array('warehouse.update', $warehouse->id), 'method' => 'PUT')) }}
+@extends('layouts.master')
+@section('title')
+    {{ __('Edit Warehouse') }}
+@endsection
 
-<div class="modal-body">
-    {{-- start for ai module--}}
-    @php
-        $settings = \App\Models\Utility::settings();
-    @endphp
-    @if($settings['ai_chatgpt_enable'] == 'on')
-    <div class="text-end">
-        <a href="#" data-size="md" class="btn  btn-primary btn-icon btn-sm" data-ajax-popup-over="true" data-url="{{ route('generate',['warehouse']) }}"
-           data-bs-placement="top" data-title="{{ __('Generate content with AI') }}">
-            <i class="fas fa-robot"></i> <span>{{__('Generate with AI')}}</span>
-        </a>
-    </div>
-    @endif
-    {{-- end for ai module--}}
+@section('main-content')
+    @include('admin.section.flash_message')
+    <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
+            <li class="breadcrumb-item">{{ __('Edit Warehouse') }}</li>
+        </ol>
+    </nav>
     <div class="row">
+        {{ Form::open(['route' => 'admin.warehouse.update',$warehouse->id, 'class' => 'w-100']) }}
         <div class="form-group col-md-12">
-
             {{ Form::label('name', __('Name'),['class'=>'form-label']) }}
             {{ Form::text('name', null, array('class' => 'form-control','required'=>'required')) }}
             @error('name')
@@ -45,3 +42,4 @@
     <input type="submit" value="{{__('Edit')}}" class="btn  btn-primary">
 </div>
 {{ Form::close() }}
+@endsection

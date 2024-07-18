@@ -31,7 +31,7 @@ class SystemController extends Controller
         {
             $settings = Utility::settings();
             $admin_payment_setting = Utility::getAdminPaymentSetting();
-            return view('settings.index', compact('settings','admin_payment_setting'));
+            return view('admin.settings.index', compact('settings','admin_payment_setting'));
         }
         else
         {
@@ -564,7 +564,7 @@ class SystemController extends Controller
             $file_size = number_format($file_size / 1000000, 4);
 
 
-            return view('settings.company', compact('settings','company_payment_setting',
+            return view('admin.settings.company', compact('settings','company_payment_setting',
                 'timezones', 'ips','EmailTemplates','currOfferletterLang','Offerletter','offerlang','Joiningletter',
                 'currjoiningletterLang','joininglang','experience_certificate','curr_exp_cetificate_Lang','explang',
                 'noc_certificate','currnocLang','noclang','file_size','offerlangName','joininglangName','explangName','noclangName'));
@@ -1001,7 +1001,7 @@ class SystemController extends Controller
         $data['mail_from_address'] = $request->mail_from_address;
         $data['mail_from_name']    = $request->mail_from_name;
 
-        return view('settings.test_mail', compact('data'));
+        return view('admin.settings.test_mail', compact('data'));
     }
 
     public function testSendMail(Request $request)
@@ -1071,7 +1071,7 @@ class SystemController extends Controller
         {
             $settings = Utility::settings();
 
-            return view('settings.print', compact('settings'));
+            return view('admin.settings.print', compact('settings'));
         }
         else
         {
@@ -1081,16 +1081,16 @@ class SystemController extends Controller
 
     public function posPrintIndex()
     {
-        if(\Auth::user()->can('manage print settings'))
-        {
+        // if(\Auth::user()->can('manage print settings'))
+        // {
             $settings = Utility::settings();
 
-            return view('settings.pos', compact('settings'));
-        }
-        else
-        {
-            return redirect()->back()->with('error', 'Permission denied.');
-        }
+            return view('admin.settings.pos', compact('settings'));
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', 'Permission denied.');
+        // }
     }
 
     public function adminPaymentSettings($request)
@@ -1935,7 +1935,7 @@ class SystemController extends Controller
             $modules     = WebhookSetting::$modules;
             $methods     = WebhookSetting::$method;
 
-            return view('webhook.create',compact('modules','methods'));
+            return view('admin.webhook.create',compact('modules','methods'));
         }
         else
         {
@@ -1984,7 +1984,7 @@ class SystemController extends Controller
         $webhooksetting = WebhookSetting::find($id);
         $modules     = WebhookSetting::$modules;
         $methods     = WebhookSetting::$method;
-        return view('webhook.edit', compact('webhooksetting', 'modules', 'methods'));
+        return view('admin.webhook.edit', compact('webhooksetting', 'modules', 'methods'));
     }
 
     public function webhookUpdate(Request $request, $id)
@@ -2249,7 +2249,7 @@ class SystemController extends Controller
     //ip settings
     public function createIp()
     {
-        return view('restrict_ip.create');
+        return view('admin.restrict_ip.create');
     }
 
     public function storeIp(Request $request)
@@ -2282,7 +2282,7 @@ class SystemController extends Controller
     {
         $ip = IpRestrict::find($id);
 
-        return view('restrict_ip.edit', compact('ip'));
+        return view('admin.restrict_ip.edit', compact('ip'));
     }
 
     public function updateIp(Request $request, $id)

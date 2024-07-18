@@ -17,7 +17,7 @@ class WarehouseTransferController extends Controller
     public function index()
     {
         $warehouse_transfers = WarehouseTransfer::where('created_by', '=', \Auth::user()->creatorId())->with(['product','fromWarehouse'])->get();
-        return view('warehouse-transfer.index',compact('warehouse_transfers'));
+        return view('admin.warehouse-transfer.index',compact('warehouse_transfers'));
     }
 
     public function create()
@@ -29,7 +29,7 @@ class WarehouseTransferController extends Controller
                                 ->pluck('name','product_id');
         $ware_pro->prepend('Select products', '');
 
-        return view('warehouse-transfer.create',compact('from_warehouses','to_warehouses','ware_pro'));
+        return view('admin.warehouse-transfer.create',compact('from_warehouses','to_warehouses','ware_pro'));
 
     }
 

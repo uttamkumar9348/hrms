@@ -39,7 +39,7 @@ class PurchaseController extends Controller
         $purchases = Purchase::where('created_by', '=', \Auth::user()->creatorId())->with(['vender','category'])->get();
 
 
-        return view('purchase.index', compact('purchases', 'status','vender'));
+        return view('admin.purchase.index', compact('purchases', 'status','vender'));
 
 
     }
@@ -68,7 +68,7 @@ class PurchaseController extends Controller
 
             $product_services->prepend('--', '');
 
-            return view('purchase.create', compact('venders', 'purchase_number', 'product_services', 'category', 'customFields','vendorId','warehouse'));
+            return view('admin.purchase.create', compact('venders', 'purchase_number', 'product_services', 'category', 'customFields','vendorId','warehouse'));
         }
         else
         {
@@ -182,7 +182,7 @@ class PurchaseController extends Controller
 
 
 
-                return view('purchase.view', compact('purchase', 'vendor', 'iteams', 'purchasePayment'));
+                return view('admin.purchase.view', compact('purchase', 'vendor', 'iteams', 'purchasePayment'));
             }
             else
             {
@@ -219,7 +219,7 @@ class PurchaseController extends Controller
 
 
 
-            return view('purchase.edit', compact('venders', 'product_services', 'purchase', 'warehouse','purchase_number', 'category'));
+            return view('admin.purchase.edit', compact('venders', 'product_services', 'purchase', 'warehouse','purchase_number', 'category'));
         }
         else
         {
@@ -581,7 +581,7 @@ class PurchaseController extends Controller
             $color      = '#' . $settings['purchase_color'];
             $font_color = Utility::getFontColor($color);
 
-            return view('purchase.templates.' . $settings['purchase_template'], compact('purchase', 'color', 'settings', 'vendor', 'img', 'font_color'));
+            return view('admin.purchase.templates.' . $settings['purchase_template'], compact('purchase', 'color', 'settings', 'vendor', 'img', 'font_color'));
         }
         else
         {
@@ -682,7 +682,7 @@ class PurchaseController extends Controller
             $img          = asset($logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png'));
         }
 
-        return view('purchase.templates.' . $template, compact('purchase', 'preview', 'color', 'img', 'settings', 'vendor', 'font_color'));
+        return view('admin.purchase.templates.' . $template, compact('purchase', 'preview', 'color', 'img', 'settings', 'vendor', 'font_color'));
     }
 
     public function savePurchaseTemplateSettings(Request $request)
@@ -751,7 +751,7 @@ class PurchaseController extends Controller
         $vendor = $purchase->vender;
         $iteams   = $purchase->items;
 
-        return view('purchase.customer_bill', compact('purchase', 'vendor', 'iteams','purchasePayment','user'));
+        return view('admin.purchase.customer_bill', compact('purchase', 'vendor', 'iteams','purchasePayment','user'));
     }
 
     public function payment($purchase_id)
@@ -764,7 +764,7 @@ class PurchaseController extends Controller
             $categories = ProductServiceCategory::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $accounts   = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
-            return view('purchase.payment', compact('venders', 'categories', 'accounts', 'purchase'));
+            return view('admin.purchase.payment', compact('venders', 'categories', 'accounts', 'purchase'));
         }
         else
         {
@@ -923,7 +923,7 @@ class PurchaseController extends Controller
     {
         $vender = Vender::where('id', '=', $request->id)->first();
 
-        return view('purchase.vender_detail', compact('vender'));
+        return view('admin.purchase.vender_detail', compact('vender'));
     }
     public function product(Request $request)
     {

@@ -20,7 +20,7 @@ class WarehouseController extends Controller
 
         $warehouses = warehouse::where('created_by', '=', \Auth::user()->creatorId())->get();
 
-        return view('warehouse.index',compact('warehouses'));
+        return view('admin.warehouse.index',compact('warehouses'));
 
     }
 
@@ -31,7 +31,7 @@ class WarehouseController extends Controller
      */
     public function create()
     {
-        return view('warehouse.create');
+        return view('admin.warehouse.create');
 
     }
 
@@ -43,8 +43,8 @@ class WarehouseController extends Controller
      */
     public function store(Request $request)
     {
-        if(\Auth::user()->can('create warehouse'))
-        {
+        // if(\Auth::user()->can('create warehouse'))
+        // {
             $validator = \Validator::make(
                 $request->all(), [
                     'name' => 'required',
@@ -65,12 +65,12 @@ class WarehouseController extends Controller
             $warehouse->created_by = \Auth::user()->creatorId();
             $warehouse->save();
 
-            return redirect()->route('warehouse.index')->with('success', __('Warehouse successfully created.'));
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+            return redirect()->route('admin.warehouse.index')->with('success', __('Warehouse successfully created.'));
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
     }
 
     /**
@@ -84,8 +84,8 @@ class WarehouseController extends Controller
 
         $id = WarehouseProduct::where('warehouse_id' , $warehouse->id)->first();
 
-        if(\Auth::user()->can('show warehouse'))
-        {
+        // if(\Auth::user()->can('show warehouse'))
+        // {
 //            dd($warehouse->id);
 
             if(WarehouseProduct::where('warehouse_id' , $warehouse->id)->exists())
@@ -100,20 +100,20 @@ class WarehouseController extends Controller
 //                dd($data);
 
 
-                return view('warehouse.show', compact('warehouse'));
+                return view('admin.warehouse.show', compact('warehouse'));
             }
             else
             {
 
 
                 $warehouse = [];
-                return view('warehouse.show', compact('warehouse'));
+                return view('admin.warehouse.show', compact('warehouse'));
             }
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
     }
     /**
      * Show the form for editing the specified resource.
@@ -124,21 +124,21 @@ class WarehouseController extends Controller
     public function edit(warehouse $warehouse)
     {
 
-        if(\Auth::user()->can('edit warehouse'))
-        {
+        // if(\Auth::user()->can('edit warehouse'))
+        // {
             if($warehouse->created_by == \Auth::user()->creatorId())
             {
-                return view('warehouse.edit', compact('warehouse'));
+                return view('admin.warehouse.edit', compact('warehouse'));
             }
             else
             {
                 return response()->json(['error' => __('Permission denied.')], 401);
             }
-        }
-        else
-        {
-            return response()->json(['error' => __('Permission denied.')], 401);
-        }
+        // }
+        // else
+        // {
+        //     return response()->json(['error' => __('Permission denied.')], 401);
+        // }
     }
     /**
      * Update the specified resource in storage.

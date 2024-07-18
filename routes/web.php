@@ -435,12 +435,12 @@ Route::group([
     );
 
     //warehouse
-    Route::resource('warehouse', WarehouseController::class)->middleware(['auth', 'XSS', 'revalidate']);
+    Route::resource('warehouse', WarehouseController::class);
 
     //purchase
     Route::get('purchase/items', [PurchaseController::class, 'items'])->name('purchase.items');
     Route::resource('purchase', PurchaseController::class);
-    //    Route::get('/bill/{id}/', 'PurchaseController@purchaseLink')->name('purchase.link.copy');
+    Route::get('/bill/{id}/', 'PurchaseController@purchaseLink')->name('purchase.link.copy');
     Route::get('purchase/{id}/payment', [PurchaseController::class, 'payment'])->name('purchase.payment');
     Route::post('purchase/{id}/payment', [PurchaseController::class, 'createPayment'])->name('purchase.payment');
     Route::post('purchase/{id}/payment/{pid}/destroy', [PurchaseController::class, 'paymentDestroy'])->name('purchase.payment.destroy');
@@ -452,34 +452,33 @@ Route::group([
     Route::get('purchase/{id}/resent', [PurchaseController::class, 'resent'])->name('purchase.resent');
 
     //warehouse-transfer
-    Route::resource('warehouse-transfer', WarehouseTransferController::class)->middleware(['auth', 'XSS', 'revalidate']);
-    Route::post('warehouse-transfer/getproduct', [WarehouseTransferController::class, 'getproduct'])->name('warehouse-transfer.getproduct')->middleware(['auth', 'XSS']);
-    Route::post('warehouse-transfer/getquantity', [WarehouseTransferController::class, 'getquantity'])->name('warehouse-transfer.getquantity')->middleware(['auth', 'XSS']);
+    Route::resource('warehouse-transfer', WarehouseTransferController::class);
+    Route::post('warehouse-transfer/getproduct', [WarehouseTransferController::class, 'getproduct'])->name('warehouse-transfer.getproduct');
+    Route::post('warehouse-transfer/getquantity', [WarehouseTransferController::class, 'getquantity'])->name('warehouse-transfer.getquantity');
 
     //pos barcode
-    Route::get('barcode/pos', [PosController::class, 'barcode'])->name('pos.barcode')->middleware(['auth', 'XSS']);
-    Route::get('setting/pos', [PosController::class, 'setting'])->name('pos.setting')->middleware(['auth', 'XSS']);
+    Route::get('barcode/pos', [PosController::class, 'barcode'])->name('pos.barcode');
+    Route::get('setting/pos', [PosController::class, 'setting'])->name('pos.setting');
     Route::post('barcode/settings', [PosController::class, 'BarcodesettingStore'])->name('barcode.setting');
-    Route::get('print/pos', [PosController::class, 'printBarcode'])->name('pos.print')->middleware(['auth', 'XSS']);
-    Route::post('pos/getproduct', [PosController::class, 'getproduct'])->name('pos.getproduct')->middleware(['auth', 'XSS']);
-    Route::any('pos-receipt', [PosController::class, 'receipt'])->name('pos.receipt')->middleware(['auth', 'XSS']);
-    Route::post('/cartdiscount', [PosController::class, 'cartdiscount'])->name('cartdiscount')->middleware(['auth', 'XSS']);
+    Route::get('print/pos', [PosController::class, 'printBarcode'])->name('pos.print');
+    Route::post('pos/getproduct', [PosController::class, 'getproduct'])->name('pos.getproduct');
+    Route::any('pos-receipt', [PosController::class, 'receipt'])->name('pos.receipt');
+    Route::post('/cartdiscount', [PosController::class, 'cartdiscount'])->name('cartdiscount');
 
-    Route::get('pos-print-setting', [SystemController::class, 'posPrintIndex'])->name('pos.print.setting')->middleware(['auth', 'XSS']);
-    Route::get('purchase/preview/{template}/{color}', [PurchaseController::class, 'previewPurchase'])->name('purchase.preview')->middleware(['auth', 'XSS']);
-    Route::get('pos/preview/{template}/{color}', [PosController::class, 'previewPos'])->name('pos.preview')->middleware(['auth', 'XSS']);
-    
+    Route::get('pos-print-setting', [SystemController::class, 'posPrintIndex'])->name('pos.print.setting');
+    Route::get('purchase/preview/{template}/{color}', [PurchaseController::class, 'previewPurchase'])->name('purchase.preview');
+    Route::get('pos/preview/{template}/{color}', [PosController::class, 'previewPos'])->name('pos.preview');
+
     Route::post('/purchase/template/setting', [PurchaseController::class, 'savePurchaseTemplateSettings'])->name('purchase.template.setting');
     Route::post('/pos/template/setting', [PosController::class, 'savePosTemplateSettings'])->name('pos.template.setting');
-    
-    Route::get('purchase/pdf/{id}', [PurchaseController::class, 'purchase'])->name('purchase.pdf')->middleware(['auth', 'XSS', 'revalidate']);
-    Route::get('pos/pdf/{id}', [PosController::class, 'pos'])->name('pos.pdf')->middleware(['auth', 'XSS', 'revalidate']);
-    Route::get('pos/data/store', [PosController::class, 'store'])->name('pos.data.store')->middleware(['auth', 'XSS', 'revalidate']);
+
+    Route::get('purchase/pdf/{id}', [PurchaseController::class, 'purchase'])->name('purchase.pdf');
+    Route::get('pos/pdf/{id}', [PosController::class, 'pos'])->name('pos.pdf');
+    Route::get('pos/data/store', [PosController::class, 'store'])->name('pos.data.store');
     //for pos print
-    Route::get('printview/pos', [PosController::class, 'printView'])->name('pos.printview')->middleware(['auth', 'XSS', 'revalidate']);
-    
-    Route::resource('pos', PosController::class)->middleware(['auth', 'XSS', 'revalidate']);
-    
+    Route::get('printview/pos', [PosController::class, 'printView'])->name('pos.printview');
+
+    Route::resource('pos', PosController::class);
 });
 
 Route::fallback(function () {

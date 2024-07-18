@@ -194,5 +194,27 @@ class User extends Authenticatable
         });
     }
 
+    public function creatorId()
+    {
+        if($this->type == 'company' || $this->type == 'super admin')
+        {
+            return $this->id;
+        }
+        else
+        {
+            return $this->created_by;
+        }
+    }
 
+    public function barcodeFormat()
+    {
+        $settings = Utility::settings();
+        return isset($settings['barcode_format'])?$settings['barcode_format']:'code128';
+    }
+
+    public function barcodeType()
+    {
+        $settings = Utility::settings();
+        return isset($settings['barcode_type'])?$settings['barcode_type']:'css';
+    }
 }

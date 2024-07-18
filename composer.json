@@ -19,6 +19,7 @@
         "laravelcollective/html": "^6.4",
         "maatwebsite/excel": "^3.1",
         "milantarami/number-to-words": "^1.0",
+        "milon/barcode": "^11.0",
         "psr/simple-cache": "2.0",
         "simplesoftwareio/simple-qrcode": "~4"
     },
