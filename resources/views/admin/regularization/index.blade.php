@@ -127,7 +127,7 @@
                             @endif
 
 
-                            @if(!is_null($value->regularization_status))
+                            @if(!is_null($value->regularization_status) && $value->regularization_status != 0 )
                             <td class="text-center">
                                 <a class=" disabled changeAttendanceStatus btn btn-{{$changeColor[$value->regularization_status]}} btn-xs" data-href="{{route('admin.attendances.change-status',$value->regularizations_id)}}" title="Change Regularization Status ">
                                     {{($value->regularization_status == \App\Models\Regularization::ATTENDANCE_APPROVED) ? 'Approved':'Rejected'}}
