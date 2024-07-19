@@ -37,7 +37,7 @@ class Regularization extends Model
     const RECORDS_PER_PAGE = 20;
 
     const ATTENDANCE_APPROVED = 1;
-    const ATTENDANCE_REJECTED = 0;
+    const ATTENDANCE_REJECTED = 2;
 
     public static function boot()
     {

@@ -20,7 +20,7 @@
             @foreach($dates as $date)
                 <th style="text-align: center;"><b>{{$date}}</b></th>
             @endforeach
-                <th style="text-align: center;"><b>Total Worked Hours</b></th>
+                <!-- <th style="text-align: center;"><b>Total Worked Hours</b></th> -->
                 <th style="text-align: center;"><b>Total Holidays</b></th>
                 <th style="text-align: center;"><b>Total WeekEnds</b></th>
         </tr>
@@ -55,13 +55,13 @@
                         <td align="center">A</td>
                     @endif
                 @endforeach
-            <td align="center">
+            <!-- <td align="center">
                 @if($value['check_out_at'])
                 {{ \App\Helpers\AttendanceHelper::getWorkedHourInHourAndMinute($value['check_in_at'], $value['check_out_at']) }}
                 @else
                     0
                 @endif
-            </td>
+            </td> -->
 
             <td align="center">
                 {{$TotalHoliday}}

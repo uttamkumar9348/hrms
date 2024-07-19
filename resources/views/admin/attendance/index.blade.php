@@ -69,6 +69,7 @@
                                     <td></td>
                                 @endcan
                                 <th>Employee Name</th>
+                                <th class="text-center">Attendance Date</th>
                                 <th class="text-center">Check In At</th>
                                 <th class="text-center">Check Out At</th>
                                 <th class="text-center">Attendance Status</th>
@@ -103,7 +104,9 @@
                                 <td>
                                     {{ucfirst($value->user_name)}}
                                 </td>
-
+                                <td>
+                                    {{date('d-m-Y',strtotime($value->attendance_date))}}
+                                </td>
                                 @if($value->check_in_at)
                                     <td class="text-center">
                                         <span class="btn btn-outline-secondary btn-xs checkLocation"

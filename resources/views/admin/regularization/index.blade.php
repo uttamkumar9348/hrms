@@ -21,12 +21,22 @@
     @include('admin.attendance.common.regularizationBreadCrumb')
     <div class="search-box p-4 pb-0 bg-white rounded mb-3 box-shadow">
         <form class="forms-sample" action="{{route('admin.regularization.index')}}" method="get">
-            <h5 class="mb-3">Attendance Of The Day</h5>
+            <h5 class="mb-3">Regularization Of The Day</h5>
             <div class="row align-items-center">
 
                 <div class="col-lg col-md-4 mb-4">
                     <input id="attendance_date" name="attendance_date" @if($isBsEnabled) class="form-control dayAttendance" type="text" placeholder="yy/mm/dd" @else class="form-control" type="date" @endif />
                 </div>
+                <!-- status filter end-->
+                <div class="col-lg col-md-4 mb-4">
+                    <select class="form-select form-select-lg" name="status" id="branch_id">
+                        <option value="select">Select Status</option>
+                        <option value="1">Approve</option>
+                        <option value="0">Reject</option>
+                        <option value={{NULL}}>Pending</option>
+                    </select>
+                </div>
+                <!-- status filter end -->
 
                 <div class="col-lg col-md-4 mb-4">
                     <select class="form-select form-select-lg" name="branch_id" id="branch_id">
@@ -77,7 +87,7 @@
                     <tbody>
                         <?php
                         $changeColor = [
-                            0 => 'danger',
+                            2 => 'danger',
                             1 => 'success',
                         ]
                         ?>
@@ -180,12 +190,7 @@
                             </td>
                             @endcanany
                         </tr>
-                        @else
-                        <tr>
-                            <td colspan="100%">
-                                <p class="text-center"><b>No records found!</b></p>
-                            </td>
-                        </tr>
+
                         @endif
                         @endforeach
                     </tbody>

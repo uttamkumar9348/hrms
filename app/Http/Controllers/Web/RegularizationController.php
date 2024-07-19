@@ -48,7 +48,7 @@ class RegularizationController extends Controller
 
     public function index(Request $request)
     {
-
+        // dd($request->all());
         try {
             $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
             $isBsEnabled = AppHelper::ifDateInBsEnabled();
@@ -56,20 +56,21 @@ class RegularizationController extends Controller
             $companyId = AppHelper::getAuthUserCompanyId();
 
             $filterParameter = [
-                'regularization_date' => $request->attendance_date ?? AppHelper::getCurrentDateInYmdFormat(),
+                'regularization_date' => $request->attendance_date ?? null,
                 // 'regularization_date' => $request->attendance_date ?? null,
                 'company_id' => $companyId,
                 'branch_id' => $request->branch_id ?? null,
                 'department_id' => $request->department_id ?? null,
                 'download_excel' => $request->download_excel,
+                'regularization_status' => $request->status,
                 'date_in_bs' => false,
             ];
 
-            if (AppHelper::ifDateInBsEnabled()) {
-                $filterParameter['regularization_date'] = $request->attendance_date ?? AppHelper::getCurrentDateInBS();
-                // $filterParameter['regularization_date'] = $request->attendance_date ?? null;
-                $filterParameter['date_in_bs'] = true;
-            }
+            // if (AppHelper::ifDateInBsEnabled()) {
+            //     $filterParameter['regularization_date'] = $request->attendance_date ?? AppHelper::getCurrentDateInBS();
+            //     // $filterParameter['regularization_date'] = $request->attendance_date ?? null;
+            //     $filterParameter['date_in_bs'] = true;
+            // }
 
             $regularizationDetails = $this->attendanceService->getAllCompanyEmployeeRegularizationDetailOfTheDay($filterParameter);
             $branch = $this->branchRepo->getLoggedInUserCompanyBranches($companyId, $selectBranch);

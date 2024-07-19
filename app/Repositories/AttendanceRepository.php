@@ -81,10 +81,13 @@ class AttendanceRepository
             'regularizations.created_by',
             'regularizations.updated_by',
         )->leftJoin('regularizations', function ($join) use ($filterParameter) {
-            $join->on('users.id', '=', 'regularizations.user_id');
+            
             // dd($filterParameter);
             if ($filterParameter['regularization_date'] != null) {
+                $join->on('users.id', '=', 'regularizations.user_id');
                 $join->where('regularizations.regularization_date', '=', $filterParameter['regularization_date']);
+            }else{
+                $join->on('users.id', '=', 'regularizations.user_id');
             }
         })
             ->join('companies', 'users.company_id', '=', 'companies.id')
@@ -94,6 +97,9 @@ class AttendanceRepository
             })
             ->when(isset($filterParameter['department_id']), function ($query) use ($filterParameter) {
                 $query->where('users.department_id', $filterParameter['department_id']);
+            })
+            ->when(isset($filterParameter['regularization_status']), function($query) use ($filterParameter){
+                $query->where('regularizations.regularization_status', $filterParameter['regularization_status']);
             })
             ->get();
     }
@@ -156,7 +162,8 @@ class AttendanceRepository
                 'check_in_latitude' => $validatedData['check_in_latitude'],
                 'check_out_latitude' => $validatedData['check_in_latitude'],
                 'check_in_longitude' => $validatedData['check_in_longitude'],
-                'check_out_longitude' => $validatedData['check_in_longitude']
+                'check_out_longitude' => $validatedData['check_in_longitude'], 
+                'regularization_status' => 0
             ])->fresh();
         } catch (\Exception $e) {
             // Log the exception
