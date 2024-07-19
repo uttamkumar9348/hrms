@@ -51,8 +51,8 @@ class PurchaseController extends Controller
      */
     public function create($vendorId)
     {
-        if(\Auth::user()->can('create purchase'))
-        {
+        // if(\Auth::user()->can('create purchase'))
+        // {
             $customFields = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'purchase')->get();
             $category     = ProductServiceCategory::where('created_by', \Auth::user()->creatorId())->where('type', 'expense')->get()->pluck('name', 'id');
             $category->prepend('Select Category', '');
@@ -69,11 +69,11 @@ class PurchaseController extends Controller
             $product_services->prepend('--', '');
 
             return view('admin.purchase.create', compact('venders', 'purchase_number', 'product_services', 'category', 'customFields','vendorId','warehouse'));
-        }
-        else
-        {
-            return response()->json(['error' => __('Permission denied.')], 401);
-        }
+        // }
+        // else
+        // {
+        //     return response()->json(['error' => __('Permission denied.')], 401);
+        // }
     }
 
     /**

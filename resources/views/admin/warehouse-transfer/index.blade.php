@@ -11,8 +11,7 @@
             <li class="breadcrumb-item">{{ __('Warehouse Transfer') }}</li>
         </ol>
         <div class="float-end">
-            <a href="#" data-size="lg" data-url="{{ route('admin.warehouse-transfer.create') }}" data-ajax-popup="true"
-                data-bs-toggle="tooltip" title="{{ __('Create') }}" data-title="{{ __('Create Warehouse Transfer') }}"
+            <a href="{{ route('admin.warehouse-transfer.create') }}" data-bs-toggle="tooltip" title="{{ __('Create') }}" data-title="{{ __('Create Warehouse Transfer') }}"
                 class="btn btn-sm btn-primary">
                 Add
             </a>

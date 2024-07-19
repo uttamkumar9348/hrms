@@ -73,15 +73,9 @@
                                             {{-- @endcan --}}
                                             {{-- @can('delete warehouse') --}}
                                             <div class="action-btn bg-danger">
-                                                {!! Form::open([
-                                                    'method' => 'DELETE',
-                                                    'route' => ['admin.warehouse.destroy', $warehouse->id],
-                                                    'id' => 'delete-form-' . $warehouse->id,
-                                                ]) !!}
-                                                <a href="#" class="btn btn-sm  align-items-center bs-pass-para"
+                                                <a href="{{ route('admin.warehouse.destroy', $warehouse->id) }}" class="btn btn-sm  align-items-center bs-pass-para"
                                                     data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
                                                         class="link-icon" data-feather="trash"></i></a>
-                                                {!! Form::close() !!}
                                             </div>
                                             {{-- @endcan --}}
                                         </td>

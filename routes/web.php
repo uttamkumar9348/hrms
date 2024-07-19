@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\BillController;
 use App\Http\Controllers\Farming\CuttingOrderController;
 use App\Http\Controllers\Farming\FarmerLoanController;
 use App\Http\Controllers\Farming\FarmingController;
@@ -479,6 +480,22 @@ Route::group([
     Route::get('printview/pos', [PosController::class, 'printView'])->name('pos.printview');
 
     Route::resource('pos', PosController::class);
+
+    //bill
+    Route::get('bill/{id}/duplicate', [BillController::class, 'duplicate'])->name('bill.duplicate');
+    Route::get('bill/{id}/shipping/print', [BillController::class, 'shippingDisplay'])->name('bill.shipping.print');
+    Route::get('bill/index', [BillController::class, 'index'])->name('bill.index');
+    Route::post('bill/product/destroy', [BillController::class, 'productDestroy'])->name('bill.product.destroy');
+    Route::post('bill/product', [BillController::class, 'product'])->name('bill.product');
+    Route::post('bill/vender', [BillController::class, 'vender'])->name('bill.vender');
+    Route::get('bill/{id}/sent', [BillController::class, 'sent'])->name('bill.sent');
+    Route::get('bill/{id}/resent', [BillController::class, 'resent'])->name('bill.resent');
+    Route::get('bill/{id}/payment', [BillController::class, 'payment'])->name('bill.payment');
+    Route::post('bill/{id}/payment', [BillController::class, 'createPayment'])->name('bill.payment');
+    Route::post('bill/{id}/payment/{pid}/destroy', [BillController::class, 'paymentDestroy'])->name('bill.payment.destroy');
+    Route::get('bill/items', [BillController::class, 'items'])->name('bill.items');
+    Route::resource('bill', BillController::class);
+    Route::get('bill/create/{cid}', [BillController::class, 'create'])->name('bill.create');
 });
 
 Route::fallback(function () {

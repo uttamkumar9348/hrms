@@ -217,4 +217,18 @@ class User extends Authenticatable
         $settings = Utility::settings();
         return isset($settings['barcode_type'])?$settings['barcode_type']:'css';
     }
+
+    public function purchaseNumberFormat($number)
+    {
+        $settings = Utility::settings();
+
+        return $settings["purchase_prefix"] . sprintf("%05d", $number);
+    }
+
+    public function currencySymbol()
+    {
+        $settings = Utility::settings();
+
+        return $settings['site_currency_symbol'];
+    }
 }

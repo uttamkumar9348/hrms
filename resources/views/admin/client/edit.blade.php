@@ -1,4 +1,3 @@
-
 @extends('layouts.master')
 
 @section('title','Edit Client ')
@@ -12,13 +11,9 @@
 @endsection
 
 @section('main-content')
-
     <section class="content">
-
         @include('admin.section.flash_message')
-
         @include('admin.client.common.breadcrumb')
-
         <div class="card">
             <div class="card-body pb-0">
                 <form id="clientEdit" class="forms-sample" action="{{route('admin.clients.update',$clientDetail->id)}}" enctype="multipart/form-data"   method="post">
@@ -28,7 +23,6 @@
                 </form>
             </div>
         </div>
-
     </section>
 @endsection
 
