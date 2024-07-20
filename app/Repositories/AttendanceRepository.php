@@ -89,6 +89,10 @@ class AttendanceRepository
             }else{
                 $join->on('users.id', '=', 'regularizations.user_id');
             }
+            
+            if($filterParameter['regularization_status'] != null){
+                $join->where('regularizations.regularization_status', $filterParameter['regularization_status']);
+            }   
         })
             ->join('companies', 'users.company_id', '=', 'companies.id')
             ->join('branches', 'users.branch_id', '=', 'branches.id')
@@ -98,9 +102,9 @@ class AttendanceRepository
             ->when(isset($filterParameter['department_id']), function ($query) use ($filterParameter) {
                 $query->where('users.department_id', $filterParameter['department_id']);
             })
-            ->when(isset($filterParameter['regularization_status']), function($query) use ($filterParameter){
-                $query->where('regularizations.regularization_status', $filterParameter['regularization_status']);
-            })
+            // ->when(isset($filterParameter['regularization_status']), function($query) use ($filterParameter){
+            //     $query->where('regularizations.regularization_status', $filterParameter['regularization_status']);
+            // })
             ->get();
     }
 

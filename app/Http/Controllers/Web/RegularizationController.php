@@ -120,7 +120,7 @@ class RegularizationController extends Controller
 
     public function rejectRegularization($id){
         $regularization_data = Regularization::find($id);
-        $regularization_data->regularization_status = 0;
+        $regularization_data->regularization_status = 2;
         $result = $regularization_data->save();
 
         if ($result) {

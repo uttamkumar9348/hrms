@@ -30,10 +30,10 @@
                 <!-- status filter end-->
                 <div class="col-lg col-md-4 mb-4">
                     <select class="form-select form-select-lg" name="status" id="branch_id">
-                        <option value="select">Select Status</option>
+                        <option value={{NULL}}>Select Status</option>
                         <option value="1">Approve</option>
-                        <option value="0">Reject</option>
-                        <option value={{NULL}}>Pending</option>
+                        <option value="2">Reject</option>
+                        <option value="0">Pending</option>
                     </select>
                 </div>
                 <!-- status filter end -->
@@ -57,7 +57,7 @@
                     <button type="submit" class="btn btn-block btn-success form-control me-md-2 me-0 mb-4">Filter</button>
 
                     @can('attendance_csv_export')
-                    <button type="button" id="download-daywise-attendance-excel" data-href="{{route('admin.attendances.index' )}}" class="btn btn-block btn-secondary form-control me-md-2 me-0 mb-4">CSV Export
+                    <button type="button" id="download-daywise-attendance-excel" data-href="{{route('admin.attendances.index' )}}" class="btn btn-block btn-secondary form-control me-md-2 me-0 mb-4">Export
                     </button>
                     @endcan
 
@@ -178,14 +178,23 @@
                                     @endif
                                     @endif
 
-
+                                    @if($value->regularization_status != "2")
                                     <li class="me-2">
-                                        <i style="cursor: pointer;" class="link-icon" data-feather="edit" onclick="approveRegularization(`{{ route('admin.regularization.approveRegularization', ['id' => $value->regularizations_id]) }}`)" id="approve_btn"></i>
+                                        <i style="cursor: pointer;" class="link-icon" data-feather="edit" onclick="approveRegularization(`{{ route('admin.regularization.approveRegularization', ['id' => $value->regularizations_id]) }}`)" id="approve_btn_{{ $value->regularizations_id }}"></i>
                                     </li>
 
                                     <li class="me-2">
-                                        <i style="cursor: pointer;" class="link-icon" data-feather="delete" id="approve_btn" onclick="rejectRegularization(`{{ route('admin.regularization.rejectRegularization', ['id' => $value->regularizations_id]) }}`)"></i>
+                                        <i style="cursor: pointer;" class="link-icon" data-feather="delete" onclick="rejectRegularization(`{{ route('admin.regularization.rejectRegularization', ['id' => $value->regularizations_id]) }}`)" id="reject_btn_{{ $value->regularizations_id }}"></i>
                                     </li>
+                                    @else
+                                    <li class="me-2">
+                                        <i style="opacity: 0.5;"  class="link-icon" data-feather="edit" id="approve_btn"></i>
+                                    </li>
+
+                                    <li class="me-2">
+                                        <i style="opacity: 0.5;" class="link-icon" data-feather="delete"  id="reject_btn"></i>
+                                    </li>
+                                    @endif
                                 </ul>
                             </td>
                             @endcanany
@@ -218,6 +227,25 @@
 @section('scripts')
 @include('admin.attendance.common.scripts')
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let regularizationStatus = `{{ $value->regularization_status }}`;
+        console.log(regularizationStatus);
+        if (regularizationStatus == 2) {
+            let approveBtn = document.getElementById('approve_btn_{{ $value->regularizations_id }}');
+            let rejectBtn = document.getElementById('reject_btn_{{ $value->regularizations_id }}');
+
+            if (approveBtn) {
+                approveBtn.style.pointerEvents = 'none';
+                approveBtn.style.opacity = '0.5';
+            }
+
+            if (rejectBtn) {
+                rejectBtn.style.pointerEvents = 'none';
+                rejectBtn.style.opacity = '0.5';
+            }
+        }
+    });
+
     $('#branch_id').change(function() {
         let selectedBranchId = $('#branch_id option:selected').val();
 
