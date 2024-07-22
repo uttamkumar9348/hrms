@@ -3,9 +3,7 @@
     {{ __('Purchase Create') }}
 @endsection
 
-@push('script')
-    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
+@section('scripts')
     <script>
         var selector = "body";
         if ($(selector + " .repeater").length) {
@@ -92,7 +90,6 @@
             $('#vender_detail').removeClass('d-block');
             $('#vender_detail').addClass('d-none');
         })
-
 
         $(document).on('change', '.item', function() {
             var iteams_id = $(this).val();
@@ -352,7 +349,7 @@
             $(".discount").change();
         });
     </script>
-@endpush
+@endsection
 
 @section('main-content')
     @include('admin.section.flash_message')
@@ -364,7 +361,7 @@
         </ol>
     </nav>
     <div class="row">
-        {{ Form::open(['url' => 'purchase', 'class' => 'w-100']) }}
+        {{ Form::open(['route' => 'admin.purchase.store', 'method' =>'POST', 'class' => 'w-100']) }}
         <div class="col-12">
             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             <div class="card">

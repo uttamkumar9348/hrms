@@ -961,7 +961,7 @@ class BillController extends Controller
     {
         $vender = Vender::where('id', '=', $request->id)->first();
 
-        return view('bill.vender_detail', compact('vender'));
+        return view('admin.bill.vender_detail', compact('vender'));
     }
 
 

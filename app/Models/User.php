@@ -231,4 +231,18 @@ class User extends Authenticatable
 
         return $settings['site_currency_symbol'];
     }
+
+    public function dateFormat($date)
+    {
+        $settings = Utility::settings();
+
+        return date($settings['site_date_format'], strtotime($date));
+    }
+
+    public function timeFormat($time)
+    {
+        $settings = Utility::settings();
+
+        return date($settings['site_time_format'], strtotime($time));
+    }
 }

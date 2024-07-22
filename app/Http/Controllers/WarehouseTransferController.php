@@ -22,8 +22,8 @@ class WarehouseTransferController extends Controller
 
     public function create()
     {
-        $from_warehouses      = warehouse::where('created_by', '=', \Auth::user()->creatorId())->get();
-        $to_warehouses     = warehouse::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        $from_warehouses = warehouse::where('created_by', '=', \Auth::user()->creatorId())->get();
+        $to_warehouses = warehouse::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
         $to_warehouses->prepend('Select Warehouse', '');
         $ware_pro= WarehouseProduct::join('product_services', 'warehouse_products.product_id', '=', 'product_services.id')
                                 ->pluck('name','product_id');

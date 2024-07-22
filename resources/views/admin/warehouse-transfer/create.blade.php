@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('page-title')
-    {{ __('Warehouse Transfer') }}
+    {{ __('Warehouse Transfer Create') }}
 @endsection
 
 @section('main-content')
@@ -9,7 +9,7 @@
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item"><a href="{{ route('admin.warehouse-transfer.index') }}">{{ __('Transfer') }}</a></li>
-            <li class="breadcrumb-item">{{ __('Purchase') }}</li>
+            <li class="breadcrumb-item">{{ __('Create') }}</li>
         </ol>
     </nav>
     {{ Form::open(['route' => 'admin.warehouse-transfer.store', 'class' => 'w-100']) }}

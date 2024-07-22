@@ -65,7 +65,8 @@
                                             {{-- @endcan --}}
                                             {{-- @can('edit warehouse') --}}
                                             <div class="action-btn bg-info">
-                                                <a href="{{ route('admin.warehouse.edit', $warehouse->id) }}" class="btn btn-sm  align-items-center" data-bs-toggle="tooltip"
+                                                <a href="{{ route('admin.warehouse.edit', $warehouse->id) }}"
+                                                    class="btn btn-sm  align-items-center" data-bs-toggle="tooltip"
                                                     title="{{ __('Edit') }}" data-title="{{ __('Edit Warehouse') }}">
                                                     <i class="link-icon" data-feather="edit"></i>
                                                 </a>
@@ -73,9 +74,12 @@
                                             {{-- @endcan --}}
                                             {{-- @can('delete warehouse') --}}
                                             <div class="action-btn bg-danger">
-                                                <a href="{{ route('admin.warehouse.destroy', $warehouse->id) }}" class="btn btn-sm  align-items-center bs-pass-para"
+                                                {{ Form::open(['route' => ['admin.warehouse.destroy', $warehouse->id], 'class' => 'w-100 delete_btn']) }}
+                                                <a id="alertButton" type="submit"
+                                                    class="btn btn-sm align-items-center bs-pass-para"
                                                     data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
                                                         class="link-icon" data-feather="trash"></i></a>
+                                                {{ Form::close() }}
                                             </div>
                                             {{-- @endcan --}}
                                         </td>
@@ -89,4 +93,27 @@
             </div>
         </div>
     </div>
+@endsection
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            $('#alertButton').on('click', function() {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "This action can not be undone. Do you want to continue?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Yes",
+                    cancelButtonColor: "#d33",
+                    cancelButtonText: "No",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('.delete_btn').submit();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

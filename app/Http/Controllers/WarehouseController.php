@@ -181,10 +181,11 @@ class WarehouseController extends Controller
      * @param  \App\Models\warehouse  $warehouse
      * @return \Illuminate\Http\Response
      */
-    public function destroy(warehouse $warehouse)
+    public function destroy($id)
     {
         // if(\Auth::user()->can('delete warehouse'))
         // {
+            $warehouse = warehouse::findorfail($id);
             if($warehouse->created_by == \Auth::user()->creatorId())
             {
                 $warehouse->delete();

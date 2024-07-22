@@ -60,7 +60,7 @@ class PurchaseController extends Controller
             $purchase_number = \Auth::user()->purchaseNumberFormat($this->purchaseNumber());
             $venders     = Vender::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $venders->prepend('Select Vender', '');
-
+            
             $warehouse     = warehouse::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $warehouse->prepend('Select Warehouse', '');
 
@@ -85,8 +85,8 @@ class PurchaseController extends Controller
     public function store(Request $request)
     {
 
-        if(\Auth::user()->can('create purchase'))
-        {
+        // if(\Auth::user()->can('create purchase'))
+        // {
             $validator = \Validator::make(
                 $request->all(), [
                     'vender_id' => 'required',
@@ -146,12 +146,12 @@ class PurchaseController extends Controller
 
             }
 
-            return redirect()->route('purchase.index', $purchase->id)->with('success', __('Purchase successfully created.'));
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+            return redirect()->route('admin.purchase.index', $purchase->id)->with('success', __('Purchase successfully created.'));
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
     }
 
     /**
