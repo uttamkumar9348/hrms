@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Facades\Excel as FacadesExcel;
 
 class AttendanceController extends Controller
 {
@@ -93,7 +94,7 @@ class AttendanceController extends Controller
             Log::info($filterParameter);
             $branch = $this->branchRepo->getLoggedInUserCompanyBranches($companyId, $selectBranch);
             if ($filterParameter['download_excel']) {
-                return \Maatwebsite\Excel\Facades\Excel::download(new AttendanceDayWiseExport($attendanceDetail, $filterParameter), 'attendance- from' . $filterParameter['start_date'] . 'to' . $filterParameter['end_date'] .  '-report.xlsx');
+                return FacadesExcel::download(new AttendanceDayWiseExport($attendanceDetail, $filterParameter), 'attendance- from' . $filterParameter['start_date'] . 'to' . $filterParameter['end_date'] .  '-report.xlsx');
             }
             return view($this->view . 'index', compact('attendanceDetail', 'filterParameter', 'branch', 'isBsEnabled', 'appTimeSetting'));
         } catch (Exception $exception) {

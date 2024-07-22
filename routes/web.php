@@ -82,6 +82,8 @@ Route::group([
         /** User route */
         Route::resource('users', UserController::class);
         Route::get('users/toggle-status/{id}', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+        Route::get('users/export/forms', [UserController::class, 'exportForm'])->name('users.exportForm');
+
         Route::get('users/delete/{id}', [UserController::class, 'delete'])->name('users.delete');
         Route::get('users/change-workspace/{id}', [UserController::class, 'changeWorkSpace'])->name('users.change-workspace');
         Route::get('users/get-company-employee/{branchId}', [UserController::class, 'getAllCompanyEmployeeDetail'])->name('users.getAllCompanyUsers');

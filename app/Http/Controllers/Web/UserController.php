@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Exports\DatabaseData\EmployeeExport;
+use App\Exports\EmployeeFormExport;
 use App\Helpers\AppHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -26,6 +28,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\RefreshTokenRepository;
 use Laravel\Passport\TokenRepository;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -67,6 +70,11 @@ class UserController extends Controller
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
         }
+    }
+
+    public function exportForm(){
+        return Excel::download(new EmployeeFormExport(), 'crate-form'  .  '-report.xlsx');
+
     }
 
     public function create()

@@ -9,6 +9,10 @@
         <a href="{{route('admin.users.index')}}">
             <button class="btn btn-sm btn-primary"><i class="link-icon" data-feather="arrow-left"></i> Back</button>
         </a>
+
+        <a href="{{route('admin.users.exportForm')}}">
+            <button class="btn btn-sm btn-primary"> Export</button>
+        </a>
     </div>
 @endsection
 
