@@ -83,6 +83,9 @@ Route::group([
         Route::resource('users', UserController::class);
         Route::get('users/toggle-status/{id}', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
         Route::get('users/export/forms', [UserController::class, 'exportForm'])->name('users.exportForm');
+        
+        Route::get('employees/import-csv', [UserController::class, 'employeeImport'])->name('employees.import-csv.show');
+        Route::post('employees/import-csv', [UserController::class, 'importEmployee'])->name('employees.import-excel.store');
 
         Route::get('users/delete/{id}', [UserController::class, 'delete'])->name('users.delete');
         Route::get('users/change-workspace/{id}', [UserController::class, 'changeWorkSpace'])->name('users.change-workspace');

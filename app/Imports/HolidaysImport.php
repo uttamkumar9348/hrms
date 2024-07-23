@@ -4,7 +4,6 @@ namespace App\Imports;
 
 use App\Helpers\AppHelper;
 use App\Models\Holiday;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -35,7 +34,5 @@ class HolidaysImport implements ToModel,WithHeadingRow
             "company_id" => $companyId,
             "is_public_holiday" => $row['is_public_holiday']
         ]);
-
-
     }
 }
