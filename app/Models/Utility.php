@@ -675,7 +675,8 @@ class Utility extends Model
             $taxes  = [];
             foreach($taxArr as $tax)
             {
-                $taxes[] = self::taxes($tax);
+                // $taxes[] = self::taxes($tax);
+                $taxes[] = Tax::find($tax);
             }
             self::$taxData = $taxes;
         }

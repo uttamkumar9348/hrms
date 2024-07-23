@@ -13,7 +13,7 @@
     $company_favicon=Utility::getValByName('company_favicon');
  $lang=Utility::getValByName('default_language');
 @endphp
-@push('script')
+@section('scripts')
     <script>
         var scrollSpy = new bootstrap.ScrollSpy(document.body, {
             target: '#useradd-sidenav',
@@ -51,7 +51,7 @@
             document.getElementById('bill_image').src = src
         }
     </script>
-@endpush
+@endsection
 @section('main-content')
     <div class="col-sm-12 mt-4">
         <div class="card">

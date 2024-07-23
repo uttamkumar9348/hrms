@@ -395,108 +395,109 @@ Route::group([
 
         /** delete employee leave type */
         Route::get('employees/leave_type/delete/{id}', [UserController::class, 'deleteEmployeeLeaveType'])->name('employee_leave_type.delete');
+
+
+        /* Farmer management*/
+        Route::group(
+            [
+                'prefix' => 'farmer',
+                'as' => 'farmer.',
+            ],
+            function () {
+                Route::post('location/get_states', [FarmingController::class, 'getStates'])->name('location.get_states');
+                Route::post('location/get_districts', [FarmingController::class, 'getDistricts'])->name('location.get_districts');
+                Route::post('location/get_blocks', [FarmingController::class, 'getBlocks'])->name('location.get_blocks');
+                Route::post('location/get_gram_panchyats', [FarmingController::class, 'getGramPanchyats'])->name('location.get_gram_panchyats');
+                Route::post('location/get_villages', [FarmingController::class, 'getVillages'])->name('location.get_villages');
+                Route::post('location/get_centers', [FarmingController::class, 'getCenters'])->name('location.get_centers');
+                Route::post('location/get_country_state', [FarmingController::class, 'get_country_state'])->name('location.get_country_state');
+                Route::get('farming_registration/validate/{id}', [FarmingController::class, 'validateProfile'])->name('farming_registration.validate');
+                Route::resource('farming_registration', FarmingController::class);
+                Route::post('registration_id', [FarmingController::class, 'registration_id'])->name('registration_id');
+                Route::resource('guarantor', GuarantorController::class);
+                Route::get('bank_guarantee', [FarmingPaymentController::class, 'bankGuarantee'])->name('bank_guarantee.index');
+                Route::get('bank_guarantee/{id}', [FarmingPaymentController::class, 'editBankGuarantee'])->name('bank_guarantee.edit');
+                Route::get('bank_guarantee/pdf/{id}', [FarmingPaymentController::class, 'pdfBankGuarantee'])->name('bank_guarantee.pdf');
+                Route::resource('payment', FarmingPaymentController::class);
+                Route::post('g_code', [FarmingPaymentController::class, 'g_code'])->name('g_code');
+                Route::view('allotment', 'farmer.allotment.index')->name('allotment.index');
+                Route::post('get_product_service_by_category', [FarmerLoanController::class, 'getProductServiceByCategory'])->name('loan.get_product_service_by_category');
+                Route::post('get_product_service_detail', [FarmerLoanController::class, 'getProductServiceDetail'])->name('loan.get_product_service_detail');
+                Route::post('get_farming_detail', [FarmerLoanController::class, 'getFarmingDetail'])->name('loan.get_farming_detail');
+                Route::resource('loan', FarmerLoanController::class);
+                Route::get('reimbursement/create', [FarmingPaymentController::class, 'reimbursementCreate'])->name('reimbursement.create');
+                Route::get('reimbursement', [FarmingPaymentController::class, 'reimbursement'])->name('reimbursement.index');
+                Route::resource('seed_category', SeedCategoryController::class);
+                Route::post('get_detail', [FarmingDetailController::class, 'getFarmingDetail'])->name('farming.get_detail');
+                Route::resource('farming_detail', FarmingDetailController::class);
+                Route::post('update_cutting_order', [CuttingOrderController::class, 'updateCuttingOrder'])->name('farming.update_cutting_order');
+                Route::resource('cutting_order', CuttingOrderController::class);
+            }
+        );
+
+        //warehouse
+        Route::resource('warehouse', WarehouseController::class);
+        Route::post('warehouse/{id}/destroy', [WarehouseController::class, 'destroy'])->name('warehouse.destroy');
+
+        //purchase
+        Route::resource('purchase', PurchaseController::class);
+        Route::get('purchase/items', [PurchaseController::class, 'items'])->name('purchase.items');
+        Route::get('/bill/{id}/', 'PurchaseController@purchaseLink')->name('purchase.link.copy');
+        Route::get('purchase/{id}/payment', [PurchaseController::class, 'payment'])->name('purchase.payment');
+        Route::post('purchase/{id}/payment', [PurchaseController::class, 'createPayment'])->name('purchase.payment');
+        Route::post('purchase/{id}/payment/{pid}/destroy', [PurchaseController::class, 'paymentDestroy'])->name('purchase.payment.destroy');
+        Route::post('purchase/product/destroy', [PurchaseController::class, 'productDestroy'])->name('purchase.product.destroy');
+        Route::post('purchase/vender', [PurchaseController::class, 'vender'])->name('purchase.vender');
+        Route::post('purchase/product', [PurchaseController::class, 'product'])->name('purchase.product');
+        Route::get('purchase/create/{cid}', [PurchaseController::class, 'create'])->name('purchase.create');
+        Route::get('purchase/{id}/sent', [PurchaseController::class, 'sent'])->name('purchase.sent');
+        Route::get('purchase/{id}/resent', [PurchaseController::class, 'resent'])->name('purchase.resent');
+
+        //warehouse-transfer
+        Route::resource('warehouse-transfer', WarehouseTransferController::class);
+        Route::post('warehouse-transfer/getproduct', [WarehouseTransferController::class, 'getproduct'])->name('warehouse-transfer.getproduct');
+        Route::post('warehouse-transfer/getquantity', [WarehouseTransferController::class, 'getquantity'])->name('warehouse-transfer.getquantity');
+
+        //pos barcode
+        Route::get('barcode/pos', [PosController::class, 'barcode'])->name('pos.barcode');
+        Route::get('setting/pos', [PosController::class, 'setting'])->name('pos.setting');
+        Route::post('barcode/settings', [PosController::class, 'BarcodesettingStore'])->name('barcode.setting');
+        Route::get('print/pos', [PosController::class, 'printBarcode'])->name('pos.print');
+        Route::post('pos/getproduct', [PosController::class, 'getproduct'])->name('pos.getproduct');
+        Route::any('pos-receipt', [PosController::class, 'receipt'])->name('pos.receipt');
+        Route::post('/cartdiscount', [PosController::class, 'cartdiscount'])->name('cartdiscount');
+
+        Route::get('pos-print-setting', [SystemController::class, 'posPrintIndex'])->name('pos.print.setting');
+        Route::get('purchase/preview/{template}/{color}', [PurchaseController::class, 'previewPurchase'])->name('purchase.preview');
+        Route::get('pos/preview/{template}/{color}', [PosController::class, 'previewPos'])->name('pos.preview');
+
+        Route::post('/purchase/template/setting', [PurchaseController::class, 'savePurchaseTemplateSettings'])->name('purchase.template.setting');
+        Route::post('/pos/template/setting', [PosController::class, 'savePosTemplateSettings'])->name('pos.template.setting');
+
+        Route::get('purchase/pdf/{id}', [PurchaseController::class, 'purchase'])->name('purchase.pdf');
+        Route::get('pos/pdf/{id}', [PosController::class, 'pos'])->name('pos.pdf');
+        Route::get('pos/data/store', [PosController::class, 'store'])->name('pos.data.store');
+        //for pos print
+        Route::get('printview/pos', [PosController::class, 'printView'])->name('pos.printview');
+
+        Route::resource('pos', PosController::class);
+
+        //bill
+        Route::get('bill/{id}/duplicate', [BillController::class, 'duplicate'])->name('bill.duplicate');
+        Route::get('bill/{id}/shipping/print', [BillController::class, 'shippingDisplay'])->name('bill.shipping.print');
+        Route::get('bill/index', [BillController::class, 'index'])->name('bill.index');
+        Route::post('bill/product/destroy', [BillController::class, 'productDestroy'])->name('bill.product.destroy');
+        Route::post('bill/product', [BillController::class, 'product'])->name('bill.product');
+        Route::post('bill/vender', [BillController::class, 'vender'])->name('bill.vender');
+        Route::get('bill/{id}/sent', [BillController::class, 'sent'])->name('bill.sent');
+        Route::get('bill/{id}/resent', [BillController::class, 'resent'])->name('bill.resent');
+        Route::get('bill/{id}/payment', [BillController::class, 'payment'])->name('bill.payment');
+        Route::post('bill/{id}/payment', [BillController::class, 'createPayment'])->name('bill.payment');
+        Route::post('bill/{id}/payment/{pid}/destroy', [BillController::class, 'paymentDestroy'])->name('bill.payment.destroy');
+        Route::get('bill/items', [BillController::class, 'items'])->name('bill.items');
+        Route::resource('bill', BillController::class);
+        Route::get('bill/create/{cid}', [BillController::class, 'create'])->name('bill.create');
     });
-
-    /* Farmer management*/
-    Route::group(
-        [
-            'prefix' => 'farmer',
-            'as' => 'farmer.',
-        ],
-        function () {
-            Route::post('location/get_states', [FarmingController::class, 'getStates'])->name('location.get_states');
-            Route::post('location/get_districts', [FarmingController::class, 'getDistricts'])->name('location.get_districts');
-            Route::post('location/get_blocks', [FarmingController::class, 'getBlocks'])->name('location.get_blocks');
-            Route::post('location/get_gram_panchyats', [FarmingController::class, 'getGramPanchyats'])->name('location.get_gram_panchyats');
-            Route::post('location/get_villages', [FarmingController::class, 'getVillages'])->name('location.get_villages');
-            Route::post('location/get_centers', [FarmingController::class, 'getCenters'])->name('location.get_centers');
-            Route::post('location/get_country_state', [FarmingController::class, 'get_country_state'])->name('location.get_country_state');
-            Route::get('farming_registration/validate/{id}', [FarmingController::class, 'validateProfile'])->name('farming_registration.validate');
-            Route::resource('farming_registration', FarmingController::class);
-            Route::post('registration_id', [FarmingController::class, 'registration_id'])->name('registration_id');
-            Route::resource('guarantor', GuarantorController::class);
-            Route::get('bank_guarantee', [FarmingPaymentController::class, 'bankGuarantee'])->name('bank_guarantee.index');
-            Route::get('bank_guarantee/{id}', [FarmingPaymentController::class, 'editBankGuarantee'])->name('bank_guarantee.edit');
-            Route::get('bank_guarantee/pdf/{id}', [FarmingPaymentController::class, 'pdfBankGuarantee'])->name('bank_guarantee.pdf');
-            Route::resource('payment', FarmingPaymentController::class);
-            Route::post('g_code', [FarmingPaymentController::class, 'g_code'])->name('g_code');
-            Route::view('allotment', 'farmer.allotment.index')->name('allotment.index');
-            Route::post('get_product_service_by_category', [FarmerLoanController::class, 'getProductServiceByCategory'])->name('loan.get_product_service_by_category');
-            Route::post('get_product_service_detail', [FarmerLoanController::class, 'getProductServiceDetail'])->name('loan.get_product_service_detail');
-            Route::post('get_farming_detail', [FarmerLoanController::class, 'getFarmingDetail'])->name('loan.get_farming_detail');
-            Route::resource('loan', FarmerLoanController::class);
-            Route::get('reimbursement/create', [FarmingPaymentController::class, 'reimbursementCreate'])->name('reimbursement.create');
-            Route::get('reimbursement', [FarmingPaymentController::class, 'reimbursement'])->name('reimbursement.index');
-            Route::resource('seed_category', SeedCategoryController::class);
-            Route::post('get_detail', [FarmingDetailController::class, 'getFarmingDetail'])->name('farming.get_detail');
-            Route::resource('farming_detail', FarmingDetailController::class);
-            Route::post('update_cutting_order', [CuttingOrderController::class, 'updateCuttingOrder'])->name('farming.update_cutting_order');
-            Route::resource('cutting_order', CuttingOrderController::class);
-        }
-    );
-
-    //warehouse
-    Route::resource('warehouse', WarehouseController::class);
-    Route::post('warehouse/{id}/destroy', [WarehouseController::class, 'destroy'])->name('warehouse.destroy');
-
-    //purchase
-    Route::resource('purchase', PurchaseController::class);
-    Route::get('purchase/items', [PurchaseController::class, 'items'])->name('purchase.items');
-    Route::get('/bill/{id}/', 'PurchaseController@purchaseLink')->name('purchase.link.copy');
-    Route::get('purchase/{id}/payment', [PurchaseController::class, 'payment'])->name('purchase.payment');
-    Route::post('purchase/{id}/payment', [PurchaseController::class, 'createPayment'])->name('purchase.payment');
-    Route::post('purchase/{id}/payment/{pid}/destroy', [PurchaseController::class, 'paymentDestroy'])->name('purchase.payment.destroy');
-    Route::post('purchase/product/destroy', [PurchaseController::class, 'productDestroy'])->name('purchase.product.destroy');
-    Route::post('purchase/vender', [PurchaseController::class, 'vender'])->name('purchase.vender');
-    Route::post('purchase/product', [PurchaseController::class, 'product'])->name('purchase.product');
-    Route::get('purchase/create/{cid}', [PurchaseController::class, 'create'])->name('purchase.create');
-    Route::get('purchase/{id}/sent', [PurchaseController::class, 'sent'])->name('purchase.sent');
-    Route::get('purchase/{id}/resent', [PurchaseController::class, 'resent'])->name('purchase.resent');
-
-    //warehouse-transfer
-    Route::resource('warehouse-transfer', WarehouseTransferController::class);
-    Route::post('warehouse-transfer/getproduct', [WarehouseTransferController::class, 'getproduct'])->name('warehouse-transfer.getproduct');
-    Route::post('warehouse-transfer/getquantity', [WarehouseTransferController::class, 'getquantity'])->name('warehouse-transfer.getquantity');
-
-    //pos barcode
-    Route::get('barcode/pos', [PosController::class, 'barcode'])->name('pos.barcode');
-    Route::get('setting/pos', [PosController::class, 'setting'])->name('pos.setting');
-    Route::post('barcode/settings', [PosController::class, 'BarcodesettingStore'])->name('barcode.setting');
-    Route::get('print/pos', [PosController::class, 'printBarcode'])->name('pos.print');
-    Route::post('pos/getproduct', [PosController::class, 'getproduct'])->name('pos.getproduct');
-    Route::any('pos-receipt', [PosController::class, 'receipt'])->name('pos.receipt');
-    Route::post('/cartdiscount', [PosController::class, 'cartdiscount'])->name('cartdiscount');
-
-    Route::get('pos-print-setting', [SystemController::class, 'posPrintIndex'])->name('pos.print.setting');
-    Route::get('purchase/preview/{template}/{color}', [PurchaseController::class, 'previewPurchase'])->name('purchase.preview');
-    Route::get('pos/preview/{template}/{color}', [PosController::class, 'previewPos'])->name('pos.preview');
-
-    Route::post('/purchase/template/setting', [PurchaseController::class, 'savePurchaseTemplateSettings'])->name('purchase.template.setting');
-    Route::post('/pos/template/setting', [PosController::class, 'savePosTemplateSettings'])->name('pos.template.setting');
-
-    Route::get('purchase/pdf/{id}', [PurchaseController::class, 'purchase'])->name('purchase.pdf');
-    Route::get('pos/pdf/{id}', [PosController::class, 'pos'])->name('pos.pdf');
-    Route::get('pos/data/store', [PosController::class, 'store'])->name('pos.data.store');
-    //for pos print
-    Route::get('printview/pos', [PosController::class, 'printView'])->name('pos.printview');
-
-    Route::resource('pos', PosController::class);
-
-    //bill
-    Route::get('bill/{id}/duplicate', [BillController::class, 'duplicate'])->name('bill.duplicate');
-    Route::get('bill/{id}/shipping/print', [BillController::class, 'shippingDisplay'])->name('bill.shipping.print');
-    Route::get('bill/index', [BillController::class, 'index'])->name('bill.index');
-    Route::post('bill/product/destroy', [BillController::class, 'productDestroy'])->name('bill.product.destroy');
-    Route::post('bill/product', [BillController::class, 'product'])->name('bill.product');
-    Route::post('bill/vender', [BillController::class, 'vender'])->name('bill.vender');
-    Route::get('bill/{id}/sent', [BillController::class, 'sent'])->name('bill.sent');
-    Route::get('bill/{id}/resent', [BillController::class, 'resent'])->name('bill.resent');
-    Route::get('bill/{id}/payment', [BillController::class, 'payment'])->name('bill.payment');
-    Route::post('bill/{id}/payment', [BillController::class, 'createPayment'])->name('bill.payment');
-    Route::post('bill/{id}/payment/{pid}/destroy', [BillController::class, 'paymentDestroy'])->name('bill.payment.destroy');
-    Route::get('bill/items', [BillController::class, 'items'])->name('bill.items');
-    Route::resource('bill', BillController::class);
-    Route::get('bill/create/{cid}', [BillController::class, 'create'])->name('bill.create');
 });
 
 Route::fallback(function () {

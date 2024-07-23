@@ -36,12 +36,10 @@ class PurchaseController extends Controller
         $vender = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
         $vender->prepend('Select Vendor', '');
         $status = Purchase::$statues;
-        $purchases = Purchase::where('created_by', '=', \Auth::user()->creatorId())->with(['vender','category'])->get();
+        $purchases = Purchase::where('created_by', '=', \Auth::user()->creatorId())->with(['vender', 'category'])->get();
 
 
-        return view('admin.purchase.index', compact('purchases', 'status','vender'));
-
-
+        return view('admin.purchase.index', compact('purchases', 'status', 'vender'));
     }
 
     /**
@@ -53,22 +51,22 @@ class PurchaseController extends Controller
     {
         // if(\Auth::user()->can('create purchase'))
         // {
-            $customFields = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'purchase')->get();
-            $category     = ProductServiceCategory::where('created_by', \Auth::user()->creatorId())->where('type', 'expense')->get()->pluck('name', 'id');
-            $category->prepend('Select Category', '');
+        $customFields = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'purchase')->get();
+        $category     = ProductServiceCategory::where('created_by', \Auth::user()->creatorId())->where('type', 'expense')->get()->pluck('name', 'id');
+        $category->prepend('Select Category', '');
 
-            $purchase_number = \Auth::user()->purchaseNumberFormat($this->purchaseNumber());
-            $venders     = Vender::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $venders->prepend('Select Vender', '');
-            
-            $warehouse     = warehouse::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $warehouse->prepend('Select Warehouse', '');
+        $purchase_number = \Auth::user()->purchaseNumberFormat($this->purchaseNumber());
+        $venders     = Vender::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        $venders->prepend('Select Vender', '');
 
-            $product_services = ProductService::where('created_by', \Auth::user()->creatorId())->where('type','!=', 'service')->get()->pluck('name', 'id');
+        $warehouse     = warehouse::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        $warehouse->prepend('Select Warehouse', '');
 
-            $product_services->prepend('--', '');
+        $product_services = ProductService::where('created_by', \Auth::user()->creatorId())->where('type', '!=', 'service')->get()->pluck('name', 'id');
 
-            return view('admin.purchase.create', compact('venders', 'purchase_number', 'product_services', 'category', 'customFields','vendorId','warehouse'));
+        $product_services->prepend('--', '');
+
+        return view('admin.purchase.create', compact('venders', 'purchase_number', 'product_services', 'category', 'customFields', 'vendorId', 'warehouse'));
         // }
         // else
         // {
@@ -87,66 +85,63 @@ class PurchaseController extends Controller
 
         // if(\Auth::user()->can('create purchase'))
         // {
-            $validator = \Validator::make(
-                $request->all(), [
-                    'vender_id' => 'required',
-                    'warehouse_id' => 'required',
-                    'purchase_date' => 'required',
-                    'category_id' => 'required',
-                    'items' => 'required',
-                ]
-            );
-            if($validator->fails())
-            {
-                $messages = $validator->getMessageBag();
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'vender_id' => 'required',
+                'warehouse_id' => 'required',
+                'purchase_date' => 'required',
+                'category_id' => 'required',
+                'items' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
 
-                return redirect()->back()->with('error', $messages->first());
+            return redirect()->back()->with('error', $messages->first());
+        }
+        $purchase                 = new Purchase();
+        $purchase->purchase_id    = $this->purchaseNumber();
+        $purchase->vender_id      = $request->vender_id;
+        $purchase->warehouse_id      = $request->warehouse_id;
+        $purchase->purchase_date  = $request->purchase_date;
+        $purchase->purchase_number   = !empty($request->purchase_number) ? $request->purchase_number : 0;
+        $purchase->status         =  0;
+        //            $purchase->discount_apply = isset($request->discount_apply) ? 1 : 0;
+        $purchase->category_id    = $request->category_id;
+        $purchase->created_by     = \Auth::user()->creatorId();
+        $purchase->save();
+
+        $products = $request->items;
+
+        for ($i = 0; $i < count($products); $i++) {
+            $purchaseProduct              = new PurchaseProduct();
+            $purchaseProduct->purchase_id     = $purchase->id;
+            $purchaseProduct->product_id  = $products[$i]['item'];
+            $purchaseProduct->quantity    = $products[$i]['quantity'];
+            $purchaseProduct->tax         = $products[$i]['tax'];
+            //                $purchaseProduct->discount    = isset($products[$i]['discount']) ? $products[$i]['discount'] : 0;
+            $purchaseProduct->discount    = $products[$i]['discount'];
+            $purchaseProduct->price       = $products[$i]['price'];
+            $purchaseProduct->description = $products[$i]['description'];
+            $purchaseProduct->save();
+
+            //inventory management (Quantity)
+            Utility::total_quantity('plus', $purchaseProduct->quantity, $purchaseProduct->product_id);
+
+            //Product Stock Report
+            $type = 'purchase';
+            $type_id = $purchase->id;
+            $description = $products[$i]['quantity'] . '  ' . __(' quantity add in purchase') . ' ' . \Auth::user()->purchaseNumberFormat($purchase->purchase_id);
+            Utility::addProductStock($products[$i]['item'], $products[$i]['quantity'], $type, $description, $type_id);
+
+            //Warehouse Stock Report
+            if (isset($products[$i]['item'])) {
+                Utility::addWarehouseStock($products[$i]['item'], $products[$i]['quantity'], $request->warehouse_id);
             }
-            $purchase                 = new Purchase();
-            $purchase->purchase_id    = $this->purchaseNumber();
-            $purchase->vender_id      = $request->vender_id;
-            $purchase->warehouse_id      = $request->warehouse_id;
-            $purchase->purchase_date  = $request->purchase_date;
-            $purchase->purchase_number   = !empty($request->purchase_number) ? $request->purchase_number : 0;
-            $purchase->status         =  0;
-//            $purchase->discount_apply = isset($request->discount_apply) ? 1 : 0;
-            $purchase->category_id    = $request->category_id;
-            $purchase->created_by     = \Auth::user()->creatorId();
-            $purchase->save();
+        }
 
-            $products = $request->items;
-
-            for($i = 0; $i < count($products); $i++)
-            {
-                $purchaseProduct              = new PurchaseProduct();
-                $purchaseProduct->purchase_id     = $purchase->id;
-                $purchaseProduct->product_id  = $products[$i]['item'];
-                $purchaseProduct->quantity    = $products[$i]['quantity'];
-                $purchaseProduct->tax         = $products[$i]['tax'];
-//                $purchaseProduct->discount    = isset($products[$i]['discount']) ? $products[$i]['discount'] : 0;
-                $purchaseProduct->discount    = $products[$i]['discount'];
-                $purchaseProduct->price       = $products[$i]['price'];
-                $purchaseProduct->description = $products[$i]['description'];
-                $purchaseProduct->save();
-
-                //inventory management (Quantity)
-                Utility::total_quantity('plus',$purchaseProduct->quantity,$purchaseProduct->product_id);
-
-                //Product Stock Report
-                $type='purchase';
-                $type_id = $purchase->id;
-                $description=$products[$i]['quantity'].'  '.__(' quantity add in purchase').' '. \Auth::user()->purchaseNumberFormat($purchase->purchase_id);
-                Utility::addProductStock( $products[$i]['item'],$products[$i]['quantity'],$type,$description,$type_id);
-
-                //Warehouse Stock Report
-                if(isset($products[$i]['item']))
-                {
-                    Utility::addWarehouseStock( $products[$i]['item'],$products[$i]['quantity'],$request->warehouse_id);
-                }
-
-            }
-
-            return redirect()->route('admin.purchase.index', $purchase->id)->with('success', __('Purchase successfully created.'));
+        return redirect()->route('admin.purchase.index', $purchase->id)->with('success', __('Purchase successfully created.'));
         // }
         // else
         // {
@@ -163,34 +158,26 @@ class PurchaseController extends Controller
     public function show($ids)
     {
 
-        if(\Auth::user()->can('show purchase'))
-        {
+        if (\Auth::user()->can('show purchase')) {
             try {
-                $id       = Crypt::decrypt($ids);
+                $id = Crypt::decrypt($ids);
             } catch (\Throwable $th) {
                 return redirect()->back()->with('error', __('Purchase Not Found.'));
             }
             $id   = Crypt::decrypt($ids);
             $purchase = Purchase::find($id);
 
-            if($purchase->created_by == \Auth::user()->creatorId())
-            {
+            if ($purchase->created_by == \Auth::user()->creatorId()) {
 
                 $purchasePayment = PurchasePayment::where('purchase_id', $purchase->id)->first();
                 $vendor      = $purchase->vender;
                 $iteams      = $purchase->items;
 
-
-
                 return view('admin.purchase.view', compact('purchase', 'vendor', 'iteams', 'purchasePayment'));
-            }
-            else
-            {
+            } else {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
@@ -203,8 +190,7 @@ class PurchaseController extends Controller
      */
     public function edit($idsd)
     {
-        if(\Auth::user()->can('edit purchase'))
-        {
+        if (\Auth::user()->can('edit purchase')) {
 
             $idwww   = Crypt::decrypt($idsd);
             $purchase     = Purchase::find($idwww);
@@ -214,15 +200,13 @@ class PurchaseController extends Controller
 
             $purchase_number      = \Auth::user()->purchaseNumberFormat($purchase->purchase_id);
             $venders          = Vender::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $product_services = ProductService::where('created_by', \Auth::user()->creatorId())->where('type','!=', 'service')->get()->pluck('name', 'id');
+            $product_services = ProductService::where('created_by', \Auth::user()->creatorId())->where('type', '!=', 'service')->get()->pluck('name', 'id');
 
 
 
 
-            return view('admin.purchase.edit', compact('venders', 'product_services', 'purchase', 'warehouse','purchase_number', 'category'));
-        }
-        else
-        {
+            return view('admin.purchase.edit', compact('venders', 'product_services', 'purchase', 'warehouse', 'purchase_number', 'category'));
+        } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }
     }
@@ -237,72 +221,66 @@ class PurchaseController extends Controller
     {
 
 
-        if(\Auth::user()->can('edit purchase'))
-        {
+        if (\Auth::user()->can('edit purchase')) {
 
-            if($purchase->created_by == \Auth::user()->creatorId())
-            {
+            if ($purchase->created_by == \Auth::user()->creatorId()) {
                 $validator = \Validator::make(
-                    $request->all(), [
+                    $request->all(),
+                    [
                         'vender_id' => 'required',
                         'purchase_date' => 'required',
                         'items' => 'required',
                     ]
                 );
-                if($validator->fails())
-                {
+                if ($validator->fails()) {
                     $messages = $validator->getMessageBag();
 
-                    return redirect()->route('purchase.index')->with('error', $messages->first());
+                    return redirect()->route('admin.purchase.index')->with('error', $messages->first());
                 }
                 $purchase->vender_id      = $request->vender_id;
                 $purchase->purchase_date      = $request->purchase_date;
-//                $purchase->discount_apply = isset($request->discount_apply) ? 1 : 0;
+                //                $purchase->discount_apply = isset($request->discount_apply) ? 1 : 0;
                 $purchase->category_id    = $request->category_id;
                 $purchase->save();
                 $products = $request->items;
 
-                for($i = 0; $i < count($products); $i++)
-                {
+                for ($i = 0; $i < count($products); $i++) {
                     $purchaseProduct = PurchaseProduct::find($products[$i]['id']);
                     $old_qty = $purchaseProduct->quantity;
 
-                    if($purchaseProduct == null)
-                    {
+                    if ($purchaseProduct == null) {
                         $purchaseProduct             = new PurchaseProduct();
                         $purchaseProduct->purchase_id    = $purchase->id;
-                        Utility::total_quantity('plus',$products[$i]['quantity'],$products[$i]['items']);
-                    }
-                    else{
+                        Utility::total_quantity('plus', $products[$i]['quantity'], $products[$i]['items']);
+                    } else {
 
-                        Utility::total_quantity('minus',$purchaseProduct->quantity,$purchaseProduct->product_id);
+                        Utility::total_quantity('minus', $purchaseProduct->quantity, $purchaseProduct->product_id);
                     }
 
-                    if(isset($products[$i]['item']))
-                    {
+                    if (isset($products[$i]['item'])) {
                         $purchaseProduct->product_id = $products[$i]['item'];
                     }
 
                     $purchaseProduct->quantity    = $products[$i]['quantity'];
                     $purchaseProduct->tax         = $products[$i]['tax'];
-//                    $purchaseProduct->discount    = isset($products[$i]['discount']) ? $products[$i]['discount'] : 0;
+                    //                    $purchaseProduct->discount    = isset($products[$i]['discount']) ? $products[$i]['discount'] : 0;
                     $purchaseProduct->discount    = $products[$i]['discount'];
                     $purchaseProduct->price       = $products[$i]['price'];
                     $purchaseProduct->description = $products[$i]['description'];
                     $purchaseProduct->save();
 
-                    if ($products[$i]['id']>0) {
-                        Utility::total_quantity('plus',$products[$i]['quantity'],$purchaseProduct->product_id);
+                    if ($products[$i]['id'] > 0) {
+                        Utility::total_quantity('plus', $products[$i]['quantity'], $purchaseProduct->product_id);
                     }
 
                     //Product Stock Report
-                    $type='purchase';
+                    $type = 'purchase';
                     $type_id = $purchase->id;
-                    StockReport::where('type','=','purchase')->where('type_id','=',$purchase->id)->delete();
-                    $description=$products[$i]['quantity'].'  '.__(' quantity add in purchase').' '. \Auth::user()->purchaseNumberFormat($purchase->purchase_id);
+                    StockReport::where('type', '=', 'purchase')->where('type_id', '=', $purchase->id)->delete();
+                    $description = $products[$i]['quantity'] . '  ' . __(' quantity add in purchase') . ' ' . \Auth::user()->purchaseNumberFormat($purchase->purchase_id);
 
-                    if(isset($products[$i]['item']) ){
-                        Utility::addProductStock( $products[$i]['item'],$products[$i]['quantity'],$type,$description,$type_id);
+                    if (isset($products[$i]['item'])) {
+                        Utility::addProductStock($products[$i]['item'], $products[$i]['quantity'], $type, $description, $type_id);
                     }
 
 
@@ -310,23 +288,18 @@ class PurchaseController extends Controller
 
                     //Warehouse Stock Report
                     $new_qty = $purchaseProduct->quantity;
-                    $total_qty= $new_qty - $old_qty;
-                    if(isset($products[$i]['item'])){
+                    $total_qty = $new_qty - $old_qty;
+                    if (isset($products[$i]['item'])) {
 
-                        Utility::addWarehouseStock($products[$i]['item'],$total_qty,$request->warehouse_id);
+                        Utility::addWarehouseStock($products[$i]['item'], $total_qty, $request->warehouse_id);
                     }
-
                 }
 
-                return redirect()->route('purchase.index')->with('success', __('Purchase successfully updated.'));
-            }
-            else
-            {
+                return redirect()->route('admin.purchase.index')->with('success', __('Purchase successfully updated.'));
+            } else {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
@@ -339,88 +312,66 @@ class PurchaseController extends Controller
      */
     public function destroy(Purchase $purchase)
     {
-        if(\Auth::user()->can('delete purchase'))
-        {
-            if($purchase->created_by == \Auth::user()->creatorId())
-            {
-                $purchase_products = PurchaseProduct::where('purchase_id',$purchase->id)->get();
+        if (\Auth::user()->can('delete purchase')) {
+            if ($purchase->created_by == \Auth::user()->creatorId()) {
+                $purchase_products = PurchaseProduct::where('purchase_id', $purchase->id)->get();
 
                 $purchasepayments = $purchase->payments;
-                foreach($purchasepayments as $key => $value)
-                {
+                foreach ($purchasepayments as $key => $value) {
                     $purchasepayment = PurchasePayment::find($value->id)->first();
                     $purchasepayment->delete();
                 }
 
-                foreach($purchase_products as $purchase_product)
-                {
-                    $warehouse_qty = WarehouseProduct::where('warehouse_id',$purchase->warehouse_id)->where('product_id',$purchase_product->product_id)->first();
+                foreach ($purchase_products as $purchase_product) {
+                    $warehouse_qty = WarehouseProduct::where('warehouse_id', $purchase->warehouse_id)->where('product_id', $purchase_product->product_id)->first();
 
-                    $warehouse_transfers = WarehouseTransfer::where('product_id',$purchase_product->product_id)->where('from_warehouse',$purchase->warehouse_id)->get();
-                    foreach ($warehouse_transfers as $warehouse_transfer)
-                    {
-                        $temp = WarehouseProduct::where('warehouse_id',$warehouse_transfer->to_warehouse)->first();
-                        if($temp)
-                        {
+                    $warehouse_transfers = WarehouseTransfer::where('product_id', $purchase_product->product_id)->where('from_warehouse', $purchase->warehouse_id)->get();
+                    foreach ($warehouse_transfers as $warehouse_transfer) {
+                        $temp = WarehouseProduct::where('warehouse_id', $warehouse_transfer->to_warehouse)->first();
+                        if ($temp) {
                             $temp->quantity = $temp->quantity - $warehouse_transfer->quantity;
-                            if($temp->quantity > 0)
-                            {
+                            if ($temp->quantity > 0) {
                                 $temp->save();
-                            }
-                            else
-                            {
+                            } else {
                                 $temp->delete();
                             }
-
                         }
                     }
-                    if(!empty($warehouse_qty))
-                    {
+                    if (!empty($warehouse_qty)) {
                         $warehouse_qty->quantity = $warehouse_qty->quantity - $purchase_product->quantity;
-                        if( $warehouse_qty->quantity > 0)
-                        {
+                        if ($warehouse_qty->quantity > 0) {
                             $warehouse_qty->save();
-                        }
-                        else
-                        {
+                        } else {
                             $warehouse_qty->delete();
                         }
                     }
-                    $product_qty = ProductService::where('id',$purchase_product->product_id)->first();
+                    $product_qty = ProductService::where('id', $purchase_product->product_id)->first();
 
-                    if(!empty($product_qty))
-                    {
+                    if (!empty($product_qty)) {
                         $product_qty->quantity = $product_qty->quantity - $purchase_product->quantity;
                         $product_qty->save();
                     }
                     $purchase_product->delete();
-
                 }
 
                 $purchase->delete();
                 PurchaseProduct::where('purchase_id', '=', $purchase->id)->delete();
 
 
-                return redirect()->route('purchase.index')->with('success', __('Purchase successfully deleted.'));
-            }
-            else
-            {
+                return redirect()->route('admin.purchase.index')->with('success', __('Purchase successfully deleted.'));
+            } else {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
-
     }
 
 
     function purchaseNumber()
     {
         $latest = Purchase::where('created_by', '=', \Auth::user()->creatorId())->latest()->first();
-        if(!$latest)
-        {
+        if (!$latest) {
             return 1;
         }
 
@@ -428,8 +379,7 @@ class PurchaseController extends Controller
     }
     public function sent($id)
     {
-        if(\Auth::user()->can('send purchase'))
-        {
+        if (\Auth::user()->can('send purchase')) {
             $purchase            = Purchase::where('id', $id)->first();
             $purchase->send_date = date('Y-m-d');
             $purchase->status    = 1;
@@ -441,13 +391,13 @@ class PurchaseController extends Controller
             $purchase->purchase = \Auth::user()->purchaseNumberFormat($purchase->purchase_id);
 
             $purchaseId    = Crypt::encrypt($purchase->id);
-            $purchase->url = route('purchase.pdf', $purchaseId);
+            $purchase->url = route('admin.purchase.pdf', $purchaseId);
 
             Utility::userBalance('vendor', $vender->id, $purchase->getTotal(), 'credit');
 
             $vendorArr = [
                 'vender_bill_name' => $purchase->name,
-                'vender_bill_number' =>$purchase->purchase,
+                'vender_bill_number' => $purchase->purchase,
                 'vender_bill_url' => $purchase->url,
 
             ];
@@ -455,19 +405,15 @@ class PurchaseController extends Controller
 
 
             return redirect()->back()->with('success', __('Purchase successfully sent.') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
-
     }
 
     public function resent($id)
     {
 
-        if(\Auth::user()->can('send purchase'))
-        {
+        if (\Auth::user()->can('send purchase')) {
             $purchase = Purchase::where('id', $id)->first();
 
             $vender = Vender::where('id', $purchase->vender_id)->first();
@@ -476,15 +422,12 @@ class PurchaseController extends Controller
             $purchase->purchase = \Auth::user()->purchaseNumberFormat($purchase->purchase_id);
 
             $purchaseId    = Crypt::encrypt($purchase->id);
-            $purchase->url = route('purchase.pdf', $purchaseId);
+            $purchase->url = route('admin.purchase.pdf', $purchaseId);
 
-        return redirect()->back()->with('success', __('Bill successfully sent.'));
-        }
-        else
-        {
+            return redirect()->back()->with('success', __('Bill successfully sent.'));
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
-
     }
 
     public function purchase($purchase_id)
@@ -498,8 +441,7 @@ class PurchaseController extends Controller
         $data  = $data->where('created_by', '=', $purchase->created_by);
         $data1 = $data->get();
 
-        foreach($data1 as $row)
-        {
+        foreach ($data1 as $row) {
             $settings[$row->name] = $row->value;
         }
 
@@ -512,11 +454,9 @@ class PurchaseController extends Controller
         $taxesData     = [];
         $items         = [];
 
-        foreach($purchase->items as $product)
-        {
-
+        foreach ($purchase->items as $product) {
             $item              = new \stdClass();
-            $item->name        = !empty($product->product()) ? $product->product()->name : '';
+            $item->name        = !empty($product->product) ? $product->product->name : '';
             $item->quantity    = $product->quantity;
             $item->tax         = $product->tax;
             $item->discount    = $product->discount;
@@ -529,35 +469,27 @@ class PurchaseController extends Controller
 
             $taxes     = Utility::tax($product->tax);
             $itemTaxes = [];
-            if(!empty($item->tax))
-            {
-                foreach($taxes as $tax)
-                {
-                    $taxPrice      = Utility::taxRate($tax->rate, $item->price, $item->quantity,$item->discount);
+            if (!empty($item->tax)) {
+                foreach ($taxes as $tax) {
+                    $taxPrice      = Utility::taxRate($tax->rate, $item->price, $item->quantity, $item->discount);
                     $totalTaxPrice += $taxPrice;
 
                     $itemTax['name']  = $tax->name;
                     $itemTax['rate']  = $tax->rate . '%';
                     $itemTax['price'] = Utility::priceFormat($settings, $taxPrice);
-                    $itemTax['tax_price'] =$taxPrice;
+                    $itemTax['tax_price'] = $taxPrice;
                     $itemTaxes[]      = $itemTax;
 
 
-                    if(array_key_exists($tax->name, $taxesData))
-                    {
+                    if (array_key_exists($tax->name, $taxesData)) {
                         $taxesData[$tax->name] = $taxesData[$tax->name] + $taxPrice;
-                    }
-                    else
-                    {
+                    } else {
                         $taxesData[$tax->name] = $taxPrice;
                     }
-
                 }
 
                 $item->itemTax = $itemTaxes;
-            }
-            else
-            {
+            } else {
                 $item->itemTax = [];
             }
             $items[] = $item;
@@ -576,18 +508,14 @@ class PurchaseController extends Controller
         $img          = asset($logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png'));
 
 
-        if($purchase)
-        {
+        if ($purchase) {
             $color      = '#' . $settings['purchase_color'];
             $font_color = Utility::getFontColor($color);
 
             return view('admin.purchase.templates.' . $settings['purchase_template'], compact('purchase', 'color', 'settings', 'vendor', 'img', 'font_color'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
-
     }
 
     public function previewPurchase($template, $color)
@@ -616,8 +544,7 @@ class PurchaseController extends Controller
         $totalTaxPrice = 0;
         $taxesData     = [];
         $items         = [];
-        for($i = 1; $i <= 3; $i++)
-        {
+        for ($i = 1; $i <= 3; $i++) {
             $item           = new \stdClass();
             $item->name     = 'Item ' . $i;
             $item->quantity = 1;
@@ -631,8 +558,7 @@ class PurchaseController extends Controller
             ];
 
             $itemTaxes = [];
-            foreach($taxes as $k => $tax)
-            {
+            foreach ($taxes as $k => $tax) {
                 $taxPrice         = 10;
                 $totalTaxPrice    += $taxPrice;
                 $itemTax['name']  = 'Tax ' . $k;
@@ -640,12 +566,9 @@ class PurchaseController extends Controller
                 $itemTax['price'] = '$10';
                 $itemTax['tax_price'] = 10;
                 $itemTaxes[]      = $itemTax;
-                if(array_key_exists('Tax ' . $k, $taxesData))
-                {
+                if (array_key_exists('Tax ' . $k, $taxesData)) {
                     $taxesData['Tax ' . $k] = $taxesData['Tax 1'] + $taxPrice;
-                }
-                else
-                {
+                } else {
                     $taxesData['Tax ' . $k] = $taxPrice;
                 }
             }
@@ -655,7 +578,7 @@ class PurchaseController extends Controller
 
         $purchase->purchase_id    = 1;
         $purchase->issue_date = date('Y-m-d H:i:s');
-//        $purchase->due_date   = date('Y-m-d H:i:s');
+        //        $purchase->due_date   = date('Y-m-d H:i:s');
         $purchase->itemData   = $items;
 
         $purchase->totalTaxPrice = 60;
@@ -674,11 +597,9 @@ class PurchaseController extends Controller
         $settings_data = \App\Models\Utility::settingsById($purchase->created_by);
         $purchase_logo = $settings_data['purchase_logo'];
 
-        if(isset($purchase_logo) && !empty($purchase_logo))
-        {
+        if (isset($purchase_logo) && !empty($purchase_logo)) {
             $img = Utility::get_file('purchase_logo/') . $purchase_logo;
-        }
-        else{
+        } else {
             $img          = asset($logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png'));
         }
 
@@ -690,32 +611,29 @@ class PurchaseController extends Controller
         $post = $request->all();
         unset($post['_token']);
 
-        if(isset($post['purchase_template']) && (!isset($post['purchase_color']) || empty($post['purchase_color'])))
-        {
+        if (isset($post['purchase_template']) && (!isset($post['purchase_color']) || empty($post['purchase_color']))) {
             $post['purchase_color'] = "ffffff";
         }
 
 
-        if($request->purchase_logo)
-        {
+        if ($request->purchase_logo) {
             $dir = 'purchase_logo/';
             $purchase_logo = \Auth::user()->id . '_purchase_logo.png';
-            $validation =[
-                'mimes:'.'png',
-                'max:'.'20480',
+            $validation = [
+                'mimes:' . 'png',
+                'max:' . '20480',
             ];
-            $path = Utility::upload_file($request,'purchase_logo',$purchase_logo,$dir,$validation);
-            if($path['flag']==0)
-            {
+            $path = Utility::upload_file($request, 'purchase_logo', $purchase_logo, $dir, $validation);
+            if ($path['flag'] == 0) {
                 return redirect()->back()->with('error', __($path['msg']));
             }
             $post['purchase_logo'] = $purchase_logo;
         }
 
-        foreach($post as $key => $data)
-        {
+        foreach ($post as $key => $data) {
             \DB::insert(
-                'insert into settings (`value`, `name`,`created_by`) values (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) ', [
+                'insert into settings (`value`, `name`,`created_by`) values (?, ?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`) ',
+                [
                     $data,
                     $key,
                     \Auth::user()->creatorId(),
@@ -751,13 +669,12 @@ class PurchaseController extends Controller
         $vendor = $purchase->vender;
         $iteams   = $purchase->items;
 
-        return view('admin.purchase.customer_bill', compact('purchase', 'vendor', 'iteams','purchasePayment','user'));
+        return view('admin.purchase.customer_bill', compact('purchase', 'vendor', 'iteams', 'purchasePayment', 'user'));
     }
 
     public function payment($purchase_id)
     {
-        if(\Auth::user()->can('create payment purchase'))
-        {
+        if (\Auth::user()->can('create payment purchase')) {
             $purchase    = Purchase::where('id', $purchase_id)->first();
             $venders = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
@@ -765,28 +682,24 @@ class PurchaseController extends Controller
             $accounts   = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
             return view('admin.purchase.payment', compact('venders', 'categories', 'accounts', 'purchase'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
-
         }
     }
 
     public function createPayment(Request $request, $purchase_id)
     {
-        if(\Auth::user()->can('create payment purchase'))
-        {
+        if (\Auth::user()->can('create payment purchase')) {
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'date' => 'required',
                     'amount' => 'required',
                     'account_id' => 'required',
 
                 ]
             );
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
                 return redirect()->back()->with('error', $messages->first());
@@ -800,8 +713,7 @@ class PurchaseController extends Controller
             $purchasePayment->payment_method = 0;
             $purchasePayment->reference      = $request->reference;
             $purchasePayment->description    = $request->description;
-            if(!empty($request->add_receipt))
-            {
+            if (!empty($request->add_receipt)) {
                 $fileName = time() . "_" . $request->add_receipt->getClientOriginalName();
                 $request->add_receipt->storeAs('uploads/payment', $fileName);
                 $purchasePayment->add_receipt = $fileName;
@@ -812,19 +724,15 @@ class PurchaseController extends Controller
             $due   = $purchase->getDue();
             $total = $purchase->getTotal();
 
-            if($purchase->status == 0)
-            {
+            if ($purchase->status == 0) {
                 $purchase->send_date = date('Y-m-d');
                 $purchase->save();
             }
 
-            if($due <= 0)
-            {
+            if ($due <= 0) {
                 $purchase->status = 4;
                 $purchase->save();
-            }
-            else
-            {
+            } else {
                 $purchase->status = 3;
                 $purchase->save();
             }
@@ -852,39 +760,35 @@ class PurchaseController extends Controller
 
             // Send Email
             $setings = Utility::settings();
-            if($setings['new_bill_payment'] == 1)
-            {
+            if ($setings['new_bill_payment'] == 1) {
 
                 $vender = Vender::where('id', $purchase->vender_id)->first();
                 $billPaymentArr = [
                     'vender_name'   => $vender->name,
                     'vender_email'  => $vender->email,
-                    'payment_name'  =>$payment->name,
-                    'payment_amount'=>$payment->amount,
-                    'payment_bill'  =>$payment->bill,
-                    'payment_date'  =>$payment->date,
-                    'payment_method'=>$payment->method,
-                    'company_name'=>$payment->method,
+                    'payment_name'  => $payment->name,
+                    'payment_amount' => $payment->amount,
+                    'payment_bill'  => $payment->bill,
+                    'payment_date'  => $payment->date,
+                    'payment_method' => $payment->method,
+                    'company_name' => $payment->method,
 
                 ];
 
 
                 $resp = Utility::sendEmailTemplate('new_bill_payment', [$vender->id => $vender->email], $billPaymentArr);
 
-                return redirect()->back()->with('success', __('Payment successfully added.') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
-
+                return redirect('admin.purchase.show', $purchase_id)->with('success', __('Payment successfully added.') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
             }
 
             return redirect()->back()->with('success', __('Payment successfully added.'));
         }
-
     }
 
     public function paymentDestroy(Request $request, $purchase_id, $payment_id)
     {
 
-        if(\Auth::user()->can('delete payment purchase'))
-        {
+        if (\Auth::user()->can('delete payment purchase')) {
             $payment = PurchasePayment::find($payment_id);
             PurchasePayment::where('id', '=', $payment_id)->delete();
 
@@ -893,13 +797,9 @@ class PurchaseController extends Controller
             $due   = $purchase->getDue();
             $total = $purchase->getTotal();
 
-            if($due > 0 && $total != $due)
-            {
+            if ($due > 0 && $total != $due) {
                 $purchase->status = 3;
-
-            }
-            else
-            {
+            } else {
                 $purchase->status = 2;
             }
 
@@ -912,9 +812,7 @@ class PurchaseController extends Controller
             Transaction::destroyTransaction($payment_id, $type, $user);
 
             return redirect()->back()->with('success', __('Payment successfully deleted.'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
@@ -944,46 +842,30 @@ class PurchaseController extends Controller
     public function productDestroy(Request $request)
     {
 
-        if(\Auth::user()->can('delete purchase'))
-        {
+        if (\Auth::user()->can('delete purchase')) {
 
             $res = PurchaseProduct::where('id', '=', $request->id)->first();
-//            $res1 = PurchaseProduct::where('purchase_id', '=', $res->purchase_id)->where('product_id', '=', $res->product_id)->get();
+            //            $res1 = PurchaseProduct::where('purchase_id', '=', $res->purchase_id)->where('product_id', '=', $res->product_id)->get();
 
             $purchase = Purchase::where('created_by', '=', \Auth::user()->creatorId())->first();
-            $warehouse_id= $purchase->warehouse_id;
+            $warehouse_id = $purchase->warehouse_id;
 
-            $ware_pro =WarehouseProduct::where('warehouse_id',$warehouse_id)->where('product_id',$res->product_id)->first();
+            $ware_pro = WarehouseProduct::where('warehouse_id', $warehouse_id)->where('product_id', $res->product_id)->first();
 
             $qty = $ware_pro->quantity;
 
-            if($res->quantity == $qty || $res->quantity > $qty)
-            {
+            if ($res->quantity == $qty || $res->quantity > $qty) {
                 $ware_pro->delete();
-            }
-            elseif($res->quantity < $qty)
-            {
+            } elseif ($res->quantity < $qty) {
                 $ware_pro->quantity =  $qty - $res->quantity;
                 $ware_pro->save();
-
             }
             PurchaseProduct::where('id', '=', $request->id)->delete();
 
 
             return redirect()->back()->with('success', __('Purchase product successfully deleted.'));
-
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
-
-
-
-
-
-
-
-
 }

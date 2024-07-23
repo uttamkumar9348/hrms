@@ -42,11 +42,11 @@
 @endphp
 {{-- end Storage setting--}}
 
-@push('css-page')
+@section('styles')
     <link rel="stylesheet" href="{{asset('css/summernote/summernote-bs4.css')}}">
-@endpush
+@endsection
 
-@push('script')
+@section('scripts')
     <script src="{{asset('css/summernote/summernote-bs4.js')}}"></script>
     <script>
         $('.summernote-simple0').on('summernote.blur', function () {
@@ -368,7 +368,7 @@
             });
         }
     </script>
-@endpush
+@endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>

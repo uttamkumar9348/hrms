@@ -8,7 +8,7 @@
     <li class="breadcrumb-item"><a href="{{route('bill.index')}}">{{__('Bill')}}</a></li>
     <li class="breadcrumb-item">{{__('Bill Create')}}</li>
 @endsection
-@push('script-page')
+@section('scripts')
     <script src="{{asset('js/jquery-ui.min.js')}}"></script>
     <script src="{{asset('js/jquery.repeater.min.js')}}"></script>
     <script src="{{ asset('js/jquery-searchbox.js') }}"></script>
@@ -510,7 +510,7 @@
             $(".discount").change();
         });
     </script>
-@endpush
+@endsection
 @section('content')
     <div class="row">
         {{ Form::open(array('url' => 'bill','class'=>'w-100')) }}

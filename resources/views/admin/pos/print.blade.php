@@ -7,11 +7,11 @@
     <li class="breadcrumb-item"><a href="{{route('pos.barcode')}}">{{__('POS Product Barcode')}}</a></li>
     <li class="breadcrumb-item">{{__('POS Barcode Print')}}</li>
 @endsection
-@push('css-page')
+@section('styles')
     <link rel="stylesheet" href="{{ asset('css/datatable/buttons.dataTables.min.css') }}">
-@endpush
+@endsection
 
-@push('script')
+@section('scripts')
 
     <script type="text/javascript" src="{{ asset('js/html2pdf.bundle.min.js') }}"></script>
     <script>
@@ -89,7 +89,7 @@
 
         }
     </script>
-@endpush
+@endsection
 
 
 @section('action-btn')

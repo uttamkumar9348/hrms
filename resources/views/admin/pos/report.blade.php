@@ -6,9 +6,9 @@
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('POS Summary')}}</li>
 @endsection
-@push('css-page')
+@section('styles')
     <link rel="stylesheet" href="{{ asset('css/datatable/buttons.dataTables.min.css') }}">
-@endpush
+@endsection
 
 @section('main-content')
     <div id="printableArea">

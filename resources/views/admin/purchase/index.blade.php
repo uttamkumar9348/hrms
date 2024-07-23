@@ -3,7 +3,7 @@
     {{ __('Manage Purchase') }}
 @endsection
 
-@push('script')
+@section('scripts')
     <script>
         $('.copy_link').click(function(e) {
             e.preventDefault();
@@ -18,9 +18,42 @@
             show_toastr('success', 'Url copied to clipboard', 'success');
         });
     </script>
-@endpush
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            $('.alertButton').on('click', function() {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "This action can not be undone. Do you want to continue?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "Yes",
+                    cancelButtonColor: "#d33",
+                    cancelButtonText: "No",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('.delete_btn').submit();
+                    }
+                });
+            });
+        });
+    </script>
+@endsection
 
 @section('main-content')
+    <style>
+        .action-btn {
+            width: 29px;
+            height: 28px;
+            border-radius: 9.3552px;
+            color: #fff;
+            display: inline-table;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+    </style>
     @include('admin.section.flash_message')
     <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
         <ol class="breadcrumb mb-0">
@@ -29,10 +62,10 @@
         </ol>
         <div class="float-end">
             {{-- @can('create purchase') --}}
-                <a href="{{ route('admin.purchase.create', 0) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
-                    title="{{ __('Create') }}">
-                    Add
-                </a>
+            <a href="{{ route('admin.purchase.create', 0) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
+                title="{{ __('Create') }}">
+                Add
+            </a>
             {{-- @endcan --}}
         </div>
     </nav>
@@ -55,21 +88,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-
                                 @foreach ($purchases as $purchase)
                                     <tr>
                                         <td class="Id">
                                             <a href="{{ route('admin.purchase.show', \Crypt::encrypt($purchase->id)) }}"
                                                 class="btn btn-outline-primary">{{ Auth::user()->purchaseNumberFormat($purchase->purchase_id) }}</a>
-
                                         </td>
-
                                         <td> {{ !empty($purchase->vender) ? $purchase->vender->name : '' }} </td>
-
                                         <td>{{ !empty($purchase->category) ? $purchase->category->name : '' }}</td>
                                         <td>{{ Auth::user()->dateFormat($purchase->purchase_date) }}</td>
-
                                         <td>
                                             @if ($purchase->status == 0)
                                                 <span
@@ -88,48 +115,42 @@
                                                     class="purchase_status badge bg-primary p-2 px-3 rounded">{{ __(\App\Models\Purchase::$statues[$purchase->status]) }}</span>
                                             @endif
                                         </td>
-
-
-
                                         @if (Gate::check('edit purchase') || Gate::check('delete purchase') || Gate::check('show purchase'))
                                             <td class="Action">
                                                 <span>
 
                                                     @can('show purchase')
-                                                        <div class="action-btn bg-info ms-2">
+                                                        <div class="action-btn bg-info">
                                                             <a href="{{ route('admin.purchase.show', \Crypt::encrypt($purchase->id)) }}"
                                                                 class="mx-3 btn btn-sm align-items-center"
                                                                 data-bs-toggle="tooltip" title="{{ __('Show') }}"
                                                                 data-original-title="{{ __('Detail') }}">
-                                                                <i class="ti ti-eye text-white"></i>
+                                                                <i class="link-icon" data-feather="eye"></i>
                                                             </a>
                                                         </div>
                                                     @endcan
                                                     @can('edit purchase')
-                                                        <div class="action-btn bg-primary ms-2">
+                                                        <div class="action-btn bg-primary">
                                                             <a href="{{ route('admin.purchase.edit', \Crypt::encrypt($purchase->id)) }}"
                                                                 class="mx-3 btn btn-sm align-items-center"
                                                                 data-bs-toggle="tooltip" title="Edit"
                                                                 data-original-title="{{ __('Edit') }}">
-                                                                <i class="ti ti-pencil text-white"></i>
+                                                                <i class="link-icon" data-feather="edit"></i>
                                                             </a>
                                                         </div>
                                                     @endcan
                                                     @can('delete purchase')
-                                                        <div class="action-btn bg-danger ms-2">
+                                                        <div class="action-btn bg-danger">
                                                             {!! Form::open([
                                                                 'method' => 'DELETE',
-                                                                'route' => ['purchase.destroy', $purchase->id],
-                                                                'class' => 'delete-form-btn',
+                                                                'route' => ['admin.purchase.destroy', $purchase->id],
+                                                                'class' => 'delete-form-btn delete_btn',
                                                                 'id' => 'delete-form-' . $purchase->id,
                                                             ]) !!}
                                                             <a href="#"
-                                                                class="mx-3 btn btn-sm align-items-center bs-pass-para"
-                                                                data-bs-toggle="tooltip" title="{{ __('Delete') }}"
-                                                                data-original-title="{{ __('Delete') }}"
-                                                                data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
-                                                                data-confirm-yes="document.getElementById('delete-form-{{ $purchase->id }}').submit();">
-                                                                <i class="ti ti-trash text-white"></i>
+                                                                class="mx-3 btn btn-sm align-items-center bs-pass-para alertButton"
+                                                                data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                                                                <i class="link-icon" data-feather="trash"></i>
                                                             </a>
                                                             {!! Form::close() !!}
                                                         </div>

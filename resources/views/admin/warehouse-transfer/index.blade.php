@@ -85,7 +85,7 @@
     </div>
 @endsection
 
-@push('script')
+@section('scripts')
     <script>
         $(document).ready(function() {
             var w_id = $('#warehouse_id').val();
@@ -150,4 +150,4 @@
             });
         }
     </script>
-@endpush
+@endsection

@@ -8,7 +8,7 @@
     <li class="breadcrumb-item">{{__('Bill Edit')}}</li>
 @endsection
 
-@push('script-page')
+@section('scripts')
     <script src="{{asset('js/jquery-ui.min.js')}}"></script>
     <script src="{{asset('js/jquery.repeater.min.js')}}"></script>
     <script src="{{ asset('js/jquery-searchbox.js') }}"></script>
@@ -600,7 +600,7 @@
             $(".discount").change();
         });
     </script>
-@endpush
+@endsection
 @section('content')
     <div class="row">
         {{ Form::model($bill, array('route' => array('bill.update', $bill->id), 'method' => 'PUT','class'=>'w-100')) }}

@@ -2,9 +2,9 @@
 @section('title')
     {{__('POS Product Barcode')}}
 @endsection
-@push('css-page')
+@section('styles')
     <link rel="stylesheet" href="{{ asset('css/datatable/buttons.dataTables.min.css') }}">
-@endpush
+@endsection
 
 @section('main-content')
 @include('admin.section.flash_message')
@@ -61,7 +61,7 @@
     </div>
 @endsection
 
-@push('script')
+@section('scripts')
 {{--    <script src="{{ asset('public/js/jquery-barcode.min.js') }}"></script>--}}
     <script src="{{ asset('public/js/jquery-barcode.js') }}"></script>
     <script>
@@ -101,4 +101,4 @@
         // });
     </script>
 
-@endpush
+@endsection

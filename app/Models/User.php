@@ -245,4 +245,32 @@ class User extends Authenticatable
 
         return date($settings['site_time_format'], strtotime($time));
     }
+
+    public function priceFormat($price)
+    {
+        $settings = Utility::settings();
+        $decimal_number = Utility::getValByName('decimal_number') ? Utility::getValByName('decimal_number') : 0;
+
+        return (($settings['site_currency_symbol_position'] == "pre") ? $settings['site_currency_symbol'] : '') . number_format($price, $decimal_number) . (($settings['site_currency_symbol_position'] == "post") ? $settings['site_currency_symbol'] : '');
+    }
+
+    public static function priceFormats($price)
+    {
+        $settings = Utility::settings();
+        $decimal_number = Utility::getValByName('decimal_number') ? Utility::getValByName('decimal_number') : 0;
+
+        return (($settings['site_currency_symbol_position'] == "pre") ? $settings['site_currency_symbol'] : '') . number_format($price, $decimal_number) . (($settings['site_currency_symbol_position'] == "post") ? $settings['site_currency_symbol'] : '');
+    }
+
+    public function ownerId()
+    {
+        if($this->type == 'company' || $this->type == 'super admin')
+        {
+            return $this->id;
+        }
+        else
+        {
+            return $this->created_by;
+        }
+    }
 }

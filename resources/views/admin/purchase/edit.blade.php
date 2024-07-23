@@ -7,7 +7,7 @@
     <li class="breadcrumb-item"><a href="{{route('purchase.index')}}">{{__('Purchase')}}</a></li>
     <li class="breadcrumb-item">{{__('Purchase Edit')}}</li>
 @endsection
-@push('script')
+@section('scripts')
 
     <script src="{{asset('js/jquery-ui.min.js')}}"></script>
     <script src="{{asset('js/jquery.repeater.min.js')}}"></script>
@@ -441,7 +441,7 @@
             $(".discount").change();
         });
     </script>
-@endpush
+@endsection
 
 @section('main-content')
     <div class="row">

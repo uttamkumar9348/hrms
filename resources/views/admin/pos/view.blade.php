@@ -2,7 +2,7 @@
 @section('title')
     {{__('POS Detail')}}
 @endsection
-@push('script')
+@section('scripts')
     <script>
         $(document).on('click', '#shipping', function () {
             var url = $(this).data('url');
@@ -19,7 +19,7 @@
             });
         })
     </script>
-@endpush
+@endsection
 
 @php
     $settings = Utility::settings();

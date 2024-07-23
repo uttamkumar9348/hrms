@@ -2,7 +2,7 @@
 @section('page-title')
     {{__('Manage Bills')}}
 @endsection
-@push('script-page')
+@section('scripts')
     <script>
         $('.copy_link').click(function (e) {
             e.preventDefault();
@@ -17,7 +17,7 @@
             show_toastr('success', 'Url copied to clipboard', 'success');
         });
     </script>
-@endpush
+@endsection
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('Bill')}}</li>

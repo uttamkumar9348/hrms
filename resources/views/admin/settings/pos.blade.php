@@ -9,7 +9,7 @@
     $company_favicon = \App\Models\Utility::getValByName('company_favicon');
     $lang = \App\Models\Utility::getValByName('default_language');
 @endphp
-@push('script')
+@section('scripts')
     <script>
         var scrollSpy = new bootstrap.ScrollSpy(document.body, {
             target: '#useradd-sidenav',
@@ -71,7 +71,7 @@
     }
 
     </script>
-@endpush
+@endsection
 @section('main-content')
     @include('admin.section.flash_message')
     <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
