@@ -2,53 +2,131 @@
 
 namespace App\Imports;
 
-use App\Helpers\AppHelper;
-use App\Models\Branch;
-use App\Models\Department;
-use App\Models\OfficeTime;
 use App\Models\Post;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Branch;
+use App\Helpers\AppHelper;
+use App\Models\Department;
+use App\Models\OfficeTime;
+use App\Models\EmployeeAccount;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ImportUser implements ToModel
+class ImportUser implements ToModel, WithHeadingRow
 {
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
-        // dd($row);
-        // $eventDate = date('Y-m-d', strt$row['4']));
-        Log::info($row['4']);
-        return new User([
-            "name" => $row['0'],
-            "email" => $row['2'],
-            "username" => $row['9'],
-            "password" => $row['10'],
-            "address" => $row['1'],
-            "avatar" => $row['7'],
-            "dob" =>date('Y-m-d',strtotime($row['4'])),
-            "gender" => $row['5'],
-            "phone" => $row['0'],
-            "role_id" => Role::where('name',$row['11'])->value('id'),
-            "leave_allocated" => $row['20'],
-            "employment_type" => $row['16'],
-            "joining_date" => date('Y-m-d',strtotime($row['18'])),
-            "workspace_type" => $row['19'],
-            "company_id" => AppHelper::getAuthUserCompanyId(),
-            "branch_id" => Branch::where('name',$row['12'])->value('id'),
-            "department_id" => Department::where('dept_name',$row['13'])->value('id'),
-            "post_id" => Post::where('post_name',$row['14'])->value('id'),
-            "supervisor_id" =>  User::where('name',$row['15'])->value('id'),
-            "office_time_id" =>  OfficeTime::where('opening_time',$row['17'])->value('id'),
-            "marital_status" => $row['6'],
-           
-        ]);
+        // dd(count($row)-3);
+        try {
+            // Ensure all columns are available
+            // if (!isset($row['0'], $row['1'], $row['2'], $row['3'],$row['4'], $row['5'],$row['6'],$row['7'],$row['8'], $row['9'], $row['10'], $row['11'], $row['12'], $row['13'], $row['14'], $row['15'], $row['16'], $row['17'], $row['18'], $row['19'], $row['20'], $row['21'], $row['22'], $row['23'], $row['24'], $row['25'], $row['26'],)) {
+            //     throw new \Exception('Missing data in some columns');
+            // }
 
-        // dd($result);
+            // for($i=1;$i<=count($row)-3;$i++){
+
+            //     if(!isset($row[$i])){
+            //         throw new \Exception('Missing data in some columns');
+            //     }
+            // }
+
+            // Parse date fields
+            $dob = $this->parseExcelDate($row['dob']);
+            $joiningDate = $this->parseExcelDate($row['joining_date']);
+            $office_time = $this->parseExcelTime($row['office_time']);
+
+            // Fetch related model IDs
+            $roleId = Role::where('name', $row['role'])->value('id');
+            $branchId = Branch::where('name', $row['branch'])->value('id');
+            $departmentId = Department::where('dept_name', $row['department'])->value('id');
+            $postId = Post::where('post_name', $row['post'])->value('id');
+            $supervisorId = User::where('name', $row['supervisor'])->value('id');
+
+            $result =  User::create([
+                "name" => $row['name'],
+                "email" => $row['email'],
+                "username" => $row['username'],
+                "password" => bcrypt($row['password']),
+                "address" => $row['address'],
+                "avatar" => $row['avatar'],
+                "dob" => $dob,
+                "gender" => $row['gender'],
+                "phone" => $row['phone'],
+                "role_id" => $roleId,
+                "leave_allocated" => $row['leave_allocated'],
+                "employment_type" => $row['employment_type'],
+                "joining_date" => $joiningDate,
+                "workspace_type" => $row['workspace_type'],
+                "company_id" => AppHelper::getAuthUserCompanyId(),
+                "branch_id" => $branchId,
+                "department_id" => $departmentId,
+                "post_id" => $postId,
+                "supervisor_id" => $supervisorId,
+                "office_time_id" =>  OfficeTime::where('opening_time', $office_time)->value('id'),
+                "marital_status" => $row['marital_status'],
+                "employee_code" => AppHelper::getEmployeeCode()
+            ]);
+
+            EmployeeAccount::create([
+                'user_id' => $result->id,
+                'bank_name' => $row['bank_name'],
+                'bank_account_no' => $row['bank_account_number'],
+                'bank_account_type' => strtolower($row['bank_account_type']),
+                'account_holder' => $row['account_holder_name'],
+            ]);
+        } catch (\Exception $e) {
+            // Handle exceptions, possibly logging them or returning a default value
+            Log::error("Error processing row: " . json_encode($row) . " with error: " . $e->getMessage());
+            return null; // Return null to skip this row
+        }
+    }
+
+    private function parseExcelDate($value)
+    {
+        // Check if the value is numeric (Excel date format)
+        if (is_numeric($value)) {
+            Log::info("comming to integer");
+            return \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value)->format('Y-m-d');
+        }
+
+        // Otherwise, attempt to parse it as a normal date string
+        $date = \DateTime::createFromFormat('m/d/Y', $value);
+        if ($date) {
+            return $date->format('Y-m-d');
+        }
+
+        // Fallback: Attempt to parse it as a different date format
+        $date = \DateTime::createFromFormat('Y-m-d', $value);
+        if ($date) {
+            return $date->format('Y-m-d');
+        }
+
+        // Log and return null if no valid date is found
+        Log::warning("Invalid date format: " . $value);
+        return null;
+    }
+
+    private function parseExcelTime($value)
+    {
+        // Check if the value is numeric (Excel time format)
+        if (is_numeric($value)) {
+            // Calculate total seconds in a day and convert
+            $totalSeconds = $value * 24 * 60 * 60; // 24 hours, 60 minutes, 60 seconds
+            $hours = floor($totalSeconds / 3600);
+            $minutes = floor(($totalSeconds % 3600) / 60);
+            $seconds = $totalSeconds % 60;
+
+            return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+        }
+
+        // If it's already a string in time format
+        return $value;
     }
 }

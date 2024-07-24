@@ -55,7 +55,7 @@ class EmployeeFormExport implements FromCollection, WithHeadings, WithEvents, Wi
 
         $this->selects = $selects;
         $this->row_count = 100; //number of rows that will have the dropdown
-        $this->column_count = 29; //number of columns to be auto sized
+        $this->column_count = 26; //number of columns to be auto sized
     }
 
     public function collection()
@@ -66,13 +66,6 @@ class EmployeeFormExport implements FromCollection, WithHeadings, WithEvents, Wi
     public function headings(): array
     {
         return [
-            // 'Employee Code', //column A
-            // 'Name', //column B
-            // 'Address', //column C
-            // 'department', //column D
-            // 'status', //column E
-            // 'role', //column F
-
             'Name',
             'Address',
             'Email',
@@ -99,28 +92,6 @@ class EmployeeFormExport implements FromCollection, WithHeadings, WithEvents, Wi
             'Bank Account Number',
             'Account Holder Name',
             'Bank Account Type',
-
-
-            // 'Status',
-            // 'User_Type',
-            // 'Remarks',
-            // 'Uuid',
-            // 'Fcm_Token',
-            // 'Device_Type',
-            // 'Logout_Status',
-            // 'Company_Id',
-            // 'Online_Status',
-
-
-            // 'Created_By',
-            // 'Updated_By',
-            // 'Deleted_By',
-            // 'Deleted_At',
-            // 'Created_At',
-            // 'Updated_At',
-            // 'Employee_Code'
-
-
         ];
     }
 
@@ -168,7 +139,6 @@ class EmployeeFormExport implements FromCollection, WithHeadings, WithEvents, Wi
                     $validation->setError('Value is not in list.');
                     $validation->setFormula1(sprintf('"%s"', implode(',', $options)));
 
-
                     // clone validation to remaining rows
                     for ($i = 3; $i <= $row_count; $i++) {
                         $event->sheet->getCell("{$drop_column}{$i}")->setDataValidation(clone $validation);
@@ -178,7 +148,6 @@ class EmployeeFormExport implements FromCollection, WithHeadings, WithEvents, Wi
                         $column = Coordinate::stringFromColumnIndex($i);
                         $event->sheet->getColumnDimension($column)->setAutoSize(true);
                     }
-
                     //make th 1st row disabld
                     $sheet = $event->sheet->getDelegate();
                     $sheet->getHighestColumn();
