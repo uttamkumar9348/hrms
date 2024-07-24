@@ -279,7 +279,6 @@
                                                         $totalQuantity += $iteam->quantity;
                                                         $totalRate += $iteam->price;
                                                         $totalDiscount += $iteam->discount;
-                                                        // dd($taxes);
                                                         foreach ($taxes as $taxe) {
                                                             $taxDataPrice = App\Models\Utility::taxRate(
                                                                 $taxe->rate,
