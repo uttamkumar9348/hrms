@@ -74,9 +74,9 @@
                                             {{-- @endcan --}}
                                             {{-- @can('delete warehouse') --}}
                                             <div class="action-btn bg-danger">
-                                                {{ Form::open(['route' => ['admin.warehouse.destroy', $warehouse->id], 'class' => 'w-100 delete_btn']) }}
-                                                <a id="alertButton" type="submit"
-                                                    class="btn btn-sm align-items-center bs-pass-para"
+                                                {{ Form::open(['route' => ['admin.warehouse.destroy', $warehouse->id],'id' => 'delete-form-' . $warehouse->id, 'class' => 'w-100 delete_btn']) }}
+                                                <a type="submit"
+                                                    class="btn btn-sm align-items-center bs-pass-para alertButton" data-id="{{ $warehouse->id }}"
                                                     data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
                                                         class="link-icon" data-feather="trash"></i></a>
                                                 {{ Form::close() }}
@@ -97,20 +97,23 @@
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function() {
-            $('#alertButton').on('click', function() {
+        document.querySelectorAll('.alertButton').forEach(function(a) {
+            a.addEventListener('click', function(event) {
+                const formId = 'delete-form-' + this.getAttribute('data-id');
+                const form = document.getElementById(formId);
+                console.log(formId);
                 Swal.fire({
-                    title: "Are you sure?",
-                    text: "This action can not be undone. Do you want to continue?",
-                    icon: "warning",
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "Yes",
-                    cancelButtonColor: "#d33",
-                    cancelButtonText: "No",
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $('.delete_btn').submit();
+                        form.submit();
                     }
                 });
             });

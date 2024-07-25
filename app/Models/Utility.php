@@ -700,7 +700,8 @@ class Utility extends Model
     
             foreach($taxArr as $tax)
             {
-                $tax     = self::taxes($tax);
+                // $tax     = self::taxes($tax);
+                $tax = Tax::find($tax);
                 $taxRate += !empty($tax->rate) ? $tax->rate : 0;
             }
 

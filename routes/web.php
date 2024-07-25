@@ -441,7 +441,7 @@ Route::group([
 
         //purchase
         Route::resource('purchase', PurchaseController::class);
-        Route::get('purchase/items', [PurchaseController::class, 'items'])->name('purchase.items');
+        Route::post('purchase/items', [PurchaseController::class, 'items'])->name('purchase.items');
         Route::get('/bill/{id}/', 'PurchaseController@purchaseLink')->name('purchase.link.copy');
         Route::get('purchase/{id}/payment', [PurchaseController::class, 'payment'])->name('purchase.payment');
         Route::post('purchase/{id}/payment', [PurchaseController::class, 'createPayment'])->name('purchase.payment');

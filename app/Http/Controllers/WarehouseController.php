@@ -17,11 +17,9 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-
         $warehouses = warehouse::where('created_by', '=', \Auth::user()->creatorId())->get();
 
         return view('admin.warehouse.index',compact('warehouses'));
-
     }
 
     /**

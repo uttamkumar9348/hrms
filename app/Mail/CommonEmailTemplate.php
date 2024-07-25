@@ -32,7 +32,7 @@ class CommonEmailTemplate extends Mailable
      */
     public function build()
     {
-        return $this->from($this->settings['mail_from_address'], $this->template->from)->markdown('email.common_email_template')->subject($this->template->subject)->with('content', $this->template->content);
+        return $this->from($this->settings['mail_from_address'], $this->template->from)->markdown('admin.email.common_email_template')->subject($this->template->subject)->with('content', $this->template->content);
 
     }
 }

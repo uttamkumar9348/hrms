@@ -20,20 +20,23 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function() {
-            $('.alertButton').on('click', function() {
+        document.querySelectorAll('.alertButton').forEach(function(a) {
+            a.addEventListener('click', function(event) {
+                const formId = 'delete-form-' + this.getAttribute('data-id');
+                const form = document.getElementById(formId);
+
                 Swal.fire({
-                    title: "Are you sure?",
-                    text: "This action can not be undone. Do you want to continue?",
-                    icon: "warning",
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "Yes",
-                    cancelButtonColor: "#d33",
-                    cancelButtonText: "No",
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $('.delete_btn').submit();
+                        form.submit();
                     }
                 });
             });
@@ -147,9 +150,8 @@
                                                                 'class' => 'delete-form-btn delete_btn',
                                                                 'id' => 'delete-form-' . $purchase->id,
                                                             ]) !!}
-                                                            <a href="#"
-                                                                class="mx-3 btn btn-sm align-items-center bs-pass-para alertButton"
-                                                                data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                                                            <a class="mx-3 btn btn-sm align-items-center bs-pass-para alertButton"
+                                                                data-bs-toggle="tooltip" title="{{ __('Delete') }}" data-id="{{ $purchase->id }}">
                                                                 <i class="link-icon" data-feather="trash"></i>
                                                             </a>
                                                             {!! Form::close() !!}

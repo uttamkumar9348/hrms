@@ -57,7 +57,6 @@ class Purchase extends Model
         {
             $subTotal += ($product->price * $product->quantity);
         }
-
         return $subTotal;
     }
     public function getTotal()

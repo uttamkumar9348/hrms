@@ -403,7 +403,6 @@ class PurchaseController extends Controller
             ];
             $resp = Utility::sendEmailTemplate('vender_bill_sent', [$vender->id => $vender->email], $vendorArr);
 
-
             return redirect()->back()->with('success', __('Purchase successfully sent.') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -432,10 +431,9 @@ class PurchaseController extends Controller
 
     public function purchase($purchase_id)
     {
-
         $settings = Utility::settings();
         $purchaseId   = Crypt::decrypt($purchase_id);
-
+        
         $purchase  = Purchase::where('id', $purchaseId)->first();
         $data  = DB::table('settings');
         $data  = $data->where('created_by', '=', $purchase->created_by);
@@ -507,7 +505,7 @@ class PurchaseController extends Controller
         $company_logo = Utility::getValByName('company_logo_dark');
         $img          = asset($logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png'));
 
-
+dd($settings['purchase_template']);
         if ($purchase) {
             $color      = '#' . $settings['purchase_color'];
             $font_color = Utility::getFontColor($color);
@@ -689,6 +687,7 @@ class PurchaseController extends Controller
 
     public function createPayment(Request $request, $purchase_id)
     {
+        $url = \Crypt::encrypt($purchase_id);
         if (\Auth::user()->can('create payment purchase')) {
             $validator = \Validator::make(
                 $request->all(),
@@ -772,13 +771,11 @@ class PurchaseController extends Controller
                     'payment_date'  => $payment->date,
                     'payment_method' => $payment->method,
                     'company_name' => $payment->method,
-
                 ];
-
 
                 $resp = Utility::sendEmailTemplate('new_bill_payment', [$vender->id => $vender->email], $billPaymentArr);
 
-                return redirect('admin.purchase.show', $purchase_id)->with('success', __('Payment successfully added.') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+                return redirect()->route('admin.purchase.show', $url)->with('success', __('Payment successfully added.') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
             }
 
             return redirect()->back()->with('success', __('Payment successfully added.'));
@@ -825,8 +822,6 @@ class PurchaseController extends Controller
     }
     public function product(Request $request)
     {
-
-
         $data['product']     = $product = ProductService::find($request->product_id);
         $data['unit']        = !empty($product->unit) ? $product->unit->name : '';
         $data['taxRate']     = $taxRate = !empty($product->tax_id) ? $product->taxRate($product->tax_id) : 0;
@@ -835,7 +830,7 @@ class PurchaseController extends Controller
         $quantity            = 1;
         $taxPrice            = ($taxRate / 100) * ($salePrice * $quantity);
         $data['totalAmount'] = ($salePrice * $quantity);
-
+        
         return json_encode($data);
     }
 

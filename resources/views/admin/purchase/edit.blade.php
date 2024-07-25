@@ -102,7 +102,6 @@
 
         function changeItem(element) {
             var iteams_id = element.val();
-
             var url = element.data('url');
             var el = element;
             $.ajax({
@@ -117,10 +116,9 @@
                 cache: false,
                 success: function(data) {
                     var item = JSON.parse(data);
-
                     $.ajax({
                         url: '{{ route('admin.purchase.items') }}',
-                        type: 'GET',
+                        type: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': jQuery('#token').val()
                         },
@@ -131,6 +129,7 @@
                         cache: false,
                         success: function(data) {
                             var purchaseItems = JSON.parse(data);
+                            console.log(purchaseItems);
 
                             if (purchaseItems != null) {
                                 var amount = (purchaseItems.price * purchaseItems.quantity);

@@ -22,6 +22,28 @@
                 }
             });
         })
+        document.querySelectorAll('.bs-pass-para').forEach(function(element) {
+            element.addEventListener('click', function(event) {
+                event.preventDefault();
+                var confirmText = this.getAttribute('data-confirm').split('|');
+                var formId = this.getAttribute('data-confirm-yes').match(/'(.*)'/)[1];
+
+                Swal.fire({
+                    title: confirmText[0],
+                    text: confirmText[1],
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById(formId).submit();
+                    }
+                });
+            });
+        });
     </script>
 @endsection
 
@@ -89,9 +111,9 @@
                                     <p class="text-muted text-sm mb-3">{{ __('Status') }} : {{ __('Awaiting payment') }} </p>
                                     @if ($purchase->status != 0)
                                         @can('create payment purchase')
-                                            <a href="{{ route('admin.purchase.payment', $purchase->id) }}"
-                                                data-ajax-popup="true" data-title="{{ __('Add Payment') }}"
-                                                class="btn btn-sm btn-info" data-original-title="{{ __('Add Payment') }}"><i
+                                            <a href="{{ route('admin.purchase.payment', $purchase->id) }}" data-ajax-popup="true"
+                                                data-title="{{ __('Add Payment') }}" class="btn btn-sm btn-info"
+                                                data-original-title="{{ __('Add Payment') }}"><i
                                                     class="ti ti-report-money mr-2"></i>{{ __('Add Payment') }}</a> <br>
                                         @endcan
                                     @endif
@@ -319,7 +341,8 @@
                                                                         $totalTaxPrice += $taxPrice;
                                                                     @endphp
                                                                     <tr>
-                                                                        <td>{{ $tax->name . ' (' . $tax->rate . '%)' }}</td>
+                                                                        <td>{{ $tax->name . ' (' . $tax->rate . '%)' }}
+                                                                        </td>
                                                                         <td>{{ \Auth::user()->priceFormat($taxPrice) }}
                                                                         </td>
                                                                     </tr>
