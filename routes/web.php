@@ -33,6 +33,7 @@ use App\Http\Controllers\Web\QrCodeController;
 use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\RouterController;
 use App\Http\Controllers\Web\AdvanceSalaryController;
+use App\Http\Controllers\Web\AssetAssignmentController;
 use App\Http\Controllers\Web\RegularizationController;
 use App\Http\Controllers\Web\SalaryComponentController;
 use App\Http\Controllers\Web\SalaryGroupController;
@@ -288,8 +289,16 @@ Route::group([
         Route::resource('assets', AssetController::class,[
             'except' => ['destroy']
         ]);
+        Route::resource('asset_assignment', AssetAssignmentController::class,[
+            'except' => ['destroy']
+        ]);
         Route::get('assets/delete/{id}', [AssetController::class, 'delete'])->name('assets.delete');
         Route::get('assets/toggle-status/{id}', [AssetController::class, 'changeAvailabilityStatus'])->name('assets.change-Availability-status');
+
+        Route::resource('asset_assignment', AssetAssignmentController::class,[
+            'except' => ['destroy']
+        ]);
+        Route::get('asset-assignments/get-All-Assets/{assetType_id}', [AssetAssignmentController::class, 'getAllAssetsByAssetTypeId'])->name('assets.getAllAssetsByAssetTypeId');
 
         /** Salary Component route */
         Route::resource('salary-components', SalaryComponentController::class,[

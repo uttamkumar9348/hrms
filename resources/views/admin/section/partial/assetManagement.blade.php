@@ -26,6 +26,14 @@
                            class="nav-link {{ request()->routeIs('admin.assets.*') ? 'active' : '' }}">Assets</a>
                     </li>
                 @endcan
+
+                @can('list_assets')
+                    <li class="nav-item">
+                        <a href="{{route('admin.asset_assignment.index')}}"
+                           data-href="{{route('admin.asset_assignment.index')}}"
+                           class="nav-link {{ request()->routeIs('admin.asset_assignment.*') ? 'active' : '' }}">Asset Management</a>
+                    </li>
+                @endcan
             </ul>
         </div>
     </li>
