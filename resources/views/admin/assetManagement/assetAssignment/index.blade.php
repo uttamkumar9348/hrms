@@ -24,8 +24,10 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
-                            <th class="text-center">Asset Item Count</th>
-                            <th class="text-center">Status</th>
+                            <th class="text-center">Asset</th>
+                            <th class="text-center">Assigned Date</th>
+                            <th class="text-center">Returned</th>
+                            <th class="text-center">Damaged</th>
                             @canany(['edit_type','delete_type'])
                                 <th class="text-center">Action</th>
                             @endcanany
@@ -33,20 +35,34 @@
                         </thead>
                         <tbody>
                         <tr>
-                        @forelse($assetTypeLists as $key => $value)
+                        @forelse($assetLists as $key => $value)
                             <tr>
                                 <td>{{++$key}}</td>
-                                <td>{{ucfirst($value->name)}}</td>
-                                <td class="text-center">
-                                    <a href="{{route('admin.asset-types.show',$value->id)}}"> {{$value->assets_count}}</a>
+                                <td>{{ucfirst($value->assign_to)}}</td>
+                                <td class="text-center"> 
+                                    {{$value->asset_name}}
                                 </td>
-                                <td class="text-center">
-                                    <label class="switch">
-                                        <input class="toggleStatus" href="{{route('admin.asset-types.toggle-status',$value->id)}}"
-                                               type="checkbox" {{($value->is_active) == 1 ?'checked':''}}>
-                                        <span class="slider round"></span>
-                                    </label>
+                                <td class="text-center"> 
+                                    {{$value->assign_date}}
                                 </td>
+                                @if($value->returned != null)
+                                <td class="text-center"> 
+                                    Yes
+                                </td>
+                                @else
+                                <td class="text-center"> 
+                                    No
+                                </td>
+                                @endif
+                                @if($value->damaged != null || $value->damaged == 1)
+                                <td class="text-center"> 
+                                    Yes
+                                </td>
+                                @else
+                                <td class="text-center"> 
+                                    No
+                                </td>
+                                @endif
 
                                 <td class="text-center">
                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">

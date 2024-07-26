@@ -20,15 +20,21 @@ class AssetAssignment extends Model
         'cost_of_damage'
     ];
 
+    protected $attributes = [
+        'returned' => 0
+    ];
+
+    const RECORDS_PER_PAGE = 20;
+
     public function users(){
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class,'user_id', 'id');
     }
 
     public function assets(){
-        return $this->hasMany(Asset::class);
+        return $this->belongsTo(Asset::class,'asset_id','id');
     }
 
     public function asset_types(){
-        return $this->hasMany(AssetType::class);
+        return $this->belongsTo(AssetType::class,'asset_type_id','id');
     }  
 }

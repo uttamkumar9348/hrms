@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Asset;
 use App\Models\AssetAssignment;
+use App\Repositories\AssetAssignmentRepository;
 use App\Repositories\UserRepository;
 use App\Services\AssetManagement\AssetService;
 use App\Services\AssetManagement\AssetTypeService;
@@ -18,7 +19,8 @@ class AssetAssignmentController extends Controller
     public function __construct(
         private AssetTypeService $assetTypeService,
         private AssetService $assetService,
-        private UserRepository $userRepo
+        private UserRepository $userRepo,
+        private AssetAssignmentRepository $assetAsignmentRepo
     ) {
     }
 
@@ -27,10 +29,11 @@ class AssetAssignmentController extends Controller
         $this->authorize('list_type');
         try {
             $select = ['*'];
-            $with = ['assets'];
-            $assetTypeLists = $this->assetTypeService->getAllAssetTypes($select, $with);
-            return view($this->view . 'index', compact('assetTypeLists'));
-        } catch (\Exception $exception) {
+            $with = ['assets','users'];
+            $assetLists = $this->assetAsignmentRepo->getAllAssetAssignments($select, $with);
+            // dd($assetLists);
+            return view($this->view . 'index', compact('assetLists'));
+        } catch (\Exception $exception) {    
             return redirect()->back()->with('danger', $exception->getMessage());
         }
     }

@@ -199,5 +199,8 @@ class User extends Authenticatable
         });
     }
 
+    public function assetAssignments(){
+        return $this->hasMany(AssetAssignment::class);
+    }
 
 }
