@@ -95,7 +95,7 @@
                                                     <div class="action-btn bg-danger ms-2">
                                                         {!! Form::open([
                                                             'method' => 'DELETE',
-                                                            'route' => ['farmer.farming_registration.destroy', $farming->id],
+                                                            'route' => ['admin.farmer.farming_registration.destroy', $farming->id],
                                                             'id' => 'delete-form-' . $farming->id,
                                                         ]) !!}
                                                         <a href="#"
