@@ -174,7 +174,7 @@ class RegularizationController extends Controller
         $checkout_at = $request->checkout ? $request->checkout : null;
         $user_id = auth()->user()->id;
         $companyId = auth()->user()->company_id;
-        // dd($companyId);
+        // dd($companyId, $user_id, $checkout_at, $checkin_at, $reason, $date);
 
 
         try {
@@ -189,6 +189,7 @@ class RegularizationController extends Controller
                 ]);
             }
         } catch (Exception $exception) {
+            dd($exception);
             return redirect()->back()->with('danger', $exception->getMessage());
         }
     }
@@ -199,12 +200,12 @@ class RegularizationController extends Controller
             $select = ['name'];
             $permissionKeyForNotification = 'employee_check_in';
             $userDetail = $this->userRepository->findUserDetailById($userId);
-
+            
             if (!$userDetail) {
                 throw new Exception('Employee Detail Not Found', 404);
             }
 
-            // dd($userDetail);
+            // dd($userDetail,$companyId, $userId);
             $validatedData = $this->attendanceController->prepareDataForRegularization($companyId, $userId, 'checkIn');
             // dd($validatedData);
             if ($dashboardAttendance) {
@@ -219,6 +220,7 @@ class RegularizationController extends Controller
 
             return $regularization_data;
         } catch (Exception $exception) {
+            dd($exception);
             DB::rollBack();
             throw $exception;
         }

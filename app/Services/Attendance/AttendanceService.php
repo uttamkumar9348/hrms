@@ -243,6 +243,7 @@ class AttendanceService
     }
 
     public function newRgularization($reason,$validatedData,$date,$checkin_at,$checkout_at){
+        
         $employeeLeaveDetail = $this->leaveRepo->findEmployeeApprovedLeaveForCurrentDate($validatedData,['id']);
         // dd($employeeLeaveDetail);
         if($employeeLeaveDetail){

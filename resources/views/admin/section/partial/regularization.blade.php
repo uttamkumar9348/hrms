@@ -85,11 +85,6 @@
         label {
             margin-right: 10px;
         }
-
-        #clockContainer {
-            background: url(http://127.0.0.1:8000/assets/images/clock.jpg) no-repeat;
-            background-size: cover;
-        }
     </style>
 </head>
 
@@ -112,18 +107,18 @@
                     <span class="close">&times;</span>
                 </div>
                 <div class="card-body text-center clock-display">
-
-                    <div id="clockContainer" class="mb-3">
-                        <div id="hour"></div>
-                        <div id="minute"></div>
-                        <div id="second"></div>
+                    <div id="clockContainer" class="mb-3"
+                        style="background: url({{ asset('assets/images/clock.jpg') }}) no-repeat;background-size: cover;">
+                        <div id="rhour"></div>
+                        <div id="rminute"></div>
+                        <div id="rsecond"></div>
                     </div>
 
-                    <p id="date" class="text-primary fw-bolder mb-3"></p>
-
+                    <p id="rdate" class="text-primary fw-bolder mb-3"></p>
 
                     <div class="check-text  align-items-center justify-content-around">
-                        <span> Date:- <input type="date" name="date" id="get_date" onchange="checkAttendance(`{{ route('admin.ajaxRegularizationModal') }}`)"></span>
+                        <span> Date:- <input type="date" name="date" id="get_date"
+                                onchange="checkAttendance(`{{ route('admin.ajaxRegularizationModal') }}`)"></span>
 
                         <div class="form-container">
                             <div class="form-group">
@@ -135,10 +130,14 @@
                                 <input type="time" name="checkout" id="checkout_time">
                             </div>
                         </div>
-                        <span><textarea required name="reason" id="late_reason" cols="29" rows="3"></textarea></span>
+                        <span>
+                            <textarea required name="reason" id="late_reason" cols="29" rows="3"></textarea>
+                        </span>
                     </div>
                     <div class="punch-btn mt-2 mb-2 d-flex align-items-center justify-content-around">
-                        <button class="btn btn-lg btn-danger {{ ''}}" onclick="regularization(`{{ route('admin.createAjaxRegularization') }}`)" id="addRegularization" data-audio="{{asset('assets/audio/beep.mp3')}}">
+                        <button class="btn btn-lg btn-danger {{ '' }}"
+                            onclick="regularization(`{{ route('admin.createAjaxRegularization') }}`)"
+                            id="addRegularization" data-audio="{{ asset('assets/audio/beep.mp3') }}">
                             Regularize
                         </button>
                     </div>
@@ -149,8 +148,39 @@
         <!-- </div> -->
 
     </div>
-
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script>
+        $('document').ready(function() {
+            setInterval(drawClock, 1000);
+
+            function drawClock() {
+                const hour = $('#rhour');
+                const minute = $('#rminute');
+                const second = $('#rsecond');
+
+                let now = new Date();
+                let hr = now.getHours();
+                let min = now.getMinutes();
+                let sec = now.getSeconds();
+
+                let hr_rotation = 30 * hr + min / 2;
+                let min_rotation = 6 * min;
+                let sec_rotation = 6 * sec;
+
+                // hour.style.transform = `rotate(${hr_rotation}deg)`;
+                // minute.style.transform = `rotate(${min_rotation}deg)`;
+                // second.style.transform = `rotate(${sec_rotation}deg)`;
+
+                // display weekday and date
+                const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const weekday = weekdays[now.getDay()];
+                const date = now.toLocaleDateString();
+
+                const dateDiv = document.getElementById('rdate');
+                dateDiv.innerText = `${weekday}, ${date}`;
+            }
+        });
+
         function checkAttendance(url) {
             let choose_date = document.getElementById('get_date').value
             console.log(choose_date);
@@ -259,7 +289,7 @@
                         reason: reason
                     },
                     success: function(data) {
-                        console.log(data?.message);
+                        console.log(data.message);
                         var modal = document.getElementById("myModal");
                         Swal.fire({
                             icon: 'success',
