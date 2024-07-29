@@ -46,6 +46,8 @@ use App\Http\Controllers\Web\QrCodeController;
 use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\RouterController;
 use App\Http\Controllers\Web\AdvanceSalaryController;
+use App\Http\Controllers\Web\AssetAssignmentController;
+use App\Http\Controllers\Web\RegularizationController;
 use App\Http\Controllers\Web\SalaryComponentController;
 use App\Http\Controllers\Web\SalaryGroupController;
 use App\Http\Controllers\Web\SalaryHeadController;
@@ -94,6 +96,11 @@ Route::group([
         /** User route */
         Route::resource('users', UserController::class);
         Route::get('users/toggle-status/{id}', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+        Route::get('users/export/forms', [UserController::class, 'exportForm'])->name('users.exportForm');
+        
+        Route::get('employees/import-csv', [UserController::class, 'employeeImport'])->name('employees.import-csv.show');
+        Route::post('employees/import-csv', [UserController::class, 'importEmployee'])->name('employees.import-excel.store');
+
         Route::get('users/delete/{id}', [UserController::class, 'delete'])->name('users.delete');
         Route::get('users/change-workspace/{id}', [UserController::class, 'changeWorkSpace'])->name('users.change-workspace');
         Route::get('users/get-company-employee/{branchId}', [UserController::class, 'getAllCompanyEmployeeDetail'])->name('users.getAllCompanyUsers');
@@ -181,6 +188,13 @@ Route::group([
         Route::get('employees/attendance/delete/{id}', [AttendanceController::class, 'delete'])->name('attendance.delete');
         Route::get('employees/attendance/change-status/{id}', [AttendanceController::class, 'changeAttendanceStatus'])->name('attendances.change-status');
         Route::get('employees/attendance/{type}', [AttendanceController::class, 'dashboardAttendance'])->name('dashboard.takeAttendance');
+        
+        //Attendance Regularization
+        Route::resource('regularization',RegularizationController::class);
+        Route::get('regularization/approve/{id}',[RegularizationController::class,'approveRegularization'])->name('regularization.approveRegularization');
+        Route::get('regularization/reject/{id}',[RegularizationController::class,'rejectRegularization'])->name('regularization.rejectRegularization');
+        Route::post('ajax-regularization', [RegularizationController::class, 'checkAttendance'])->name('ajaxRegularizationModal');
+        Route::post('create-regularization', [RegularizationController::class, 'createRegularization'])->name('createAjaxRegularization');
 
         /** Leave route */
         Route::get('employees/leave-request', [LeaveController::class, 'index'])->name('leave-request.index');
@@ -288,8 +302,16 @@ Route::group([
         Route::resource('assets', AssetController::class, [
             'except' => ['destroy']
         ]);
+        Route::resource('asset_assignment', AssetAssignmentController::class,[
+            'except' => ['destroy']
+        ]);
         Route::get('assets/delete/{id}', [AssetController::class, 'delete'])->name('assets.delete');
         Route::get('assets/toggle-status/{id}', [AssetController::class, 'changeAvailabilityStatus'])->name('assets.change-Availability-status');
+
+        Route::resource('asset_assignment', AssetAssignmentController::class,[
+            'except' => ['destroy']
+        ]);
+        Route::get('asset-assignments/get-All-Assets/{assetType_id}', [AssetAssignmentController::class, 'getAllAssetsByAssetTypeId'])->name('assets.getAllAssetsByAssetTypeId');
 
         /** Salary Component route */
         Route::resource('salary-components', SalaryComponentController::class, [

@@ -24,7 +24,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Facades\Excel as FacadesExcel;
 
 class AttendanceController extends Controller
 {
@@ -53,14 +55,30 @@ class AttendanceController extends Controller
 
     public function index(Request $request)
     {
+        Log::info($request->all());
+
         $this->authorize('list_attendance');
         try {
+
+            $data = $request->all();
+            $start_date = '';
+            $end_date = '';
+            if (isset($data['datetimes'])) {
+                $datetimes = explode(' - ', $request->datetimes);
+                $start_date = date('Y-m-d', strtotime($datetimes[0]));
+                $end_date = date('Y-m-d', strtotime($datetimes[1]));
+            } else {
+                $start_date = AppHelper::getCurrentDateInYmdFormat();
+                $end_date = AppHelper::getCurrentDateInYmdFormat();
+            }
             $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
             $isBsEnabled = AppHelper::ifDateInBsEnabled();
             $selectBranch = ['id', 'name'];
             $companyId = AppHelper::getAuthUserCompanyId();
             $filterParameter = [
-                'attendance_date' => $request->attendance_date ?? AppHelper::getCurrentDateInYmdFormat(),
+                // 'attendance_date' =>  AppHelper::getCurrentDateInYmdFormat(),
+                'start_date' => $start_date,
+                'end_date' => $end_date,
                 'company_id' => $companyId,
                 'branch_id' => $request->branch_id ?? null,
                 'department_id' => $request->department_id ?? null,
@@ -68,15 +86,16 @@ class AttendanceController extends Controller
                 'date_in_bs' => false,
             ];
 
-            if (AppHelper::ifDateInBsEnabled()) {
-                $filterParameter['attendance_date'] = $request->attendance_date ?? AppHelper::getCurrentDateInBS();
-                $filterParameter['date_in_bs'] = true;
-            }
+            // if  (AppHelper::ifDateInBsEnabled())  {
+            //     $filterParameter['attendance_date'] =  AppHelper::getCurrentDateInBS();
+            //     $filterParameter['date_in_bs'] = true;
+            // }
             $attendanceDetail = $this->attendanceService->getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter);
-
+            // dd($attendanceDetail,$filterParameter);
+            Log::info($filterParameter);
             $branch = $this->branchRepo->getLoggedInUserCompanyBranches($companyId, $selectBranch);
             if ($filterParameter['download_excel']) {
-                return \Maatwebsite\Excel\Facades\Excel::download(new AttendanceDayWiseExport($attendanceDetail, $filterParameter), 'attendance-' . $filterParameter['attendance_date'] . '-report.xlsx');
+                return FacadesExcel::download(new AttendanceDayWiseExport($attendanceDetail, $filterParameter), 'attendance- from' . $filterParameter['start_date'] . 'to' . $filterParameter['end_date'] .  '-report.xlsx');
             }
             return view($this->view . 'index', compact('attendanceDetail', 'filterParameter', 'branch', 'isBsEnabled', 'appTimeSetting'));
         } catch (Exception $exception) {
@@ -238,7 +257,6 @@ class AttendanceController extends Controller
             $attendance = ($attendanceType == 'checkIn') ?
                 $this->checkIn($userId, $companyId, true, $locationDetail) :
                 $this->checkOut($userId, $companyId, true, $locationDetail);
-            
             $message = ($attendanceType == 'checkIn') ?
                 'Check In SuccessFull' :
                 'Check Out SuccessFull';
@@ -269,7 +287,6 @@ class AttendanceController extends Controller
                 $validatedData['check_in_latitude'] = $locationData['lat'];
                 $validatedData['check_in_longitude'] = $locationData['long'];
             }
-            
             DB::beginTransaction();
             $checkInAttendance =  $this->attendanceService->newCheckIn($validatedData);
             $this->userRepository->updateUserOnlineStatus($userDetail, 1);
@@ -293,19 +310,19 @@ class AttendanceController extends Controller
             $select = ['name'];
             $permissionKeyForNotification = 'employee_check_out';
             $userDetail = $this->userRepository->findUserDetailById($userId);
-            $validatedData = $this->prepareDataForAttendance($companyId, $userId, 'checkout');
-            if ($dashboardAttendance) {
+            $validatedData = $this->prepareDataForAttendance($companyId, $userId,  'checkout');
+            if  ($dashboardAttendance)  {
                 $validatedData['check_out_latitude'] = $locationData['lat'];
                 $validatedData['check_out_longitude'] = $locationData['long'];
             }
-            
-            $attendanceData = Attendance::where('user_id',$userId)
-            ->where('company_id',$companyId)
-            ->where('attendance_date', date('Y-m-d'))
-            ->first();
+
+            $attendanceData = Attendance::where('user_id', $userId)
+                ->where('company_id', $companyId)
+                ->where('attendance_date', date('Y-m-d'))
+                ->first();
 
             DB::beginTransaction();
-            $attendanceCheckOut = $this->attendanceService->newCheckOut($attendanceData,$validatedData);
+            $attendanceCheckOut = $this->attendanceService->newCheckOut($validatedData);
 
             $this->userRepository->updateUserOnlineStatus($userDetail, 0);
             DB::commit();
@@ -322,6 +339,33 @@ class AttendanceController extends Controller
     }
 
     private function prepareDataForAttendance($companyId, $userId, $checkStatus): array|RedirectResponse
+    {
+        try {
+            $with = ['branch:id,branch_location_latitude,branch_location_longitude'];
+            $select = ['routers.*'];
+            $userBranchId = AppHelper::getAuthUserBranchId();
+
+            $routerDetail = $this->routerRepo->findRouterDetailByBranchId($userBranchId, $with, $select);
+            if (!$routerDetail) {
+                throw new Exception('Branch Routers Detail Not Found.', 400);
+            }
+            if ($checkStatus == 'checkIn') {
+                $validatedData['check_in_latitude'] = $routerDetail->branch->branch_location_latitude;
+                $validatedData['check_in_longitude'] = $routerDetail->branch->branch_location_longitude;
+            } else {
+                $validatedData['check_out_latitude'] = $routerDetail->branch->branch_location_latitude;
+                $validatedData['check_out_longitude'] = $routerDetail->branch->branch_location_longitude;
+            }
+            $validatedData['user_id'] = $userId;
+            $validatedData['company_id'] = $companyId;
+            $validatedData['router_bssid'] = $routerDetail->router_ssid;
+            return $validatedData;
+        } catch (Exception $exception) {
+            throw $exception;
+        }
+    }
+
+    public function prepareDataForRegularization($companyId, $userId, $checkStatus): array|RedirectResponse
     {
         try {
             $with = ['branch:id,branch_location_latitude,branch_location_longitude'];

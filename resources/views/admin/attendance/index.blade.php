@@ -25,18 +25,7 @@
                 <div class="row align-items-center">
 
                     <div class="col-lg col-md-4 mb-4">
-                        <input id="attendance_date"
-                                name="attendance_date"
-                                value="{{$filterParameter['attendance_date']}}"
-                                @if($isBsEnabled)
-                                    class="form-control dayAttendance"
-                                    type="text"
-                                    placeholder="yy/mm/dd"
-                                @else
-                                    class="form-control"
-                                    type="date"
-                                @endif
-                        />
+                        @include('admin.attendance.dateRangeFilter')
                     </div>
 
                     <div class="col-lg col-md-4 mb-4">
@@ -58,7 +47,7 @@
                         <button type="submit" class="btn btn-block btn-success form-control me-md-2 me-0 mb-4">Filter</button>
 
                         @can('attendance_csv_export')
-                            <button type="button" id="download-daywise-attendance-excel"
+                            <button type="button" id="download-excel-report"
                                     data-href="{{route('admin.attendances.index' )}}"
                                     class="btn btn-block btn-secondary form-control me-md-2 me-0 mb-4">CSV Export
                             </button>
@@ -80,6 +69,7 @@
                                     <td></td>
                                 @endcan
                                 <th>Employee Name</th>
+                                <th class="text-center">Attendance Date</th>
                                 <th class="text-center">Check In At</th>
                                 <th class="text-center">Check Out At</th>
                                 <th class="text-center">Attendance Status</th>
@@ -114,7 +104,9 @@
                                 <td>
                                     {{ucfirst($value->user_name)}}
                                 </td>
-
+                                <td>
+                                    {{date('d-m-Y',strtotime($value->attendance_date))}}
+                                </td>
                                 @if($value->check_in_at)
                                     <td class="text-center">
                                         <span class="btn btn-outline-secondary btn-xs checkLocation"
@@ -178,7 +170,7 @@
                             @canany(['attendance_create','attendance_update','attendance_delete'])
                                 <td class="text-center">
                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                        @if($filterParameter['attendance_date'] ==  $currentDate)
+                                        @if($filterParameter['start_date'] ==  $currentDate)
                                             @if(!$value->check_in_at)
                                                 @can('attendance_create')
                                                     <li class="me-2">
@@ -216,7 +208,7 @@
                                                         data-in="{{ date('H:i',strtotime($value->check_in_at))}}"
                                                         data-out="{{ ($value->check_out_at) ? date('H:i',strtotime($value->check_out_at)) : null}}"
                                                         data-remark="{{$value->edit_remark}}"
-                                                        data-date="{{$filterParameter['attendance_date']}}"
+                                                        data-date="{{$filterParameter['start_date']}}"
                                                         data-name="{{ucfirst($value->user_name)}}"
                                                         title="Edit attendance time"
                                                     >
@@ -266,9 +258,10 @@
     </section>
 @endsection
 
-@section('scripts')
-    @include('admin.attendance.common.scripts')
+@section('attendanceScripts')
+@include('admin.attendance.common.attendanceScript')
     <script>
+
         $('#branch_id').change(function() {
             let selectedBranchId = $('#branch_id option:selected').val();
 

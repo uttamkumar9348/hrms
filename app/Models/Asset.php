@@ -76,4 +76,8 @@ class Asset extends Model
         return $this->belongsTo(User::class,'assigned_to','id')->withDefault();
     }
 
+    public function assetAssignments(){
+        return $this->hasMany(AssetAssignment::class);
+    }
+
 }

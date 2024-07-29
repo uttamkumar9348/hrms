@@ -2,48 +2,51 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Helpers\AppHelper;
-use App\Http\Controllers\Controller;
+use Exception;
 use App\Models\User;
+use App\Helpers\AppHelper;
+use App\Imports\ImportUser;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Exports\EmployeeFormExport;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Repositories\UserRepository;
+use App\Repositories\RoleRepository;
+use App\Http\Controllers\Controller;
+use Laravel\Passport\TokenRepository;
 use App\Repositories\BranchRepository;
+use Illuminate\Contracts\View\Factory;
 use App\Repositories\CompanyRepository;
-use App\Repositories\EmployeeLeaveTypeRepository;
+use App\Requests\User\UserCreateRequest;
+use App\Requests\User\UserUpdateRequest;
+use App\Requests\User\UserAccountRequest;
 use App\Repositories\LeaveTypeRepository;
 use App\Repositories\OfficeTimeRepository;
-use App\Repositories\RoleRepository;
-use App\Repositories\UserAccountRepository;
-use App\Repositories\UserRepository;
-use App\Requests\Leave\LeaveTypeRequest;
-use App\Requests\User\ChangePasswordRequest;
-use App\Requests\User\UserAccountRequest;
-use App\Requests\User\UserCreateRequest;
 use App\Requests\User\UserLeaveTypeRequest;
-use App\Requests\User\UserUpdateRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
-use Exception;
-use Illuminate\Support\Facades\Log;
+use App\Repositories\UserAccountRepository;
+use App\Requests\User\ChangePasswordRequest;
 use Laravel\Passport\RefreshTokenRepository;
-use Laravel\Passport\TokenRepository;
+use Illuminate\Contracts\Foundation\Application;
+use App\Repositories\EmployeeLeaveTypeRepository;
 
 class UserController extends Controller
 {
-    private $view ='admin.users.';
+    private $view = 'admin.users.';
 
+    public function __construct(
+        protected UserRepository $userRepo,
+        protected CompanyRepository $companyRepo,
+        protected RoleRepository $roleRepo,
+        protected OfficeTimeRepository $officeTimeRepo,
+        protected UserAccountRepository $accountRepo,
+        protected CompanyRepository $companyRepository,
+        protected BranchRepository $branchRepository,
+        protected LeaveTypeRepository $leaveTypeRepository,
+        protected EmployeeLeaveTypeRepository $employeeLeaveTypeRepository,
 
-    public function __construct(protected UserRepository $userRepo,
-                                protected CompanyRepository $companyRepo,
-                                protected RoleRepository $roleRepo,
-                                protected OfficeTimeRepository $officeTimeRepo,
-                                protected UserAccountRepository $accountRepo,
-                                protected CompanyRepository $companyRepository,
-                                protected BranchRepository $branchRepository,
-                                protected LeaveTypeRepository $leaveTypeRepository,
-                                protected EmployeeLeaveTypeRepository $employeeLeaveTypeRepository,
-
-    )
-    {}
+    ) {
+    }
 
     public function index(Request $request)
     {
@@ -56,17 +59,40 @@ class UserController extends Controller
                 'branch_id' => $request->branch_id ?? null,
                 'department_id' => $request->department_id ?? null,
             ];
-            $with = ['branch:id,name','company:id,name','post:id,post_name','department:id,dept_name','role:id,name'];
-            $select=['users.*','branch_id','company_id','department_id','post_id','role_id'];
-            $users = $this->userRepo->getAllUsers($filterParameters,$select,$with);
+            $with = ['branch:id,name', 'company:id,name', 'post:id,post_name', 'department:id,dept_name', 'role:id,name'];
+            $select = ['users.*', 'branch_id', 'company_id', 'department_id', 'post_id', 'role_id'];
+            $users = $this->userRepo->getAllUsers($filterParameters, $select, $with);
 
             $company = $this->companyRepository->getCompanyDetail(['id']);
             $branches = $this->branchRepository->getLoggedInUserCompanyBranches($company->id, ['id', 'name']);
 
-            return view($this->view . 'index',compact('users','filterParameters', 'branches'));
+            return view($this->view . 'index', compact('users', 'filterParameters', 'branches'));
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
         }
+    }
+
+    public function employeeImport(): Factory|View|Application
+    {
+        $this->authorize('import_holiday');
+        return view($this->view . 'imports.importUser');
+    }
+
+    //import user excel
+    public function importEmployee(Request $request)
+    {
+        try {
+            $file = $request->file('file');
+            Excel::import(new ImportUser, $file);
+            return redirect()->route('admin.users.index')->with('success', 'Employee Imported Successfully');
+        } catch (Exception $exception) {
+            return redirect()->back()->with('danger', $exception->getMessage());
+        }
+    }
+
+    public function exportForm()
+    {
+        return Excel::download(new EmployeeFormExport(), 'crate-form'  .  '-report.xlsx');
     }
 
     public function create()
@@ -74,24 +100,24 @@ class UserController extends Controller
         $this->authorize('create_employee');
         try {
             $with = ['branches:id,name'];
-            $select = ['id','name'];
-            $companyDetail = $this->companyRepo->getCompanyDetail($select,$with);
+            $select = ['id', 'name'];
+            $companyDetail = $this->companyRepo->getCompanyDetail($select, $with);
             $roles = $this->roleRepo->getAllActiveRoles();
 
             $employeeCode = AppHelper::getEmployeeCode();
 
             $leaveTypes = $this->leaveTypeRepository->getPaidLeaveTypes();
 
-            return view($this->view.'create',compact('companyDetail','roles','leaveTypes','employeeCode'));
+            return view($this->view . 'create', compact('companyDetail', 'roles', 'leaveTypes', 'employeeCode'));
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
         }
     }
 
-    public function store(UserCreateRequest $request,UserAccountRequest $accountRequest, UserLeaveTypeRequest $leaveRequest)
+    public function store(UserCreateRequest $request, UserAccountRequest $accountRequest, UserLeaveTypeRequest $leaveRequest)
     {
         $this->authorize('create_employee');
-        try{
+        try {
             $validatedData = $request->validated();
 
             $accountValidatedData = $accountRequest->validated();
@@ -99,14 +125,14 @@ class UserController extends Controller
 
             $validatedData['password'] = bcrypt($validatedData['password']);
             $validatedData['is_active'] = 1;
-            $validatedData['status'] ='verified';
+            $validatedData['status'] = 'verified';
             $validatedData['company_id'] = AppHelper::getAuthUserCompanyId();
 
 
             DB::beginTransaction();
-                $user = $this->userRepo->store($validatedData);
-                $accountValidatedData['user_id'] = $user['id'];
-                $this->accountRepo->store($accountValidatedData);
+            $user = $this->userRepo->store($validatedData);
+            $accountValidatedData['user_id'] = $user['id'];
+            $this->accountRepo->store($accountValidatedData);
 
             if (!is_null($user['leave_allocated']) && isset($leaveTypeData['leave_type_id'])) {
                 foreach ($leaveTypeData['leave_type_id'] as $key => $value) {
@@ -116,16 +142,14 @@ class UserController extends Controller
                     $input['leave_type_id']  = $value;
 
                     $this->employeeLeaveTypeRepository->store($input);
-
                 }
             }
-
 
             DB::commit();
             return redirect()
                 ->route('admin.users.index')
                 ->with('success', 'New Employee Detail Added Successfully');
-        }catch(Exception $exception){
+        } catch (Exception $exception) {
             DB::rollBack();
             return redirect()->back()->with('danger', $exception->getMessage())->withInput();
         }
@@ -144,8 +168,8 @@ class UserController extends Controller
                 'accountDetail'
             ];
             $select = ['users.*', 'branch_id', 'company_id', 'department_id', 'post_id', 'role_id'];
-            $userDetail = $this->userRepo->findUserDetailById($id,$select,$with);
-            return view($this->view.'show2',compact('userDetail'));
+            $userDetail = $this->userRepo->findUserDetailById($id, $select, $with);
+            return view($this->view . 'show2', compact('userDetail'));
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getFile());
         }
@@ -153,22 +177,20 @@ class UserController extends Controller
 
     public function edit($id)
     {
-
         $this->authorize('edit_employee');
         try {
             $with = ['branches:id,name'];
-            $select = ['id','name'];
-            $companyDetail = $this->companyRepo->getCompanyDetail($select,$with);
+            $select = ['id', 'name'];
+            $companyDetail = $this->companyRepo->getCompanyDetail($select, $with);
             $roles = $this->roleRepo->getAllActiveRoles();
 
             $userSelect = ['*'];
             $userWith = ['accountDetail'];
-            $userDetail = $this->userRepo->findUserDetailById($id,$userSelect,$userWith);
+            $userDetail = $this->userRepo->findUserDetailById($id, $userSelect, $userWith);
             $leaveTypes = $this->leaveTypeRepository->getPaidLeaveTypes();
-            $employeeLeaveTypes = $this->employeeLeaveTypeRepository->getAll(['id','leave_type_id','days','is_active'],$id);
+            $employeeLeaveTypes = $this->employeeLeaveTypeRepository->getAll(['id', 'leave_type_id', 'days', 'is_active'], $id);
 
-
-            return view($this->view.'edit',compact('companyDetail','roles','userDetail','leaveTypes','employeeLeaveTypes'));
+            return view($this->view . 'edit', compact('companyDetail', 'roles', 'userDetail', 'leaveTypes', 'employeeLeaveTypes'));
         } catch (Exception $exception) {
 
             return redirect()->back()->with('danger', $exception->getFile());
@@ -183,7 +205,6 @@ class UserController extends Controller
             $accountValidatedData = $accountRequest->validated();
 
             $leaveTypeData = $leaveRequest->validated();
-
 
             $userDetail = $this->userRepo->findUserDetailById($id);
             if (in_array($userDetail->username, User::DEMO_USERS_USERNAME)) {
@@ -204,7 +225,7 @@ class UserController extends Controller
                     $employeeLeaveTypeData = $this->employeeLeaveTypeRepository->findByLeaveType($id, $value);
                     if ($employeeLeaveTypeData) {
 
-                        $this->employeeLeaveTypeRepository->update($employeeLeaveTypeData,$input);
+                        $this->employeeLeaveTypeRepository->update($employeeLeaveTypeData, $input);
                     } else {
                         $input['employee_id']  = $id;
                         $input['leave_type_id']  = $value;
@@ -213,10 +234,9 @@ class UserController extends Controller
                         $this->employeeLeaveTypeRepository->store($input);
                     }
                 }
-            }else{
+            } else {
                 $this->employeeLeaveTypeRepository->deleteByEmployee($id);
             }
-
 
             DB::commit();
             return redirect()
@@ -233,7 +253,7 @@ class UserController extends Controller
         $this->authorize('edit_employee');
         try {
             DB::beginTransaction();
-                $this->userRepo->toggleIsActiveStatus($id);
+            $this->userRepo->toggleIsActiveStatus($id);
             DB::commit();
             return redirect()->back()->with('success', 'Users Is Active Status Changed  Successfully');
         } catch (Exception $exception) {
@@ -247,14 +267,14 @@ class UserController extends Controller
         $this->authorize('delete_employee');
         try {
             $usersDetail = $this->userRepo->findUserDetailById($id);
-            if(in_array($usersDetail->username, User::DEMO_USERS_USERNAME)){
-                throw new Exception('This is a demo version. Please buy the application to use the full feature',400);
+            if (in_array($usersDetail->username, User::DEMO_USERS_USERNAME)) {
+                throw new Exception('This is a demo version. Please buy the application to use the full feature', 400);
             }
             if (!$usersDetail) {
                 throw new Exception('Users Detail Not Found', 404);
             }
-            if($usersDetail->id == auth()->user()->id){
-                throw new Exception('cannot delete own records',402);
+            if ($usersDetail->id == auth()->user()->id) {
+                throw new Exception('cannot delete own records', 402);
             }
             DB::beginTransaction();
             $this->userRepo->delete($usersDetail);
@@ -270,13 +290,13 @@ class UserController extends Controller
     {
         $this->authorize('edit_employee');
         try {
-            $select = ['id','workspace_type'];
-            $userDetail = $this->userRepo->findUserDetailById($id,$select);
+            $select = ['id', 'workspace_type'];
+            $userDetail = $this->userRepo->findUserDetailById($id, $select);
             if (!$userDetail) {
                 throw new Exception('Users Detail Not Found', 404);
             }
             DB::beginTransaction();
-                $this->userRepo->changeWorkSpace($userDetail);
+            $this->userRepo->changeWorkSpace($userDetail);
             DB::commit();
             return redirect()->back()->with('success', 'User Workspace Changed Successfully');
         } catch (Exception $exception) {
@@ -287,42 +307,41 @@ class UserController extends Controller
 
     public function getAllCompanyEmployeeDetail($branchId)
     {
-        try{
+        try {
 
             $branch = $this->branchRepository->findBranchDetailById($branchId);
 
-            $selectEmployee=['id','name'];
-            $selectOfficeTime = ['id','opening_time','closing_time'];
+            $selectEmployee = ['id', 'name'];
+            $selectOfficeTime = ['id', 'opening_time', 'closing_time'];
             $employees = $this->userRepo->getAllVerifiedEmployeeOfCompany($selectEmployee);
-            $officeTime = $this->officeTimeRepo->getALlActiveOfficeTimeByCompanyId($branch->company_id,$selectOfficeTime);
+            $officeTime = $this->officeTimeRepo->getALlActiveOfficeTimeByCompanyId($branch->company_id, $selectOfficeTime);
 
             return response()->json([
                 'employee' => $employees,
                 'officeTime' => $officeTime
             ]);
-        }catch(Exception $exception){
+        } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
         }
     }
 
-    public function changePassword(ChangePasswordRequest $request,$userId)
+    public function changePassword(ChangePasswordRequest $request, $userId)
     {
         $this->authorize('change_password');
-        try{
+        try {
             $validatedData = $request->validated();
             $userDetail = $this->userRepo->findUserDetailById($userId);
-            if(in_array($userDetail->username, User::DEMO_USERS_USERNAME)){
-                throw new Exception('This is a demo version. Please buy the application to use the full feature',400);
+            if (in_array($userDetail->username, User::DEMO_USERS_USERNAME)) {
+                throw new Exception('This is a demo version. Please buy the application to use the full feature', 400);
             }
             if (!$userDetail) {
                 throw new Exception('Users Detail Not Found', 404);
             }
             DB::beginTransaction();
-                $this->userRepo->changePassword($userDetail,$validatedData['new_password']);
+            $this->userRepo->changePassword($userDetail, $validatedData['new_password']);
             DB::commit();
             return redirect()->back()->with('success', 'User Password Changed Successfully');
-
-        }catch(Exception $exception){
+        } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
         }
     }
@@ -330,28 +349,28 @@ class UserController extends Controller
     public function forceLogOutEmployee($employeeId)
     {
         $this->authorize('force_logout');
-        try{
+        try {
             $tokenRepository = app(TokenRepository::class);
             $refreshTokenRepository = app(RefreshTokenRepository::class);
 
             $userDetail = $this->userRepo->findUserDetailById($employeeId);
-            if(!$userDetail){
-                throw new Exception('User Detail Not found',404);
+            if (!$userDetail) {
+                throw new Exception('User Detail Not found', 404);
             }
             $accessToken = $userDetail->tokens;
             DB::beginTransaction();
-                foreach ($accessToken as $token) {
-                    $tokenRepository->revokeAccessToken($token->id);
-                    $refreshTokenRepository->revokeRefreshTokensByAccessTokenId($token->id);
-                }
-                $validatedData['uuid'] = null;
-                $validatedData['logout_status'] = 0;
-                $validatedData['remember_token'] = null;
-                $validatedData['fcm_token'] = null;
-                $this->userRepo->update($userDetail,$validatedData);
+            foreach ($accessToken as $token) {
+                $tokenRepository->revokeAccessToken($token->id);
+                $refreshTokenRepository->revokeRefreshTokensByAccessTokenId($token->id);
+            }
+            $validatedData['uuid'] = null;
+            $validatedData['logout_status'] = 0;
+            $validatedData['remember_token'] = null;
+            $validatedData['fcm_token'] = null;
+            $this->userRepo->update($userDetail, $validatedData);
             DB::commit();
             return redirect()->back()->with('success', 'Force log out successFull');
-        }catch(Exception $exception){
+        } catch (Exception $exception) {
             DB::rollBack();
             return redirect()->back()->with('danger', $exception->getMessage());
         }

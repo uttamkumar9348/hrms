@@ -45,11 +45,22 @@ class AttendanceService
      */
     public function getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter): mixed
     {
-
+        
         if($filterParameter['date_in_bs']){
             $filterParameter['attendance_date'] = AppHelper::dateInYmdFormatNepToEng($filterParameter['attendance_date']);
         }
+        // dd($filterParameter);
         return $this->attendanceRepo->getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter);
+
+    }
+
+    public function getAllCompanyEmployeeRegularizationDetailOfTheDay($filterParameter): mixed
+    {
+
+        if($filterParameter['date_in_bs']){
+            $filterParameter['regularization_date'] = $filterParameter['regularization_date'] != null?AppHelper::dateInYmdFormatNepToEng($filterParameter['regularization_date']):$filterParameter['regularization_date'];
+        }
+        return $this->attendanceRepo->getAllCompanyEmployeeregularizationDetailOfTheDay($filterParameter);
 
     }
 
@@ -231,6 +242,35 @@ class AttendanceService
 
     }
 
+    public function newRgularization($reason,$validatedData,$date,$checkin_at,$checkout_at){
+        $employeeLeaveDetail = $this->leaveRepo->findEmployeeApprovedLeaveForCurrentDate($validatedData,['id']);
+        // dd($employeeLeaveDetail);
+        if($employeeLeaveDetail){
+            throw new Exception('Cannot check in when leave request is Approved/Pending.',400);
+        }
+
+        // $checkHolidayAndWeekend = AttendanceHelper::isHolidayOrWeekendOnCurrentDate();
+        // if (!$checkHolidayAndWeekend) {
+        //     throw new Exception('Check In not allowed on holidays or on office Off Days', 403);
+        // }
+
+        $validatedData['attendance_date'] = $date;
+        $validatedData['check_in_at'] = $checkin_at;
+        $validatedData['check_out_at'] = $checkout_at;
+        $validatedData['check_in_latitude'] = $validatedData['check_in_latitude'] ?? '';
+        $validatedData['check_in_longitude'] = $validatedData['check_in_longitude'] ?? '';
+        $validatedData['reason'] = $reason;
+
+        //storeRegularizationDetail
+
+        // dd($validatedData);  
+        $regularize = $this->attendanceRepo->storeRegularizationDetail($validatedData);
+        if ($regularize) {
+
+            $this->updateUserOnlineStatus($regularize->user_id,User::ONLINE);
+        }
+        return $regularize;
+    }
 
     /**
      * @throws Exception

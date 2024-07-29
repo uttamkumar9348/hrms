@@ -48,6 +48,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
 @yield('scripts')
+@yield('attendanceScripts')
+
 
 
 </body>

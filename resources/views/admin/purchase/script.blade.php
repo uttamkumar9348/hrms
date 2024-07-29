@@ -1,5 +1,5 @@
 <script src="{{ asset('js/jquery.min.js') }} "></script>
-<script type="text/javascript" src="{{ asset('js/html2pdf.bundle.min.js') }}"></script>
+{{-- <script type="text/javascript" src="{{ asset('js/html2pdf.bundle.min.js') }}"></script> --}}
 <script>
     function closeScript() {
         setTimeout(function () {
@@ -7,8 +7,10 @@
         }, 1000);
     }
 
-    $(window).on('load', function () {
+    // $(window).on('load', function () {
+    $(document).ready(function () {
         var element = document.getElementById('boxes');
+        console.log(element);
         var opt = {
             filename: '{{\App\Models\Utility::purchaseNumberFormat($purchase->purchase_id)}}',
             image: {type: 'jpeg', quality: 1},

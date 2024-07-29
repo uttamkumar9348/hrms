@@ -5,34 +5,37 @@
 @section('action','Add')
 
 @section('button')
-    <div class="float-end">
-        <a href="{{route('admin.users.index')}}">
-            <button class="btn btn-sm btn-primary"><i class="link-icon" data-feather="arrow-left"></i> Back</button>
-        </a>
-    </div>
+<div class="float-end">
+    <a href="{{route('admin.users.index')}}">
+        <button class="btn btn-sm btn-primary"><i class="link-icon" data-feather="arrow-left"></i> Back</button>
+    </a>
+
+    <a href="{{route('admin.users.exportForm')}}">
+        <button style="padding: 10px 15px; font-size: 0.812rem;" class="btn btn-sm btn-primary"> Export</button>
+    </a>
+</div>
 @endsection
 
 @section('main-content')
 
-    <section class="content">
+<section class="content">
 
-        @include('admin.section.flash_message')
+    @include('admin.section.flash_message')
 
-        @include('admin.users.common.breadcrumb')
+    @include('admin.users.common.breadcrumb')
 
-        <div class="card-user">
-            <form class="forms-sample" id="employeeDetail" action="{{route('admin.users.store')}}" enctype="multipart/form-data"
-                  method="POST">
-                @csrf
-                @include('admin.users.common.form')
-            </form>
-        </div>
+    <div class="card-user">
+        <form class="forms-sample" id="employeeDetail" action="{{route('admin.users.store')}}" enctype="multipart/form-data" method="POST">
+            @csrf
+            @include('admin.users.common.form')
+        </form>
+    </div>
 
-    </section>
+</section>
 @endsection
 
 @section('scripts')
 
-    @include('admin.users.common.scripts')
+@include('admin.users.common.scripts')
 
 @endsection

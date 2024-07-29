@@ -52,4 +52,8 @@ class AssetType extends Model
         return $this->hasMany(Asset::class, 'type_id', 'id');
     }
 
+    public function assetAssignments(){
+        return $this->hasMany(AssetAssignment::class);
+    }
+
 }

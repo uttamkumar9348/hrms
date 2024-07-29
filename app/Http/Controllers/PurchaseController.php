@@ -505,7 +505,7 @@ class PurchaseController extends Controller
         $company_logo = Utility::getValByName('company_logo_dark');
         $img          = asset($logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png'));
 
-dd($settings['purchase_template']);
+
         if ($purchase) {
             $color      = '#' . $settings['purchase_color'];
             $font_color = Utility::getFontColor($color);

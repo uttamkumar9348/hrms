@@ -35,6 +35,7 @@
                 @include('admin.section.partial.setting')
                 @include('admin.section.partial.farmermanagement')
                 @include('admin.section.partial.inventory')
+                @include('admin.section.partial.regularization')
             </ul>
         </div>
     </nav>
