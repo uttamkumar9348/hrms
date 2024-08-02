@@ -193,7 +193,7 @@ class LeaveRepository
             'users.id as user_id',
             'users.name as name',
             'users.avatar as avatar',
-            'departmentts.dept_name as department',
+            'departments.dept_name as department',
             'posts.post_name as post',
             'leave_requests_master.no_of_days as no_of_days',
             'leave_requests_master.leave_from as leave_from',
@@ -204,7 +204,7 @@ class LeaveRepository
                 $join->on('leave_requests_master.requested_by', '=', 'users.id')
                     ->whereNUll('users.deleted_at');
             })
-            ->join('departmentts', 'departmentts.id', '=', 'users.department_id')
+            ->join('departments', 'departments.id', '=', 'users.department_id')
             ->join('posts', 'posts.id', '=', 'users.post_id')
             ->where(function ($query) use ($filterParameter) {
                 $query->whereDate('leave_requests_master.leave_from', '<=', $filterParameter['leave_date'])

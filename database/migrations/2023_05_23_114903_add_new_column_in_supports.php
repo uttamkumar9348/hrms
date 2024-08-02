@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::table('supports', function (Blueprint $table) {
             $table->bigInteger('department_id')->unsigned()->nullable()->after('description');
 
-            $table->foreign('department_id')->references('id')->on('departmentts')->nullOnDelete();
+            $table->foreign('department_id')->references('id')->on('departments')->nullOnDelete();
         });
     }
 

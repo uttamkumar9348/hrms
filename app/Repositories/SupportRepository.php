@@ -79,15 +79,15 @@ class SupportRepository
                 'supports.status as status',
                 'supports.created_at as query_date',
                 'supports.updated_at as updated_date',
-                'departmentts.dept_name as requested_department',
+                'departments.dept_name as requested_department',
                 'created.name as requested_by',
                 'updated.name as updated_by'
             ])
-            ->join('departmentts', 'supports.department_id',  'departmentts.id')
+            ->join('departments', 'supports.department_id',  'departments.id')
             ->join('users as created', 'created.id', 'supports.created_by')
             ->leftjoin('users as updated', 'updated.id', 'supports.updated_by')
             ->where('created.id', $filterParameters['user_id'])
-            ->where('departmentts.is_active', Department::IS_ACTIVE)
+            ->where('departments.is_active', Department::IS_ACTIVE)
             ->orderByDesc('query_date')
             ->paginate($filterParameters['per_page']);
 

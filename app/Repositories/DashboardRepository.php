@@ -18,7 +18,7 @@ class DashboardRepository
             ->where('is_active', 1)
             ->groupBy('company_id');
 
-        $totalDepartments = DB::table('departmentts')
+        $totalDepartments = DB::table('departments')
             ->select('company_id', DB::raw('COUNT(id) as total_departments'))
             ->where('is_active', 1)
             ->groupBy('company_id');
@@ -85,15 +85,15 @@ class DashboardRepository
             'on_leave_today.total_on_leave',
             'paid_leaves.total_paid_leaves',
             'pending_leave_requests.total_pending_leave_requests',
-            'departmentts.total_departments',
+            'departments.total_departments',
             'projectts.total_projects'
         )
             ->leftJoinSub($totalCompanyEmployee, 'company_employee', function ($join) {
                 $join->on('companies.id', '=', 'company_employee.company_id');
             })
 
-            ->leftJoinSub($totalDepartments, 'departmentts', function ($join) {
-                $join->on('companies.id', '=', 'departmentts.company_id');
+            ->leftJoinSub($totalDepartments, 'departments', function ($join) {
+                $join->on('companies.id', '=', 'departments.company_id');
             })
             ->leftJoinSub($totalCheckedInEmployee, 'checked_in_employee', function ($join) {
                 $join->on('companies.id', '=', 'checked_in_employee.company_id');

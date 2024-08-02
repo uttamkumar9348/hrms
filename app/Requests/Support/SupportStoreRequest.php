@@ -29,7 +29,7 @@ class SupportStoreRequest extends FormRequest
         return [
             'title' => 'required|string|max:200',
             'description' => 'required|string',
-            'department_id' => ['required', Rule::exists('departmentts','id')
+            'department_id' => ['required', Rule::exists('departments','id')
                 ->where('is_active',Department::IS_ACTIVE)
             ],
             'status' => ['nullable',Rule::in(Support::STATUS)],
