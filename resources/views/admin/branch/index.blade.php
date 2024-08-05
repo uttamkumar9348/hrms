@@ -95,9 +95,9 @@
                                         <ul class="d-flex list-unstyled mb-0 justify-content-center">
                                             @can('edit_branch')
                                                 <li class="me-2">
-                                                    <a href=""
-                                                       id="editBranch"
+                                                    <a id="editBranch"
                                                        data-href="{{route('admin.branch.edit',$value->id)}}"
+                                                       data-update="{{route('admin.branch.update',$value->id)}}"
                                                        data-id="{{ $value->id }}">
                                                         <i class="link-icon" data-feather="edit"></i>
                                                     </a>
@@ -120,7 +120,6 @@
                                 </td>
                             </tr>
                         @endforelse
-
                         </tbody>
                     </table>
                 </div>
@@ -150,7 +149,7 @@
                 var status = $(this).prop('checked') === true ? 1 : 0;
                 var href = $(this).attr('href');
                 Swal.fire({
-                    title: 'Are you sure you want to change  status ?',
+                    title: 'Are you sure you want to change status ?',
                     showDenyButton: true,
                     confirmButtonText: `Yes`,
                     denyButtonText: `No`,
@@ -219,12 +218,14 @@
             $('body').on('click', '#editBranch', function (event) {
                 event.preventDefault();
                 let url = $(this).data('href');
+                let update = $(this).data('update');
                 $('#branch_head').find('option').not(':first').remove();
                 $.get(url, function (data) {
                     let len = 0;
                     if(data.users != null){
                         len = data.users.length;
                     }
+                    
                     if(len > 0) {
                         for (let i = 0; i < len; i++) {
                             let id = data.users[i].id;
@@ -243,7 +244,7 @@
                     $('#branch_location_longitude').val(data.data.branch_location_longitude);
                     $('#status').val(data.data.is_active);
                     $('#update').val('put');
-                    $('#branch_form').attr('action',"/admin/branch/"+ data.data.id);
+                    $('#branch_form').attr('action',update);
                     $('#submit-btn').html("Update ");
                     $('#addslider').modal('show');
                 })

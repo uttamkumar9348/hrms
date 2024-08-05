@@ -173,7 +173,6 @@
         <div class="company-detail">
             <h5 class="mb-3 border-bottom pb-3">Company Detail</h5>
             <div class="row">
-
                 <div class="col-lg-4 col-md-6 mb-3">
                     <label for="branch_id" class="form-label">Branch <span style="color: red">*</span></label>
                     <select class="form-select" id="branch" name="branch_id" required>

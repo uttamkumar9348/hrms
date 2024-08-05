@@ -15,7 +15,15 @@
 
         @include('admin.section.flash_message')
 
-        @include('admin.department.common.breadcrumb')
+        <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{route('admin.departments.index')}}">Department section</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Department Edit</li>
+            </ol>
+        
+            @yield('button')
+        </nav>
         <div class="card">
             <div class="card-body pb-0">
                 <form class="forms-sample" action="{{route('admin.departments.update',$departmentsDetail->id)}}" enctype="multipart/form-data" method="post">
