@@ -53,7 +53,7 @@ class SMPushNotification
      */
     public function __construct()
     {
-//        $this->serverKey = config('firebase.server_key') ?? '';
+        //        $this->serverKey = config('firebase.server_key') ?? '';
 
         $this->serverKey = AppHelper::getFirebaseServerKey() ?? '';
         if (!$this->serverKey) {
@@ -68,14 +68,15 @@ class SMPushNotification
      * In silence mode, however, Google has provided much more power to control push notification.
      * So, here default value for `$isSilence` is `true`
      */
-    public static function smSend(bool   $isAndroid,
-                                  string $title,
-                                  string $message,
-                                  string $type,
-                                  array  $data,
-                                  array  $recipients,
-                                  bool   $isSilence = false): void
-    {
+    public static function smSend(
+        bool   $isAndroid,
+        string $title,
+        string $message,
+        string $type,
+        array  $data,
+        array  $recipients,
+        bool   $isSilence = false
+    ): void {
         $push = new SMPushNotification();
 
         $data['type'] = $type;

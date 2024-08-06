@@ -105,7 +105,7 @@ class LeaveController extends Controller
                 $notification = $this->notificationService->store($notificationData);
 
                 if($notification){
-                    $this->sendLeaveStatusNotification($notification,$leaveRequestDetail->requested_by);
+                    // $this->sendLeaveStatusNotification($notification,$leaveRequestDetail->requested_by);
                 }
             }
             DB::commit();
@@ -145,13 +145,13 @@ class LeaveController extends Controller
             DB::beginTransaction();
                 $leaveRequest = $this->leaveService->storeLeaveRequest($validatedData);
             DB::commit();
-            AppHelper::sendNotificationToAuthorizedUser(
-                'Leave Request Notification',
-                ucfirst(auth()->user()->name). ' has requested ' .$leaveRequest['no_of_days'] .
-                ' day(s) leave from ' .AppHelper::formatDateForView($leaveRequest['leave_from']).
-                ' on ' .AppHelper::convertLeaveDateFormat($leaveRequest['leave_requested_date']) . ' Reason: '.$validatedData['reasons'],
-                $permissionKeyForNotification
-            );
+            // AppHelper::sendNotificationToAuthorizedUser(
+            //     'Leave Request Notification',
+            //     ucfirst(auth()->user()->name). ' has requested ' .$leaveRequest['no_of_days'] .
+            //     ' day(s) leave from ' .AppHelper::formatDateForView($leaveRequest['leave_from']).
+            //     ' on ' .AppHelper::convertLeaveDateFormat($leaveRequest['leave_requested_date']) . ' Reason: '.$validatedData['reasons'],
+            //     $permissionKeyForNotification
+            // );
             return redirect()
                 ->back()
                 ->with('success', 'Leave request submitted Successfully');
@@ -191,13 +191,13 @@ class LeaveController extends Controller
             DB::beginTransaction();
                 $leaveRequest = $this->leaveService->storeLeaveRequest($validatedData);
             DB::commit();
-            AppHelper::sendNotificationToAuthorizedUser(
-                'Leave Request Notification',
-                ucfirst(auth()->user()->name). ' on behalf of '.$employee->name .' has requested' .$leaveRequest['no_of_days'] .
-                ' day(s) leave from ' .AppHelper::formatDateForView($leaveRequest['leave_from']).
-                ' on ' .AppHelper::convertLeaveDateFormat($leaveRequest['leave_requested_date']) . ' Reason: '.$validatedData['reasons'],
-                $permissionKeyForNotification
-            );
+            // AppHelper::sendNotificationToAuthorizedUser(
+            //     'Leave Request Notification',
+            //     ucfirst(auth()->user()->name). ' on behalf of '.$employee->name .' has requested' .$leaveRequest['no_of_days'] .
+            //     ' day(s) leave from ' .AppHelper::formatDateForView($leaveRequest['leave_from']).
+            //     ' on ' .AppHelper::convertLeaveDateFormat($leaveRequest['leave_requested_date']) . ' Reason: '.$validatedData['reasons'],
+            //     $permissionKeyForNotification
+            // );
             return redirect()
                 ->route('admin.leave-request.index')
                 ->with('success', 'Leave request submitted Successfully');

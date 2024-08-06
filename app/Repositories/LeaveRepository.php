@@ -82,9 +82,9 @@ class LeaveRepository
             'leave_requests_master.early_exit',
             'leave_requests_master.request_updated_by',
             'leave_requests_master.requested_by',
-            'leave_typees.name as leave_type_name',
+            'leave_types.name as leave_type_name',
         )
-            ->join('leave_typees', 'leave_typees.id', '=', 'leave_requests_master.leave_type_id')
+            ->join('leave_types', 'leave_types.id', '=', 'leave_requests_master.leave_type_id')
             ->when(isset($filterParameters['leave_type']), function ($query) use ($filterParameters) {
                 $query->where('leave_requests_master.leave_type_id', $filterParameters['leave_type']);
             })

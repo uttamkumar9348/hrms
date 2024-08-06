@@ -98,6 +98,7 @@ class ProjectService
                 $projectFiles = $this->attachmentRepo->prepareAttachmentData($validatedData['attachments']);
                 $this->attachmentRepo->saveProjectAttachment($projectDetail,$projectFiles);
             }
+
             DB::commit();
             return $projectDetail;
         }catch(\Exception $e){

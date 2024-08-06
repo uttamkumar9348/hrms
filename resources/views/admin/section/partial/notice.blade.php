@@ -3,7 +3,7 @@
         <a
             href="{{ route('admin.notices.index') }}"
             data-href="{{ route('admin.notices.index') }}"
-            class="nav-link">
+            class="nav-link {{ request()->routeIs('admin.notices.*') ? 'active' : '' }}">
             <i class="link-icon" data-feather="calendar"></i>
             <span class="link-title">Notice</span>
         </a>

@@ -2,11 +2,28 @@
     class="nav-item {{ request()->routeIs('admin.company.*') ||
     request()->routeIs('admin.branch.*') ||
     request()->routeIs('admin.departments.*') ||
-    request()->routeIs('admin.posts.*') || 
-    request()->routeIs('admin.users.*') || 
-    request()->routeIs('admin.logout-requests.*') || 
+    request()->routeIs('admin.posts.*') ||
+    request()->routeIs('admin.users.*') ||
+    request()->routeIs('admin.logout-requests.*') ||
     request()->routeIs('admin.attendances.*') ||
-    request()->routeIs('admin.regularization.*')
+    request()->routeIs('admin.regularization.*') ||
+    request()->routeIs('admin.clients.*') ||
+    request()->routeIs('admin.projects.*') ||
+    request()->routeIs('admin.tasks.*') ||
+    request()->routeIs('admin.holidays.*') ||
+    request()->routeIs('admin.notices.*') ||
+    request()->routeIs('admin.salary-components.*') ||
+    request()->routeIs('admin.payment-methods.*') ||
+    request()->routeIs('admin.salary-tds.*') ||
+    request()->routeIs('admin.salary-groups.*') ||
+    request()->routeIs('admin.advance-salaries.*') ||
+    request()->routeIs('admin.employee-salaries.*') ||
+    request()->routeIs('admin.employee-salary.payroll*') ||
+    request()->routeIs('admin.overtime.*') ||
+    request()->routeIs('admin.under-time.*') ||
+    request()->routeIs('admin.leaves.*') ||
+    request()->routeIs('admin.time-leave-request.*') ||
+    request()->routeIs('admin.leave-request.*')
         ? 'active'
         : '' }}">
     <a data-href="#" class="nav-link" data-bs-toggle="collapse" href="#hrms" role="button" aria-expanded="false"
@@ -17,15 +34,33 @@
     </a>
 
     <div class="{{ request()->routeIs('admin.company.*') ||
-        request()->routeIs('admin.branch.*') ||
-        request()->routeIs('admin.departments.*') ||
-        request()->routeIs('admin.posts.*') || 
-        request()->routeIs('admin.users.*') || 
-        request()->routeIs('admin.logout-requests.*') || 
-        request()->routeIs('admin.attendances.*') ||
-        request()->routeIs('admin.regularization.*')
-            ? ''
-            : 'collapse' }}" id="hrms">
+    request()->routeIs('admin.branch.*') ||
+    request()->routeIs('admin.departments.*') ||
+    request()->routeIs('admin.posts.*') ||
+    request()->routeIs('admin.users.*') ||
+    request()->routeIs('admin.logout-requests.*') ||
+    request()->routeIs('admin.attendances.*') ||
+    request()->routeIs('admin.regularization.*') ||
+    request()->routeIs('admin.clients.*') ||
+    request()->routeIs('admin.projects.*') ||
+    request()->routeIs('admin.tasks.*') ||
+    request()->routeIs('admin.holidays.*') ||
+    request()->routeIs('admin.notices.*') ||
+    request()->routeIs('admin.salary-components.*') ||
+    request()->routeIs('admin.payment-methods.*') ||
+    request()->routeIs('admin.salary-tds.*') ||
+    request()->routeIs('admin.salary-groups.*') ||
+    request()->routeIs('admin.advance-salaries.*') ||
+    request()->routeIs('admin.employee-salaries.*') ||
+    request()->routeIs('admin.employee-salary.payroll*') ||
+    request()->routeIs('admin.overtime.*') ||
+    request()->routeIs('admin.under-time.*') ||
+    request()->routeIs('admin.leaves.*') ||
+    request()->routeIs('admin.time-leave-request.*') ||
+    request()->routeIs('admin.leave-request.*')
+        ? ''
+        : 'collapse' }}"
+        id="hrms">
         <ul class="nav sub-menu">
             @include('admin.section.partial.company')
             @include('admin.section.partial.user')

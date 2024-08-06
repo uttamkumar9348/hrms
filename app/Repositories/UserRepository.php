@@ -197,7 +197,7 @@ class UserRepository
 
     public function getEmployeeOverviewDetail($employeeId, $date)
     {
-        $totalLeaveAllocated = DB::table('leave_typees')
+        $totalLeaveAllocated = DB::table('leave_types')
             ->select('company_id', DB::raw('sum(leave_allocated) as total_paid_leaves'))
             ->whereNotNull('leave_allocated')
             ->where('is_active', 'self::IS_ACTIVE')

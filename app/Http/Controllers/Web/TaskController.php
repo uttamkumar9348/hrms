@@ -109,13 +109,13 @@ class  TaskController extends Controller
                 $notificationData['description'] = 'You are assigned to a new task '.$validatedData['name']. ' with deadline on '.$validatedData['end_date'];
                 $notificationData['notification_for_id'] = $task->id;
                 $notification = $this->notificationService->store($notificationData);
-                if($notification){
-                    $this->sendNotificationToTaskAssignedMember(
-                        $notification->title,
-                        $notification->description,
-                        $notificationData['user_id'],
-                        $task->id);
-                }
+                // if($notification){
+                //     $this->sendNotificationToTaskAssignedMember(
+                //         $notification->title,
+                //         $notification->description,
+                //         $notificationData['user_id'],
+                //         $task->id);
+                // }
             }
             return redirect()
                 ->route('admin.tasks.index')
@@ -131,6 +131,7 @@ class  TaskController extends Controller
 
     public function show($id)
     {
+        // dd($id);
         $this->authorize('show_task_detail');
         try {
             $taskSelect= ['*'];

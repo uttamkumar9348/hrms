@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('early_exit')->default(0);
             $table->timestamps();
             $table->foreign('employee_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('leave_type_id')->references('id')->on('leave_typees')->onDelete('cascade');
+            $table->foreign('leave_type_id')->references('id')->on('leave_types')->onDelete('cascade');
         });
     }
 

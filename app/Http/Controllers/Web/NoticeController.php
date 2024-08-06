@@ -77,7 +77,7 @@ class NoticeController extends Controller
             DB::commit();
             if ($notice) {
                 $userIds = $this->getUserIdsForNoticeNotification($validatedData['receiver']);
-                $this->sendNoticeNotification(ucfirst($validatedData['title']), removeHtmlTags($notice['description']), $userIds);
+                // $this->sendNoticeNotification(ucfirst($validatedData['title']), removeHtmlTags($notice['description']), $userIds);
             }
             return redirect()
                 ->back()
@@ -154,7 +154,7 @@ class NoticeController extends Controller
             DB::commit();
             if ($updateNotice) {
                 $userIds = $this->getUserIdsForNoticeNotification($validatedData['receiver']);
-                $this->sendNoticeNotification(ucfirst($validatedData['title']), removeHtmlTags($validatedData['description']), $userIds);
+                // $this->sendNoticeNotification(ucfirst($validatedData['title']), removeHtmlTags($validatedData['description']), $userIds);
             }
             return redirect()->back()->with('success', 'Notice Updated and Sent Successfully');
         } catch (Exception $exception) {

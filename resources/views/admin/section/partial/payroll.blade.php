@@ -1,11 +1,12 @@
 <li
     class="nav-item  {{ request()->routeIs('admin.salary-components.*') ||
     request()->routeIs('admin.payment-methods.*') ||
-    //                   request()->routeIs('admin.payment-currency.*') ||
     request()->routeIs('admin.salary-tds.*') ||
-    request()->routeIs('admin.salary-salary-groups.*') ||
+    request()->routeIs('admin.salary-groups.*') ||
     request()->routeIs('admin.advance-salaries.*') ||
-    request()->routeIs('admin.employee-salaries.*')
+    request()->routeIs('admin.employee-salaries.*') ||
+    request()->routeIs('admin.employee-salary.payroll*') ||
+    request()->routeIs('admin.overtime.*')
         ? 'active'
         : '' }}">
     <a class="nav-link" data-bs-toggle="collapse" href="#payroll" data-href="#" role="button" aria-expanded="false"
@@ -14,14 +15,17 @@
         <span class="link-title"> Payroll Management </span>
         <i class="link-arrow" data-feather="chevron-down"></i>
     </a>
-    <div class="{{ //                request()->routeIs('admin.payment-currency.*') ||
-        request()->routeIs('admin.salary-salary-groups.*') ||
-        request()->routeIs('admin.salary-tds.*') ||
-        request()->routeIs('admin.advance-salaries.*') ||
-        request()->routeIs('admin.employee-salaries.*') ||
-        request()->routeIs('admin.employee-salary.payroll*')
-            ? ''
-            : 'collapse' }} "
+    <div class="{{ request()->routeIs('admin.salary-components.*') ||
+    request()->routeIs('admin.salary-groups.*') ||
+    request()->routeIs('admin.salary-tds.*') ||
+    request()->routeIs('admin.advance-salaries.*') ||
+    request()->routeIs('admin.employee-salaries.*') ||
+    request()->routeIs('admin.employee-salary.payroll*') ||
+    request()->routeIs('admin.overtime.*') ||
+    request()->routeIs('admin.under-time.*') ||
+    request()->routeIs('admin.payment-methods.*')
+        ? ''
+        : 'collapse' }} "
         id="payroll">
 
         <ul class="nav sub-menu">
@@ -35,9 +39,10 @@
                     data-href="{{ route('admin.salary-components.index') }}"
                     class="nav-link {{ request()->routeIs('admin.salary-components.*') ||
                     request()->routeIs('admin.payment-methods.*') ||
-                    //                      request()->routeIs('admin.payment-currency.*') ||
-                    request()->routeIs('admin.salary-salary-groups.*') ||
-                    request()->routeIs('admin.salary-tds.*')
+                    request()->routeIs('admin.salary-groups.*') ||
+                    request()->routeIs('admin.salary-tds.*') ||
+                    request()->routeIs('admin.overtime.*') ||
+                    request()->routeIs('admin.under-time.*')
                         ? 'active'
                         : '' }}">Payroll
                     Setting
@@ -57,8 +62,6 @@
                     class="nav-link  {{ request()->routeIs('admin.employee-salaries.*') ? 'active' : '' }}">Employee
                     Salary</a>
             </li>
-
-
         </ul>
     </div>
 </li>

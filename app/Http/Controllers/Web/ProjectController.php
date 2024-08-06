@@ -89,6 +89,7 @@ class ProjectController extends Controller
             $validatedData = $request->validated();
             DB::beginTransaction();
              $project = $this->projectService->saveProjectDetail($validatedData);
+
             DB::commit();
                 if($project){
                     $notificationData['title'] = 'Project Notification';
@@ -97,13 +98,13 @@ class ProjectController extends Controller
                     $notificationData['description'] = 'You are assigned to a new project '.$validatedData['name']. ' with deadline on '.$validatedData['deadline'];
                     $notificationData['notification_for_id'] = $project->id;
                     $notification = $this->notificationService->store($notificationData);
-                    if($notification){
-                        $this->sendNotificationToAssignedProjectTeam(
-                            $notification->title,
-                            $notification->description,
-                            $notificationData['user_id'],
-                            $project->id);
-                    }
+                    // if($notification){
+                    //     $this->sendNotificationToAssignedProjectTeam(
+                    //         $notification->title,
+                    //         $notification->description,
+                    //         $notificationData['user_id'],
+                    //         $project->id);
+                    // }
                 }
             return redirect()
                 ->route('admin.projects.index')

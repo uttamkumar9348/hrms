@@ -53,7 +53,7 @@ class DashboardRepository
         }
         $pendingLeavesRequests->groupBy('company_id');
 
-        $companyPaidLeaves = DB::table('leave_typees')
+        $companyPaidLeaves = DB::table('leave_types')
             ->select('company_id', DB::raw('sum(leave_allocated) as total_paid_leaves'))
             ->whereNotNull('leave_allocated')
             ->where('is_active', '1')

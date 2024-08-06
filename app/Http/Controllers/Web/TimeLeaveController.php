@@ -152,10 +152,11 @@ class TimeLeaveController extends Controller
         $this->authorize('create_time_leave_request');
         try {
             $validatedData = $request->validated();
-
+            
             $permissionKeyForNotification = 'employee_time_leave_request';
-
+            
             $validatedData['requested_by'] = auth()->user()->id;
+
             DB::beginTransaction();
                 $leaveRequest = $this->timeLeaveService->storeTimeLeaveRequest($validatedData);
             DB::commit();
