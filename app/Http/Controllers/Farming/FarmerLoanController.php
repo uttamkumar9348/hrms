@@ -48,7 +48,7 @@ class FarmerLoanController extends Controller
                 'created_by' => 'required',
             ]);
             $farmerLoan = FarmerLoan::create($request->all());
-            return redirect()->to(route('farmer.loan.index'))->with('success', 'Loan Added Successfully.');
+            return redirect()->to(route('admin.farmer.loan.index'))->with('success', 'Loan Added Successfully.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

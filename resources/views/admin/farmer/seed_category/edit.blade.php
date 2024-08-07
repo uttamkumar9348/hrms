@@ -1,4 +1,4 @@
-{{ Form::model($seedCategory, array('route' => array('farmer.seed_category.update', $seedCategory->id), 'method' => 'PUT')) }}
+{{ Form::model($seedCategory, array('route' => array('admin.farmer.seed_category.update', $seedCategory->id), 'method' => 'PUT')) }}
 
 <div class="modal-body">
     {{-- start for ai module--}}

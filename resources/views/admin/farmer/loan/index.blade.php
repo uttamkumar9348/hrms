@@ -64,7 +64,7 @@
                                                 <div class="action-btn bg-danger ms-2">
                                                     {!! Form::open([
                                                         'method' => 'DELETE',
-                                                        'route' => ['farmer.loan.destroy', $loan->id],
+                                                        'route' => ['admin.farmer.loan.destroy', $loan->id],
                                                         'id' => 'delete-form-' . $loan->id,
                                                     ]) !!}
                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"

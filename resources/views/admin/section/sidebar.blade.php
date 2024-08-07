@@ -4,7 +4,7 @@
     <nav class="sidebar">
         <div class="sidebar-header">
             <a href="{{route('admin.dashboard')}}" class="sidebar-brand">
-               <img src="{{asset(\App\Models\Company::UPLOAD_PATH.\App\Helpers\AppHelper::getCompanyLogo())}}"  />
+               <img src="{{asset(\App\Models\Company::UPLOAD_PATH.\App\Helpers\AppHelper::getCompanyLogo())}}" />
             </a>
             <div class="sidebar-toggler not-active">
                 <span></span>

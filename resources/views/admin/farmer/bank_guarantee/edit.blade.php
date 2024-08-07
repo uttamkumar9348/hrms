@@ -19,7 +19,7 @@
         </ol>
     </nav>
     <div class="row">
-        {{ Form::model($payment, ['route' => ['farmer.payment.update', $payment->id], 'method' => 'PUT', 'class' => 'w-100']) }}
+        {{ Form::model($payment, ['route' => ['admin.farmer.payment.update', $payment->id], 'method' => 'PUT', 'class' => 'w-100']) }}
         <div class="col-12">
             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             <div class="card">

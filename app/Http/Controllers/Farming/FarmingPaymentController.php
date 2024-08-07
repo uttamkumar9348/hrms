@@ -56,7 +56,7 @@ class FarmingPaymentController extends Controller
             $client->created_by = Auth::user()->id;
             $client->save();
 
-            return redirect()->to(route('farmer.farming_registration.show', $request->farming_id))->with('success', 'Payment Added Successfully.');
+            return redirect()->to(route('admin.farmer.farming_registration.show', $request->farming_id))->with('success', 'Payment Added Successfully.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

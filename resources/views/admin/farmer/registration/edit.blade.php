@@ -183,7 +183,7 @@
         </ol>
     </nav>
     <div class="row">
-        {{ Form::model($farming, ['route' => ['farmer.farming_registration.update', $farming->id], 'method' => 'PUT', 'class' => 'w-100']) }}
+        {{ Form::model($farming, ['route' => ['admin.farmer.farming_registration.update', $farming->id], 'method' => 'PUT', 'class' => 'w-100']) }}
         <div class="col-12">
             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             <div class="card">
@@ -201,10 +201,6 @@
                             {{ Form::label('mobile', __('Mobile'), ['class' => 'form-label']) }}
                             {{ Form::number('mobile', $farming->mobile, ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
-                        {{-- <div class="form-group col-md-6">
-                            {{ Form::label('email', __('Email'),['class'=>'form-label']) }}
-                    {{ Form::email('email', $farming->email, array('class' => 'form-control','required'=>'required')) }}
-                </div> --}}
                         <div class="col-md-6">
                             <div class="form-group">
                                 {{ Form::label('country_id', __('Country'), ['class' => 'form-label']) }}

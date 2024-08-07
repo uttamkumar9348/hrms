@@ -23,7 +23,24 @@
     request()->routeIs('admin.under-time.*') ||
     request()->routeIs('admin.leaves.*') ||
     request()->routeIs('admin.time-leave-request.*') ||
-    request()->routeIs('admin.leave-request.*')
+    request()->routeIs('admin.leave-request.*') ||
+    request()->routeIs('admin.team-meetings.*') ||
+    request()->routeIs('admin.tadas.*') ||
+    request()->routeIs('admin.office-times.*') ||
+    request()->routeIs('admin.asset-types.*') ||
+    request()->routeIs('admin.assets.*') ||
+    request()->routeIs('admin.asset_assignment.*') ||
+    request()->routeIs('admin.static-page-contents.*') ||
+    request()->routeIs('admin.supports.*') ||
+    request()->routeIs('admin.routers.*') ||
+    request()->routeIs('admin.qr.*') ||
+    request()->routeIs('admin.nfc.*') ||
+    request()->routeIs('admin.roles.*') ||
+    request()->routeIs('admin.notifications.*') ||
+    request()->routeIs('admin.general-settings.*') ||
+    request()->routeIs('admin.payment-currency.*') ||
+    request()->routeIs('admin.app-settings.*') ||
+    request()->routeIs('admin.feature.index')
         ? 'active'
         : '' }}">
     <a data-href="#" class="nav-link" data-bs-toggle="collapse" href="#hrms" role="button" aria-expanded="false"
@@ -57,7 +74,24 @@
     request()->routeIs('admin.under-time.*') ||
     request()->routeIs('admin.leaves.*') ||
     request()->routeIs('admin.time-leave-request.*') ||
-    request()->routeIs('admin.leave-request.*')
+    request()->routeIs('admin.leave-request.*') ||
+    request()->routeIs('admin.team-meetings.*') ||
+    request()->routeIs('admin.tadas.*') ||
+    request()->routeIs('admin.office-times.*') ||
+    request()->routeIs('admin.asset-types.*') ||
+    request()->routeIs('admin.assets.*') ||
+    request()->routeIs('admin.asset_assignment.*') ||
+    request()->routeIs('admin.static-page-contents.*') ||
+    request()->routeIs('admin.supports.*') ||
+    request()->routeIs('admin.routers.*') ||
+    request()->routeIs('admin.qr.*') ||
+    request()->routeIs('admin.nfc.*') ||
+    request()->routeIs('admin.roles.*') ||
+    request()->routeIs('admin.notifications.*') ||
+    request()->routeIs('admin.general-settings.*') ||
+    request()->routeIs('admin.payment-currency.*') ||
+    request()->routeIs('admin.app-settings.*') ||
+    request()->routeIs('admin.feature.index')
         ? ''
         : 'collapse' }}"
         id="hrms">

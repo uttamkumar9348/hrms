@@ -1,12 +1,15 @@
 @canany(['list_type','list_assets'])
-    <li class="nav-item {{ request()->routeIs('admin.asset-types.*') || request()->routeIs('admin.assets.*')
+    <li class="nav-item {{ 
+    request()->routeIs('admin.asset-types.*') || 
+    request()->routeIs('admin.assets.*') || 
+    request()->routeIs('admin.asset_assignment.*')
                         ? 'active' : '' }} ">
         <a class="nav-link" data-bs-toggle="collapse" href="#assets" data-href="#" role="button" aria-expanded="false" aria-controls="assets">
             <i class="link-icon" data-feather="loader"></i>
             <span class="link-title">Asset Management</span>
             <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
-        <div class="{{ request()->routeIs('admin.asset-types.*') || request()->routeIs('admin.assets.*')
+        <div class="{{ request()->routeIs('admin.asset-types.*') || request()->routeIs('admin.assets.*') || request()->routeIs('admin.asset_assignment.*')
                    ?'' : 'collapse'  }}" id="assets">
             <ul class="nav sub-menu">
 

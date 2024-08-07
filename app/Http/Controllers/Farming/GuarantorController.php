@@ -64,7 +64,7 @@ class GuarantorController extends Controller
                 'created_by' => 'required',
             ]);
             Guarantor::create($request->all());
-            return redirect()->to(route('farmer.guarantor.index'))->with('success', 'Guarantor Added Successfully.');
+            return redirect()->to(route('admin.farmer.guarantor.index'))->with('success', 'Guarantor Added Successfully.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

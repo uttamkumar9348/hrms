@@ -82,7 +82,7 @@ class FarmingController extends Controller
             ]);
 
             Farming::create($request->all());
-            return redirect()->to(route('farmer.farming_registration.index'))->with('success', 'Farming Added Successfully.');
+            return redirect()->to(route('admin.farmer.farming_registration.index'))->with('success', 'Farming Added Successfully.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -213,7 +213,7 @@ class FarmingController extends Controller
     {
         $farming = Farming::find($id);
         $farming->update(['is_validate' => 1, 'farmer_id' => 'ERP-' . random_int(100000, 999999)]);
-        return redirect()->to(route('farmer.farming_registration.index'))->with('success', 'Farming Registration Validated Successfully.');
+        return redirect()->to(route('admin.farmer.farming_registration.index'))->with('success', 'Farming Registration Validated Successfully.');
     }
 
     public function registration_id(Request $request)

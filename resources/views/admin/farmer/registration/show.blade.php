@@ -45,28 +45,28 @@
                             aria-labelledby="pills-home-tab">
                             <div class="row">
                                 <div class="col-md-12">
-                                    @include('farmer.registration.partials.detail')
+                                    @include('admin.farmer.registration.partials.detail')
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="guarantor" role="tabpanel" aria-labelledby="pills-profile-tab">
                             <div class="row">
                                 <div class="col-md-12">
-                                    @include('farmer.registration.partials.guarantors')
+                                    @include('admin.farmer.registration.partials.guarantors')
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="pills-contact-tab">
                             <div class="row">
                                 <div class="col-md-12">
-                                    @include('farmer.registration.partials.payments')
+                                    @include('admin.farmer.registration.partials.payments')
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="pills-contact-tab">
                             <div class="row">
                                 <div class="col-md-12">
-                                    @include('farmer.registration.partials.loans')
+                                    @include('admin.farmer.registration.partials.loans')
                                 </div>
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                             aria-labelledby="pills-bank_guarantee-tab">
                             <div class="row">
                                 <div class="col-md-12">
-                                    @include('farmer.registration.partials.bank_guarantee')
+                                    @include('admin.farmer.registration.partials.bank_guarantee')
                                 </div>
                             </div>
                         </div>

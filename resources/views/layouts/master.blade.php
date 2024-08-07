@@ -48,6 +48,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.3/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
 @yield('scripts')
+<script>
+    $(document).ready(function() {
+        $('.deleteBtn').click(function(event) {
+            event.preventDefault();
+            let href = $(this).data('href');
+            console.log(href);
+            
+            Swal.fire({
+                title: 'Are you sure you want to Delete ?',
+                showDenyButton: true,
+                confirmButtonText: `Yes`,
+                denyButtonText: `No`,
+                padding: '10px 50px 10px 50px',
+                // width:'1000px',
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = href;
+                }
+            })
+        });
+    });
+</script>
 @yield('attendanceScripts')
 
 

@@ -68,7 +68,7 @@ class FarmingDetailController extends Controller
                 'created_by' => 'required',
             ]);
             FarmingDetail::create($request->all());
-            return redirect()->to(route('farmer.farming_detail.index'))->with('success', 'Farming Detail Added Successfully.');
+            return redirect()->to(route('admin.farmer.farming_detail.index'))->with('success', 'Farming Detail Added Successfully.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

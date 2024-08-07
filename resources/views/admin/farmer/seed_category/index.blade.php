@@ -47,7 +47,7 @@
                                             <div class="action-btn bg-danger ms-2">
                                                 {!! Form::open([
                                                     'method' => 'DELETE',
-                                                    'route' => ['farmer.seed_category.destroy', $seed_category->id],
+                                                    'route' => ['admin.farmer.seed_category.destroy', $seed_category->id],
                                                     'id' => 'delete-form-' . $seed_category->id,
                                                 ]) !!}
                                                 <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"

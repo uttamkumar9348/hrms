@@ -70,7 +70,7 @@
         </ol>
     </nav>
     <div class="row">
-        {{ Form::model($farming_detail, ['route' => ['farmer.farming_detail.update', $farming_detail->id], 'method' => 'PUT', 'class' => 'w-100']) }}
+        {{ Form::model($farming_detail, ['route' => ['admin.farmer.farming_detail.update', $farming_detail->id], 'method' => 'PUT', 'class' => 'w-100']) }}
         <div class="col-12">
             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             <div class="card">

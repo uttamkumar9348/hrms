@@ -48,6 +48,8 @@ class Farming extends Model
         'account_no_ifsc',
         'name_of_cooperative',
         'cooperative_address',
+        'farmer_id_2',
+        'farmer_category'
     ];
 
     public function country()
