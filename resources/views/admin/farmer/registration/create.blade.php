@@ -8,6 +8,8 @@
     <script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+            $('#land_holding_fields').hide();
+            
             $('#country_id').change(function() {
                 let country_id = $(this).val();
                 $.ajax({
@@ -141,30 +143,12 @@
                     }
                 });
             });
-            $('#non_loan_type').on('change', function(event) {
+            $('input[type=radio][name="land_type"]').on('change', function(event) {
                 var value = $(this).val();
-                if (value == "Bank") {
-                    $('.coperative_fields').hide();
-                    $('.bank_detail_fields').show();
+                if (value == "Leased Land") {
+                    $('#land_holding_fields').hide();
                 } else {
-                    $('.bank_detail_fields').hide();
-                    $('.coperative_fields').show();
-                }
-            });
-            $('input[type=radio][name="finance_category"]').on('change', function(event) {
-                var value = $(this).val();
-                if (value == "Loan") {
-                    $('.finance_category_fields').hide();
-                } else {
-                    $('.finance_category_fields').show();
-                }
-            });
-            $('input[type=radio][name="is_irregation"]').on('change', function(event) {
-                var value = $(this).val();
-                if (value == "1" || value == true) {
-                    $('.irregation_fields').show();
-                } else {
-                    $('.irregation_fields').hide();
+                    $('#land_holding_fields').show();
                 }
             });
         });
@@ -327,6 +311,13 @@
                             </select>
                         </div>
                         <div class="form-group col-md-6">
+                            {{ Form::label('land_type', __('Land Type'), ['class' => 'form-label']) }}
+                            <br>
+                            <label><input type="radio" name="land_type" value="Leased Land" checked> Leased
+                                Land</label>
+                            <label><input type="radio" name="land_type" value="Owned Land"> Owned Land</label>
+                        </div>
+                        <div class="form-group col-md-6" id="land_holding_fields">
                             {{ Form::label('land_holding', __('Land Holding (In Acre)'), ['class' => 'form-label']) }}
                             {{ Form::number('land_holding', '', ['class' => 'form-control', 'step' => '0.01', 'required' => 'required']) }}
                         </div>
@@ -334,20 +325,7 @@
                             {{ Form::label('offered_area', __('Offered Area'), ['class' => 'form-label']) }}
                             {{ Form::text('offered_area', '', ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
-                        <div class="form-group col-md-3">
-                            {{ Form::label('land_type', __('Land Type'), ['class' => 'form-label']) }}
-                            <br>
-                            <label><input type="radio" name="land_type" value="Leased Land" checked> Leased
-                                Land</label>
-                            <label><input type="radio" name="land_type" value="Owned Land"> Owned Land</label>
-                        </div>
-                        <div class="form-group col-md-3">
-                            {{ Form::label('is_irregation', __('Is irregation Available'), ['class' => 'form-label']) }}
-                            <br>
-                            <label><input type="radio" name="is_irregation" value="1"> Yes</label>
-                            <label><input type="radio" name="is_irregation" value="0" checked> No</label>
-                        </div>
-                        <div class="form-group col-md-6 irregation_fields" style="display:none;">
+                        <div class="form-group col-md-6">
                             {{ Form::label('irregation', __('Irregation'), ['class' => 'form-label']) }}
                             <select class="form-control select" name="irregation" id="irregation"
                                 placeholder="Select Seed Category">
@@ -360,72 +338,9 @@
                                 <option value="Dams and Canals">Dams and Canals</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-2">
-                            {{ Form::label('finance_category', __('Finance Category'), ['class' => 'form-label']) }}
-                            <br>
-                            <label><input type="radio" name="finance_category" value="Loan" checked> Loan</label>
-                            <label><input type="radio" name="finance_category" value="Non-loan"> Non-loan</label>
-                        </div>
-                        <div class="col-md-6 finance_category_fields" style="display:none;">
-                            <div class="form-group">
-                                {{ Form::label('non_loan_type', __('Non Loan Type'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="non_loan_type" id="non_loan_type"
-                                    placeholder="Select Loan Type">
-                                    <option value="">{{ __('Select') }}</option>
-                                    <option value="Bank">Bank</option>
-                                    <option value="Co-Operative">Co-Operative</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6 bank_detail_fields" style="display:none;">
-                            {{ Form::label('account_number', __('Account Number'), ['class' => 'form-label']) }}
-                            {{ Form::text('account_number', '', ['class' => 'form-control']) }}
-                        </div>
-                        <div class="col-md-6 bank_detail_fields" style="display:none;">
-                            <div class="form-group">
-                                {{ Form::label('bank', __('Bank'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="bank" id="bank"
-                                    placeholder="Select Bank">
-                                    <option value="">{{ __('Select Bank') }}</option>
-                                    <option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
-                                    <option value="Punjab National Bank (PNB)">Punjab National Bank (PNB)</option>
-                                    <option value="Bank of Baroda (BOB)">Bank of Baroda (BOB)</option>
-                                    <option value="Canara Bank">Canara Bank</option>
-                                    <option value="Union Bank of India">Union Bank of India</option>
-                                    <option value="HDFC Bank">HDFC Bank</option>
-                                    <option value="ICICI Bank">ICICI Bank</option>
-                                    <option value="Axis Bank">Axis Bank</option>
-                                    <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
-                                    <option value="IndusInd Bank">IndusInd Bank</option>
-                                    <option value="Yes Bank">Yes Bank</option>
-                                    <option value="IDBI Bank">IDBI Bank</option>
-                                    <option value="Central Bank of India">Central Bank of India</option>
-                                    <option value="Indian Bank">Indian Bank</option>
-                                    <option value="Bank of India">Bank of India</option>
-                                    <option value="Oriental Bank of Commerce (OBC)">Oriental Bank of Commerce (OBC)
-                                    </option>
-                                    <option value="Corporation Bank">Corporation Bank</option>
-                                    <option value="Andhra Bank">Andhra Bank</option>
-                                    <option value="Allahabad Bank">Allahabad Bank</option>
-                                    <option value="Syndicate Bank">Syndicate Bank</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6 bank_detail_fields" style="display:none;">
-                            {{ Form::label('branch', __('Branch'), ['class' => 'form-label']) }}
-                            {{ Form::text('branch', '', ['class' => 'form-control']) }}
-                        </div>
-                        <div class="form-group col-md-6 bank_detail_fields" style="display:none;">
-                            {{ Form::label('ifsc_code', __('IFSC Code'), ['class' => 'form-label']) }}
-                            {{ Form::text('ifsc_code', '', ['class' => 'form-control']) }}
-                        </div>
-                        <div class="form-group col-md-6 coperative_fields" style="display:none;">
-                            {{ Form::label('name_of_cooperative', __('Co-Operative Name'), ['class' => 'form-label']) }}
-                            {{ Form::text('name_of_cooperative', '', ['class' => 'form-control']) }}
-                        </div>
-                        <div class="form-group col-md-6 coperative_fields" style="display:none;">
-                            {{ Form::label('cooperative_address', __('Co-Operative Address'), ['class' => 'form-label']) }}
-                            {{ Form::text('cooperative_address', '', ['class' => 'form-control']) }}
+                        <div class="form-group col-md-6">
+                            {{ Form::label('adhaarno', __('Adhaar No.'), ['class' => 'form-label']) }}
+                            {{ Form::text('adhaarno', '', ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
                         <div class="form-group col-md-2">
                             {{ Form::label('language', __('Language'), ['class' => 'form-label']) }}

@@ -62,7 +62,8 @@ class FarmingController extends Controller
                 'age' => 'required',
                 'gender' => 'required',
                 'qualification' => 'required',
-                'land_holding' => 'required',
+                'offered_area' => 'required',
+                'adhaarno' => 'required',
                 'language' => 'required',
                 'sms_mode' => 'required',
                 'created_by' => 'required',
@@ -74,8 +75,9 @@ class FarmingController extends Controller
             $zone = Zone::find($request->zone_id);
             $center = Center::find($request->center_id);
             $existingFarmingProfiles = Farming::where('center_id', $center->id)->count() + 1;
+            dd($existingFarmingProfiles);
             $request->merge([
-                'g_code' => @$zone->zone_number . '/' . @$center->center_number . '/000' . $existingFarmingProfiles
+                'g_code' => @$zone->zone_number . @$center->center_number . '/0000' . $existingFarmingProfiles
             ]);
             $request->merge([
                 'registration_no' => "ACSI" . '-' . rand(0, 9999)
