@@ -43,16 +43,22 @@
                                 @foreach ($farmings as $farming)
                                     <tr class="font-style">
                                         <td>{{ $farming->name }}</td>
-                                        <td>{{ $farming->g_code }}</td>
+                                        <td>
+                                            @if($farming->g_code != null)
+                                            {{ $farming->g_code }}
+                                            @else
+                                            <span class="status_badge text-capitalize badge bg-danger p-2 px-3 rounded">Not Assigned</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $farming->mobile }}</td>
                                         <td>{{ $farming->age }}</td>
                                         <td>{{ $farming->gender }}</td>
                                         <td>{{ $farming->qualification }}</td>
-                                        <td>{{ @$farming->state->name }}</td>
-                                        <td>{{ @$farming->district->name }}</td>
-                                        <td>{{ @$farming->block->name }}</td>
+                                        <td>{{ $farming->state->name }}</td>
+                                        <td>{{ $farming->district->name }}</td>
+                                        <td>{{ $farming->block->name }}</td>
                                         <td>
-                                            @if (@$farming->is_validate)
+                                            @if ($farming->is_validate)
                                                 <span
                                                     class="status_badge text-capitalize badge bg-success p-2 px-3 rounded">Validated</span>
                                             @else

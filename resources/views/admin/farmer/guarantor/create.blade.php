@@ -21,8 +21,15 @@
                     },
                     success: function(response) {
                         registration_number = response.registration_id;
+                        guarentor = response.guarentor;
                         $('#registration_number').empty();
                         $('#registration_number').val(registration_number);
+                        $('#name').empty();
+                        $('#name').append('<option  value="">Select Guarantor Name</option>');
+                        for (i = 0; i < guarentor.length; i++) {
+                            $('#name').append('<option value="' + guarentor[i].id + '">' +
+                                guarentor[i].name + '</option>');
+                        }
                     }
                 });
             });
@@ -137,9 +144,9 @@
                             {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
                             <select class="form-control select" name="name" id="name" required>
                                 <option value="">{{ __('Select Guarantor Name') }}</option>
-                                @foreach ($farmings as $farming)
+                                {{-- @foreach ($farmings as $farming)
                                     <option value="{{ $farming->id }}">{{ $farming->name }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                         </div>
                         <div class="form-group col-md-6">

@@ -319,7 +319,7 @@
                         </div>
                         <div class="form-group col-md-6" id="land_holding_fields">
                             {{ Form::label('land_holding', __('Land Holding (In Acre)'), ['class' => 'form-label']) }}
-                            {{ Form::number('land_holding', '', ['class' => 'form-control', 'step' => '0.01', 'required' => 'required']) }}
+                            {{ Form::number('land_holding', '', ['class' => 'form-control', 'step' => '0.01']) }}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('offered_area', __('Offered Area'), ['class' => 'form-label']) }}

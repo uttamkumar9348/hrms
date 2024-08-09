@@ -31,12 +31,9 @@
                             <thead>
                                 <tr>
                                     <th>{{ __('Farmer') }}</th>
-                                    <!-- <th>{{ __('Name') }}</th> -->
                                     <th>{{ __('Plot Number') }}</th>
-                                    <!-- <th>{{ __('Kata Number') }}</th> -->
                                     <th>{{ __('Area in Acar') }}</th>
                                     <th>{{ __('Date of Harvesting') }}</th>
-                                    <!-- <th>{{ __('Quantity') }}</th> -->
                                     <th>{{ __('Tentative Harvest Quantity') }}</th>
                                     <th>{{ __('Seed Category') }}</th>
                                     <th>{{ __('Cutting Order') }}</th>
@@ -47,12 +44,9 @@
                                 @foreach ($farming_details as $farming_detail)
                                     <tr class="font-style">
                                         <td>{{ @$farming_detail->farming->name }}</td>
-                                        <!-- <td>{{ $farming_detail->name }}</td> -->
                                         <td>{{ $farming_detail->plot_number }}</td>
-                                        <!-- <td>{{ $farming_detail->kata_number }}</td> -->
                                         <td>{{ $farming_detail->area_in_acar }}</td>
                                         <td>{{ $farming_detail->date_of_harvesting }}</td>
-                                        <!-- <td>{{ $farming_detail->quantity }}</td> -->
                                         <td>{{ $farming_detail->tentative_harvest_quantity }}</td>
                                         <td>{{ @$farming_detail->seed_category->name }}</td>
                                         <td>
@@ -64,13 +58,6 @@
                                                     class="status_badge text-capitalize badge bg-danger p-2 px-3 rounded">No</span>
                                             @endif
                                         </td>
-                                        {{-- <td>
-                                        @if (@$farming_detail->is_validate)
-                                        <span class="status_badge text-capitalize badge bg-success p-2 px-3 rounded">Validated</span>
-                                        @else 
-                                        <span class="status_badge text-capitalize badge bg-danger p-2 px-3 rounded">Not Validated</span>
-                                        @endif
-                                    </td> --}}
                                         <td class="Action">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
                                             @if ($farming_detail->is_cutting_order != '1')

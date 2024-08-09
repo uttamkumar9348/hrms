@@ -69,16 +69,16 @@ class FarmingController extends Controller
                 'created_by' => 'required',
                 'zone_id' => 'required',
                 'center_id' => 'required',
-                'farmer_id_2' => 'required',
+                // 'farmer_id_2' => 'required',
                 'farmer_category' => 'required',
             ]);
-            $zone = Zone::find($request->zone_id);
-            $center = Center::find($request->center_id);
-            $existingFarmingProfiles = Farming::where('center_id', $center->id)->count() + 1;
-            dd($existingFarmingProfiles);
-            $request->merge([
-                'g_code' => @$zone->zone_number . @$center->center_number . '/0000' . $existingFarmingProfiles
-            ]);
+            // $zone = Zone::find($request->zone_id);
+            // $center = Center::find($request->center_id);
+            // $count = Farming::all()->count() + 1;
+            // $existingFarmingProfiles = str_pad($count, 5, '0', STR_PAD_LEFT);
+            // $request->merge([
+            //     'g_code' => @$zone->zone_number . @$center->center_number . '/' . $existingFarmingProfiles
+            // ]);
             $request->merge([
                 'registration_no' => "ACSI" . '-' . rand(0, 9999)
             ]);
@@ -138,22 +138,23 @@ class FarmingController extends Controller
     public function update(Request $request, $id)
     {
         $farming = Farming::find($id);
-        if ($request->zone_id != $farming->zone_id) {
-            $zone = Zone::find($request->zone_id);
-            $center = Center::find($request->center_id);
-            $existingFarmingProfiles = Farming::where('center_id', $center->id)->count() + 1;
-            $request->merge([
-                'g_code' => $zone->zone_number . '/' . $center->center_number . '/000' . $existingFarmingProfiles
-            ]);
-        }
-        if ($request->center_id != $farming->center_id) {
-            $zone = Zone::find($request->zone_id);
-            $center = Center::find($request->center_id);
-            $existingFarmingProfiles = Farming::where('center_id', $center->id)->count() + 1;
-            $request->merge([
-                'g_code' => $zone->zone_number . '/' . $center->center_number . '/000' . $existingFarmingProfiles
-            ]);
-        }
+        // $explode = explode('/',$farming->g_code);
+
+        // if ($request->zone_id != $farming->zone_id) {
+        //     $zone = Zone::find($request->zone_id);
+        //     $center = Center::find($request->center_id);
+
+        //     $request->merge([
+        //         'g_code' => $zone->zone_number . $center->center_number . '/' . $explode[1]
+        //     ]);
+        // }
+        // if ($request->center_id != $farming->center_id) {
+        //     $zone = Zone::find($request->zone_id);
+        //     $center = Center::find($request->center_id);
+        //     $request->merge([
+        //         'g_code' => $zone->zone_number . $center->center_number . '/' . $explode[1]
+        //     ]);
+        // }
 
         $farming->update($request->all());
         return redirect()->back()->with('success', 'Farming Updated Successfully.');
@@ -214,16 +215,24 @@ class FarmingController extends Controller
     public function validateProfile($id)
     {
         $farming = Farming::find($id);
-        $farming->update(['is_validate' => 1, 'farmer_id' => 'ERP-' . random_int(100000, 999999)]);
+        $zone = Zone::find($farming->zone_id);
+        $center = Center::find($farming->center_id);
+
+        $existingFarmingProfiles = str_pad($id, 5, '0', STR_PAD_LEFT);
+        $g_code = $zone->zone_number . $center->center_number . '/' . $existingFarmingProfiles;
+
+        $farming->update(['is_validate' => 1, 'farmer_id' => 'ERP-' . random_int(100000, 999999),'g_code' => $g_code]);
         return redirect()->to(route('admin.farmer.farming_registration.index'))->with('success', 'Farming Registration Validated Successfully.');
     }
 
     public function registration_id(Request $request)
     {
         $farmer = Farming::find($request->farmer_id);
+        $guarentor = Farming::where('id','!=',$request->farmer_id)->get();
 
         return response()->json([
             'registration_id' => $farmer->registration_no,
+            'guarentor' => $guarentor
         ]);
     }
 
@@ -235,7 +244,7 @@ class FarmingController extends Controller
         $block = Block::find($request->block_id);
         $gram_panchyat = GramPanchyat::find($request->gram_panchyat_id);
         $village = Village::find($request->village_id);
-        
+
         return response()->json([
             'country' => $country->name,
             'state' => $state->name,
