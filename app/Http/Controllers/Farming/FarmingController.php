@@ -221,14 +221,14 @@ class FarmingController extends Controller
         $existingFarmingProfiles = str_pad($id, 5, '0', STR_PAD_LEFT);
         $g_code = $zone->zone_number . $center->center_number . '/' . $existingFarmingProfiles;
 
-        $farming->update(['is_validate' => 1, 'farmer_id' => 'ERP-' . random_int(100000, 999999),'g_code' => $g_code]);
+        $farming->update(['is_validate' => 1, 'farmer_id' => 'ERP-' . random_int(100000, 999999), 'g_code' => $g_code]);
         return redirect()->to(route('admin.farmer.farming_registration.index'))->with('success', 'Farming Registration Validated Successfully.');
     }
 
     public function registration_id(Request $request)
     {
         $farmer = Farming::find($request->farmer_id);
-        $guarentor = Farming::where('id','!=',$request->farmer_id)->get();
+        $guarentor = Farming::where('id', '!=', $request->farmer_id)->get();
 
         return response()->json([
             'registration_id' => $farmer->registration_no,
@@ -253,5 +253,15 @@ class FarmingController extends Controller
             'gram_panchyat' => $gram_panchyat->name,
             'village' => $village->name,
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+            ->where('farmings.created_by', Auth::user()->id)
+            ->where('farmings.is_validate', $request->filter)
+            ->orWhere('users.supervisor_id', Auth::user()->id)->get();
+            
+        return view('admin.farmer.registration.index', compact('farmings'));
     }
 }

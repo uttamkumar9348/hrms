@@ -144,9 +144,6 @@
                             {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
                             <select class="form-control select" name="name" id="name" required>
                                 <option value="">{{ __('Select Guarantor Name') }}</option>
-                                {{-- @foreach ($farmings as $farming)
-                                    <option value="{{ $farming->id }}">{{ $farming->name }}</option>
-                                @endforeach --}}
                             </select>
                         </div>
                         <div class="form-group col-md-6">

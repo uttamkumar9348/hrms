@@ -28,9 +28,9 @@ class FarmerLoanController extends Controller
     public function create()
     {
         $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+            ->where('farmings.is_validate', 1)
             ->where('farmings.created_by', Auth::user()->id)
             ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->where('farmings.is_validate', 1)
             ->get();
         $categories = ProductServiceCategory::all();
         return view('admin.farmer.loan.create', compact('categories', 'farmings'));
@@ -68,9 +68,9 @@ class FarmerLoanController extends Controller
     public function edit($id)
     {
         $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+            ->where('farmings.is_validate', 1)
             ->where('farmings.created_by', Auth::user()->id)
             ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->where('farmings.is_validate', 1)
             ->get();
         $loan = FarmerLoan::find($id);
         $categories = ProductServiceCategory::all();

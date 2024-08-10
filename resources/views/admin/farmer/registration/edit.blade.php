@@ -271,7 +271,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 {{ Form::label('zone_id', __('Zone'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="zone_id" id="zone_id" required
+                                <select class="form-control select" name="zone_id" id="zone_id" disabled
                                     placeholder="Select Country">
                                     <option value="">{{ __('Select Zone') }}</option>
                                     @foreach ($zones as $zone)
@@ -286,7 +286,7 @@
                             <div class="form-group">
                                 {{ Form::label('center_id', __('Center'), ['class' => 'form-label']) }}
                                 <select class="form-control select" name="center_id" id="center_id"
-                                    placeholder="Select Center" required>
+                                    placeholder="Select Center" disabled>
                                     <option value="">{{ __('Select Center') }}</option>
                                     @foreach ($centers as $center)
                                         <option {{ $farming->center_id == $center->id ? 'selected' : '' }}

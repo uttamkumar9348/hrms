@@ -10,11 +10,34 @@
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item">{{ __('Farmer Registration') }}</li>
         </ol>
+        <div class="col-md-4">
+            <form action="{{ route('admin.farmer.farming_registration.search_filter') }}" method="post">
+                @csrf
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="">Filter</label>
+                        <select name="filter" id="filter" class="form-control wd-200">
+                            <option value="">Select</option>
+                            <option value="1">Validate</option>
+                            <option value="0">Nonvalidate</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Submit</button>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ route('admin.farmer.farming_registration.index') }}">
+                            <button type="button" class="btn btn-danger" style="margin-top: 20px;">Reset</button>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
         <div class="float-end">
             {{-- @can('create farmer registration') --}}
-                <a href="{{ route('admin.farmer.farming_registration.create') }}" class="btn btn-sm btn-primary">
-                    Add
-                </a>
+            <a href="{{ route('admin.farmer.farming_registration.create') }}" class="btn btn-primary">
+                Add
+            </a>
             {{-- @endcan --}}
         </div>
     </nav>
@@ -44,10 +67,12 @@
                                     <tr class="font-style">
                                         <td>{{ $farming->name }}</td>
                                         <td>
-                                            @if($farming->g_code != null)
-                                            {{ $farming->g_code }}
+                                            @if ($farming->g_code != null)
+                                                {{ $farming->g_code }}
                                             @else
-                                            <span class="status_badge text-capitalize badge bg-danger p-2 px-3 rounded">Not Assigned</span>
+                                                <span
+                                                    class="status_badge text-capitalize badge bg-danger p-2 px-3 rounded">Not
+                                                    Assigned</span>
                                             @endif
                                         </td>
                                         <td>{{ $farming->mobile }}</td>
@@ -69,42 +94,45 @@
                                         </td>
                                         <td class="Action">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                            @if (@$farming->is_validate)
-                                                @can('show farmer registration')
-                                                    <li class="me-2">
-                                                        <a href="{{ route('admin.farmer.farming_registration.show', $farming->id) }}">
-                                                            <i class="link-icon" data-feather="eye"></i>
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                            @else
-                                                @can('validate farmer registration')
-                                                    @if ($farming->created_by != Auth::user()->id)
+                                                @if ($farming->is_validate)
+                                                    @can('show farmer registration')
                                                         <li class="me-2">
-                                                            <a href="{{ route('admin.farmer.farming_registration.validate', $farming->id) }}"
-                                                                data-bs-toggle="tooltip" title="{{ __('Validate') }}">
-                                                                <i class="link-icon" data-feather="check-square"></i>
+                                                            <a
+                                                                href="{{ route('admin.farmer.farming_registration.show', $farming->id) }}">
+                                                                <i class="link-icon" data-feather="eye"></i>
                                                             </a>
                                                         </li>
-                                                    @endif
-                                                @endcan
-                                                @can('edit farmer registration')
-                                                    <li class="me-2">
-                                                        <a href="{{ route('admin.farmer.farming_registration.edit', $farming->id) }}">
-                                                            <i class="link-icon" data-feather="edit"></i>
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('delete farmer registration')
-                                                    <li>
-                                                        <a class="deleteBtn" data-href="{{route('admin.farmer.farming_registration.destroy', $farming->id)}}"
-                                                            data-bs-toggle="tooltip" title="{{ __('Delete') }}">
-                                                            <i class="link-icon" data-feather="delete"></i>
-                                                        </a>
-                                                        {!! Form::close() !!}
-                                                    </li>
-                                                @endcan
-                                            @endif
+                                                    @endcan
+                                                @else
+                                                    @can('validate farmer registration')
+                                                        @if ($farming->created_by != Auth::user()->id)
+                                                            <li class="me-2">
+                                                                <a href="{{ route('admin.farmer.farming_registration.validate', $farming->id) }}"
+                                                                    data-bs-toggle="tooltip" title="{{ __('Validate') }}">
+                                                                    <i class="link-icon" data-feather="check-square"></i>
+                                                                </a>
+                                                            </li>
+                                                        @endif
+                                                    @endcan
+                                                    @can('edit farmer registration')
+                                                        <li class="me-2">
+                                                            <a
+                                                                href="{{ route('admin.farmer.farming_registration.edit', $farming->id) }}">
+                                                                <i class="link-icon" data-feather="edit"></i>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('delete farmer registration')
+                                                        <li>
+                                                            <a class="deleteBtn"
+                                                                data-href="{{ route('admin.farmer.farming_registration.destroy', $farming->id) }}"
+                                                                data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                                                                <i class="link-icon" data-feather="delete"></i>
+                                                            </a>
+                                                            {!! Form::close() !!}
+                                                        </li>
+                                                    @endcan
+                                                @endif
                                             </ul>
                                         </td>
                                     </tr>

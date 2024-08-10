@@ -27,6 +27,17 @@
                     }
                 });
             });
+            $('#receipt_type').change(function() {
+                let receipt_type = $(this).val();
+                console.log(receipt_type);
+                if(receipt_type == "gl_no"){
+                    $('#date_of_deposite').hide();
+                    $('#amount').hide();
+                } else {
+                    $('#date_of_deposite').show();
+                    $('#amount').show();
+                }
+            });
         });
     </script>
 @endsection
@@ -62,21 +73,32 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">  
+                                {{ Form::label('receipt_type', __('Receipt Type'), ['class' => 'form-label']) }}
+                                <select class="form-control select" name="receipt_type" id="receipt_type" required
+                                    placeholder="Select Country">
+                                    <option value="">{{ __('Select') }}</option>
+                                    <option value="gl_no">{{ __('GL No.') }}</option>
+                                    <option value="receipt_no">{{ __('Receipt No.') }}</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group col-md-6">
-                            {{ Form::label('receipt_no', __('GL No./ Receipt No.'), ['class' => 'form-label']) }}
+                            {{ Form::label('receipt_no', __('Receipt No.'), ['class' => 'form-label']) }}
                             {{ Form::text('receipt_no', '', ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('agreement_number', __('G.Code'), ['class' => 'form-label']) }}
                             {{ Form::text('agreement_number', '', ['class' => 'form-control', 'required' => 'required', 'readonly']) }}
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6" id="date_of_deposite">
                             {{ Form::label('date', __('Date of Deposit'), ['class' => 'form-label']) }}
-                            {{ Form::date('date', '', ['class' => 'form-control', 'required' => 'required']) }}
+                            {{ Form::date('date', '', ['class' => 'form-control']) }}
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-6" id="amount">
                             {{ Form::label('amount', __('Amount'), ['class' => 'form-label']) }}
-                            {{ Form::number('amount', '', ['class' => 'form-control', 'step' => '0.01', 'required' => 'required']) }}
+                            {{ Form::number('amount', '', ['class' => 'form-control', 'step' => '0.01']) }}
                         </div>
                     </div>
                 </div>
