@@ -25,6 +25,7 @@ class FarmingPayment extends Model
         'loan_account_number',
         'ifsc',
         'branch',
+        'receipt_type'
     ];
 
     public function farming()

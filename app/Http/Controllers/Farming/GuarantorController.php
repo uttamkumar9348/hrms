@@ -23,6 +23,7 @@ class GuarantorController extends Controller
     public function index()
     {
         $guarantors = Guarantor::where('created_by', Auth::user()->id)->get();
+
         return view('admin.farmer.guarantor.index', compact('guarantors'));
     }
 
@@ -32,9 +33,9 @@ class GuarantorController extends Controller
     public function create()
     {
         $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+            ->where('farmings.is_validate', 1)
             ->where('farmings.created_by', Auth::user()->id)
             ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->where('farmings.is_validate', 1)
             ->get();
 
         $countries = Country::all();
@@ -91,9 +92,9 @@ class GuarantorController extends Controller
         $gram_panchyats = GramPanchyat::where('block_id', $guarantor->block_id)->get();
         $villages = Village::where('gram_panchyat_id', $guarantor->gram_panchyat_id)->get();
         $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+            ->where('farmings.is_validate', 1)
             ->where('farmings.created_by', Auth::user()->id)
             ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->where('farmings.is_validate', 1)
             ->get();
         return view('admin.farmer.guarantor.edit', compact(
             'guarantor',

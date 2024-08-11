@@ -32,9 +32,9 @@ class FarmingDetailController extends Controller
     {
 
         $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+            ->where('farmings.is_validate', 1)
             ->where('farmings.created_by', Auth::user()->id)
             ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->where('farmings.is_validate', 1)
             ->get();
         $farming_details = FarmingDetail::select('plot_number')
             ->where('created_by', Auth::user()->id)
@@ -42,7 +42,7 @@ class FarmingDetailController extends Controller
             ->first();
 
         if (!empty($farming_details)) {
-            $plot_number = "00".$farming_details->plot_number + 1 ;
+            $plot_number = "00" . $farming_details->plot_number + 1;
         } else {
             $plot_number = "001";
         }

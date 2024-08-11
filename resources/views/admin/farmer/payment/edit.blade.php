@@ -25,7 +25,6 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-
                         <div class="col-md-6">
                             <div class="form-group">
                                 {{ Form::label('farming_id', __('Farmer Registration'), ['class' => 'form-label']) }}
