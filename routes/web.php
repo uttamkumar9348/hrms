@@ -456,8 +456,10 @@ Route::group([
                 
                 Route::get('reimbursement/create', [FarmingPaymentController::class, 'reimbursementCreate'])->name('reimbursement.create');
                 Route::get('reimbursement', [FarmingPaymentController::class, 'reimbursement'])->name('reimbursement.index');
+                Route::get('reimbursement/{id}/delete', [FarmingPaymentController::class, 'reimbursement_delete'])->name('reimbursement.delete');
                 
                 Route::resource('seed_category', SeedCategoryController::class);
+                Route::get('seed_category/{id}/destroy', [SeedCategoryController::class, 'destroy'])->name('seed_category.destroy');
                 
                 Route::post('get_detail', [FarmingDetailController::class, 'getFarmingDetail'])->name('farming.get_detail');
                 Route::resource('farming_detail', FarmingDetailController::class);

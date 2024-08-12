@@ -12,8 +12,8 @@
         </ol>
         <div class="float-end">
             @can('create farmer loan')
-                <a href="{{ route('admin.farmer.loan.create') }}" class="btn btn-sm btn-primary">
-                    <i class="ti ti-plus"></i>
+                <a href="{{ route('admin.farmer.loan.create') }}" class="btn btn-primary">
+                    Add
                 </a>
             @endcan
         </div>

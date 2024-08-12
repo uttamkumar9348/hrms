@@ -37,7 +37,7 @@
                             $('#village_id').append(response.villageHtml);
                         } else {
                             $('#village_id').append(
-                            '<option  value="">Select Village</option>');
+                                '<option  value="">Select Village</option>');
                         }
                         $('#zone_id').empty();
                         if (response.zoneHtml) {
@@ -140,9 +140,9 @@
                             {{ Form::text('plot_number', $plot_number, ['class' => 'form-control', 'required' => 'required', 'readonly']) }}
                         </div>
                         <!-- <div class="form-group col-md-6">
-                                {{ Form::label('kata_number', __('Khata Number'), ['class' => 'form-label']) }}
-                                {{ Form::text('kata_number', '', ['class' => 'form-control', 'required' => 'required']) }}
-                            </div> -->
+                                    {{ Form::label('kata_number', __('Khata Number'), ['class' => 'form-label']) }}
+                                    {{ Form::text('kata_number', '', ['class' => 'form-control', 'required' => 'required']) }}
+                                </div> -->
                         <div class="form-group col-md-6">
                             {{ Form::label('area_in_acar', __('Area in acar'), ['class' => 'form-label']) }}
                             {{ Form::text('area_in_acar', '', ['class' => 'form-control', 'required' => 'required']) }}
@@ -152,9 +152,9 @@
                             {{ Form::date('date_of_harvesting', '', ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
                         <!-- <div class="form-group col-md-6">
-                                {{ Form::label('quantity', __('Quantity (In K.G)'), ['class' => 'form-label']) }}
-                                {{ Form::number('quantity', '', ['class' => 'form-control', 'required' => 'required']) }}
-                            </div> -->
+                                    {{ Form::label('quantity', __('Quantity (In K.G)'), ['class' => 'form-label']) }}
+                                    {{ Form::number('quantity', '', ['class' => 'form-control', 'required' => 'required']) }}
+                                </div> -->
                         <div class="form-group col-md-6">
                             {{ Form::label('tentative_harvest_quantity', __('Tentative Harvest Quantity (In Ton)'), ['class' => 'form-label']) }}
                             {{ Form::number('tentative_harvest_quantity', '', ['class' => 'form-control', 'required' => 'required']) }}
@@ -194,4 +194,5 @@
             </div>
             {{ Form::close() }}
         </div>
-    @endsection
+    </div>
+@endsection

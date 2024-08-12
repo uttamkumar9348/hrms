@@ -17,9 +17,9 @@
         <tbody>
         @foreach ($bank_guarantees as $bank_guarantee)
             <tr class="font-style">
-                <td>{{ @$bank_guarantee->type}}</td>
-                <td>{{ @$bank_guarantee->farming->name}}</td>
-                <td>{{ @$bank_guarantee->farming->farmer_id}}</td>
+                <td>{{ $bank_guarantee->type}}</td>
+                <td>{{ $bank_guarantee->farming->name}}</td>
+                <td>{{ $bank_guarantee->farming->farmer_id}}</td>
                 <td>{{ $bank_guarantee->bank}}</td>
                 <td>{{ $bank_guarantee->loan_account_number}}</td>
                 <td>{{ $bank_guarantee->ifsc}}</td>
@@ -27,16 +27,19 @@
                 <td>{{ $bank_guarantee->date }}</td>
                 <td>{{ $bank_guarantee->amount }}</td>
                 <td class="Action">
-                    <div class="action-btn bg-info ms-2">
-                        <a href="{{route('admin.farmer.bank_guarantee.edit',$bank_guarantee->id)}}" class="mx-3 btn btn-sm  align-items-center">
-                            <i class="ti ti-pencil text-white"></i>
-                        </a>
-                    </div>
-                    <div class="action-btn bg-success ms-2">
-                        <a href="{{route('admin.farmer.bank_guarantee.pdf',$bank_guarantee->id)}}" class="mx-3 btn btn-sm  align-items-center">
-                            <i class="ti ti-download text-white"></i>
-                        </a>
-                    </div>
+                    <ul class="d-flex list-unstyled mb-0 justify-content-center">
+                        <li class="me-2">
+                            <a href="{{route('admin.farmer.bank_guarantee.edit',$bank_guarantee->id)}}">
+                                <i class="link-icon" data-feather="edit"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.farmer.bank_guarantee.pdf',$bank_guarantee->id)}}">
+                                <i class="ti ti-download text-white"></i>
+                                <i class="link-icon" data-feather="download"></i>
+                            </a>
+                        </li>
+                    </ul>
                 </td>
             </tr>
         @endforeach

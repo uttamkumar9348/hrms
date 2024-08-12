@@ -78,7 +78,7 @@
                                                     <li>
                                                         <a class="delete" href="#"
                                                            data-href="{{route('admin.payment-methods.delete',$value->id)}}"
-                                                           title="Delete">
+                                                           data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                                                             <i class="link-icon" data-feather="delete"></i>
                                                         </a>
                                                     </li>

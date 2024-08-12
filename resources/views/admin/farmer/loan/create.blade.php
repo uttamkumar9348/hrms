@@ -161,4 +161,5 @@
             </div>
             {{ Form::close() }}
         </div>
-    @endsection
+    </div>
+@endsection

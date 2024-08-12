@@ -9,7 +9,7 @@
     <script>
         $(document).ready(function() {
             $('#land_holding_fields').hide();
-            
+
             $('#country_id').change(function() {
                 let country_id = $(this).val();
                 $.ajax({
@@ -360,9 +360,11 @@
 
             <div class="modal-footer">
                 <input type="button" value="{{ __('Cancel') }}"
-                    onclick="location.href = '{{ route('admin.farmer.farming_registration.index') }}';" class="btn btn-light">
+                    onclick="location.href = '{{ route('admin.farmer.farming_registration.index') }}';"
+                    class="btn btn-light">
                 <input type="submit" value="{{ __('Create') }}" class="btn  btn-primary">
             </div>
             {{ Form::close() }}
         </div>
-    @endsection
+    </div>
+@endsection

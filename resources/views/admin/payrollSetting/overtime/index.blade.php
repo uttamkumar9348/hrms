@@ -64,7 +64,7 @@
                                                 @can('edit_overtime')
                                                     <li class="me-2">
                                                         <a href="{{route('admin.overtime.edit',$ot->id)}}"
-                                                           title="Edit Detail">
+                                                            data-bs-toggle="tooltip" title="{{ __('Edit') }}">
                                                             <i class="link-icon" data-feather="edit"></i>
                                                         </a>
                                                     </li>

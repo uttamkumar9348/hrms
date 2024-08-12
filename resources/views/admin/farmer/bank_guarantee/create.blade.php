@@ -14,7 +14,7 @@
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item"><a
-                    href="{{ route('admin.farmer.payment.index') }}">{{ __('Farmer Issue Bank Guarantee') }}</a></li>
+                    href="{{ route('admin.farmer.allotment.index') }}">{{ __('Farmer Allotment') }}</a></li>
             <li class="breadcrumb-item">{{ __('Farmer Issue Bank Guarantee') }}</li>
         </ol>
     </nav>
@@ -34,7 +34,8 @@
                                     placeholder="Select Country">
                                     <option value="">{{ __('Select Farmer Registration') }}</option>
                                     @foreach ($farmings as $farming)
-                                        <option value="{{ $farming->id }}">{{ $farming->name . '-' . $farming->farmer_id }}
+                                        <option value="{{ $farming->id }}">
+                                            {{ $farming->name . '-' . $farming->farmer_id }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -95,9 +96,10 @@
 
             <div class="modal-footer">
                 <input type="button" value="{{ __('Cancel') }}"
-                    onclick="location.href = '{{ route('admin.farmer.payment.index') }}';" class="btn btn-light">
+                    onclick="location.href = '{{ route('admin.farmer.allotment.index') }}';" class="btn btn-light">
                 <input type="submit" value="{{ __('Create') }}" class="btn  btn-primary">
             </div>
             {{ Form::close() }}
         </div>
-    @endsection
+    </div>
+@endsection

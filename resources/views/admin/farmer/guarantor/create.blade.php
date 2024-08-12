@@ -117,7 +117,8 @@
     <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('admin.farmer.guarantor.index') }}">{{ __('Farmer Guarantor') }}</a></li>
+            <li class="breadcrumb-item"><a
+                    href="{{ route('admin.farmer.guarantor.index') }}">{{ __('Farmer Guarantor') }}</a></li>
             <li class="breadcrumb-item">{{ __('Farmer Guarantor Create') }}</li>
         </ol>
     </nav>
@@ -229,4 +230,5 @@
             </div>
             {{ Form::close() }}
         </div>
-    @endsection
+    </div>
+@endsection

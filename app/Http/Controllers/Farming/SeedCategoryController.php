@@ -36,7 +36,7 @@ class SeedCategoryController extends Controller
                 'name' => 'required',
             ]);
             SeedCategory::create($request->all());
-            return redirect()->back()->with('success', 'Seed Category Added Successfully.');
+            return redirect()->route('admin.farmer.seed_category.index')->with('success', 'Seed Category Added Successfully.');
         }catch (Exception $e)
         {
             return redirect()->back()->with('error', $e->getMessage());
@@ -66,7 +66,7 @@ class SeedCategoryController extends Controller
     {
         $seedCategory = SeedCategory::find($id);
         $seedCategory->update($request->all());
-        return redirect()->back()->with('success', 'Seed Category Updated Successfully.'); 
+        return redirect()->route('admin.farmer.seed_category.index')->with('success', 'Seed Category Updated Successfully.'); 
     }
 
     /**

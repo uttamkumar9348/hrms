@@ -63,7 +63,8 @@
                                             @if ($farming_detail->is_cutting_order != '1')
                                                 @can('edit farmer detail')
                                                     <li class="me-2">
-                                                        <a href="{{ route('admin.farmer.farming_detail.edit', $farming_detail->id) }}">
+                                                        <a href="{{ route('admin.farmer.farming_detail.edit', $farming_detail->id) }}"
+                                                            data-bs-toggle="tooltip" title="{{ __('Edit') }}">
                                                             <i class="link-icon" data-feather="edit"></i>
                                                         </a>
                                                     </li>
