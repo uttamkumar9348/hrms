@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Farming;
 
 use App\Models\FarmingDetail;
 use App\Http\Controllers\Controller;
+use App\Models\Block;
 use App\Models\Farming;
+use App\Models\GramPanchyat;
 use App\Models\SeedCategory;
+use App\Models\Village;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,10 +39,13 @@ class FarmingDetailController extends Controller
             ->where('farmings.created_by', Auth::user()->id)
             ->orWhere('users.supervisor_id', Auth::user()->id)
             ->get();
+
         $farming_details = FarmingDetail::select('plot_number')
             ->where('created_by', Auth::user()->id)
             ->OrderBy('id', 'DESC')
             ->first();
+        
+        $blocks = Block::all();
 
         if (!empty($farming_details)) {
             $plot_number = "00" . $farming_details->plot_number + 1;
@@ -47,7 +53,7 @@ class FarmingDetailController extends Controller
             $plot_number = "001";
         }
         $seed_categories = SeedCategory::all();
-        return view('admin.farmer.farming_detail.create', compact('farmings', 'seed_categories', 'plot_number'));
+        return view('admin.farmer.farming_detail.create', compact('farmings', 'seed_categories', 'plot_number', 'blocks'));
     }
 
     /**
@@ -55,6 +61,7 @@ class FarmingDetailController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         try {
             $this->validate($request, [
                 'farming_id' => 'required',
@@ -68,7 +75,7 @@ class FarmingDetailController extends Controller
                 'created_by' => 'required',
             ]);
             FarmingDetail::create($request->all());
-            return redirect()->to(route('admin.farmer.farming_detail.index'))->with('success', 'Farming Detail Added Successfully.');
+            return redirect()->to(route('admin.farmer.farming_detail.index'))->with('success', 'Plot Details Added Successfully.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -92,7 +99,10 @@ class FarmingDetailController extends Controller
             ->where('farmings.created_by', Auth::user()->id)
             ->orWhere('users.supervisor_id', Auth::user()->id)->get();
         $seed_categories = SeedCategory::all();
-        return view('admin.farmer.farming_detail.edit', compact('farming_detail', 'farmings', 'seed_categories'));
+        $blocks = Block::all();
+        $gp = GramPanchyat::all();
+        $village = Village::all();
+        return view('admin.farmer.farming_detail.edit', compact('farming_detail', 'farmings', 'seed_categories', 'blocks', 'gp', 'village'));
     }
 
     /**
@@ -113,7 +123,7 @@ class FarmingDetailController extends Controller
                 'tentative_harvest_quantity' => 'required',
             ]);
             $farming_detail->update($request->all());
-            return redirect()->back()->with('success', 'Farming Detail Updated Successfully.');
+            return redirect()->back()->with('success', 'Plot Details Updated Successfully.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

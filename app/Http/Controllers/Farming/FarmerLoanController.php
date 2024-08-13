@@ -113,7 +113,8 @@ class FarmerLoanController extends Controller
     {
         $product_service = ProductService::find($request->loan_type_id);
         $quantity = $product_service->getTotalProductQuantity()
-            && $product_service->getTotalProductQuantity() > 0 ? $product_service->getTotalProductQuantity() : 0;
+        && $product_service->getTotalProductQuantity() > 0 ? $product_service->getTotalProductQuantity() : 0;
+
         return response()->json([
             'quantity' => $quantity,
             'product_service' => $product_service,

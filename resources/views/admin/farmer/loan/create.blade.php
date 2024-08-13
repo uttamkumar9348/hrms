@@ -113,7 +113,7 @@
                             {{ Form::text('agreement_number', '', ['id' => 'agreement_number', 'class' => 'form-control', 'required' => 'required', 'readonly']) }}
                         </div>
                         <div class="form-group col-md-6">
-                            {{ Form::label('date', __('Date of Allotment'), ['class' => 'form-label']) }}
+                            {{ Form::label('date', __('Date of Issue'), ['class' => 'form-label']) }}
                             {{ Form::date('date', '', ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
                         <div class="col-md-6">

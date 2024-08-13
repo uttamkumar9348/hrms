@@ -11,11 +11,11 @@
             <li class="breadcrumb-item">{{ __('Farmer Reimbursement') }}</li>
         </ol>
         <div class="float-end">
-            {{-- @can('create farmer reimbursement') --}}
+            @can('create farmer reimbursement')
                 <a href="{{ route('admin.farmer.reimbursement.create') }}" class="btn btn-sm btn-primary">
                     Add
                 </a>
-            {{-- @endcan --}}
+            @endcan
         </div>
     </nav>
     <div class="row">

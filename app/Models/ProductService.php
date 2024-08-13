@@ -43,8 +43,7 @@ class ProductService extends Model
         $taxArr = explode(',', $taxes);
 
         $taxes  = [];
-        foreach($taxArr as $tax)
-        {
+        foreach ($taxArr as $tax) {
             $taxes[] = Tax::find($tax);
         }
 
@@ -55,8 +54,7 @@ class ProductService extends Model
     {
         $taxArr  = explode(',', $taxes);
         $taxRate = 0;
-        foreach($taxArr as $tax)
-        {
+        foreach ($taxArr as $tax) {
             $tax     = Tax::find($tax);
             $taxRate += $tax->rate;
         }
@@ -69,8 +67,7 @@ class ProductService extends Model
         $taxArr = explode(',', $taxes);
 
         $taxes = [];
-        foreach($taxArr as $tax)
-        {
+        foreach ($taxArr as $tax) {
             $taxesData = Tax::find($tax);
             $taxes[]   = !empty($taxesData) ? $taxesData->name : '';
         }
@@ -95,42 +92,35 @@ class ProductService extends Model
         $purchases = Purchase::where('created_by', $authuser->creatorId());
 
 
-        if ($authuser->isUser())
-        {
+        if ($authuser->isUser()) {
             $purchases = $purchases->where('warehouse_id', $authuser->warehouse_id);
         }
 
-        foreach($purchases->get() as $purchase)
-        {
+        foreach ($purchases->get() as $purchase) {
             $purchaseditem = PurchaseProduct::select('quantity')->where('purchase_id', $purchase->id)->where('product_id', $product_id)->first();
             $purchasedquantity += $purchaseditem != null ? $purchaseditem->quantity : 0;
         }
 
-
-        $loan = FarmerLoan::where('created_by',Auth::user()->id)->count('quantity');
+        $loan = FarmerLoan::where('created_by', Auth::user()->id)->sum('quantity');
 
         $totalquantity = $purchasedquantity - $loan;
-
         return $totalquantity;
     }
 
     public static function tax_id($product_id)
     {
         $tax = DB::table('product_services')
-        ->where('id', $product_id)
-        ->where('created_by', Auth::user()->creatorId())
-        ->select('tax_id')
-        ->first();
+            ->where('id', $product_id)
+            ->where('created_by', Auth::user()->creatorId())
+            ->select('tax_id')
+            ->first();
 
         return ($tax != null) ? $tax->tax_id : 0;
     }
 
-    public function warehouseProduct($product_id,$warehouse_id)
+    public function warehouseProduct($product_id, $warehouse_id)
     {
-        $product=WarehouseProduct::where('warehouse_id',$warehouse_id)->where('product_id',$product_id)->first();
-        return !empty($product)?$product->quantity:0;
+        $product = WarehouseProduct::where('warehouse_id', $warehouse_id)->where('product_id', $product_id)->first();
+        return !empty($product) ? $product->quantity : 0;
     }
-
-
-
 }
