@@ -35,8 +35,8 @@ class WarehouseTransferController extends Controller
 
     public function store(Request $request)
     {
-        if(\Auth::user()->can('create warehouse'))
-        {
+        // if(\Auth::user()->can('create warehouse'))
+        // {
             $validator = \Validator::make(
                 $request->all(), [
                     'from_warehouse' => 'required',
@@ -67,16 +67,16 @@ class WarehouseTransferController extends Controller
             }
             else
             {
-                return redirect()->route('warehouse-transfer.index')->with('error', __('Product out of stock!.'));
+                return redirect()->route('admin.warehouse-transfer.index')->with('error', __('Product out of stock!.'));
             }
             Utility::warehouse_transfer_qty($request->from_warehouse,$request->to_warehouse,$request->product_id,$request->quantity);
 
-            return redirect()->route('warehouse-transfer.index')->with('success', __('Warehouse Transfer successfully created.'));
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+            return redirect()->route('admin.warehouse-transfer.index')->with('success', __('Warehouse Transfer successfully created.'));
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
     }
 
     public function show()

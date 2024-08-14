@@ -3,8 +3,8 @@
     {{__('POS Barcode Print')}}
 @endsection
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
-    <li class="breadcrumb-item"><a href="{{route('pos.barcode')}}">{{__('POS Product Barcode')}}</a></li>
+    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{__('Dashboard')}}</a></li>
+    <li class="breadcrumb-item"><a href="{{route('admin.pos.barcode')}}">{{__('POS Product Barcode')}}</a></li>
     <li class="breadcrumb-item">{{__('POS Barcode Print')}}</li>
 @endsection
 @section('styles')
@@ -29,7 +29,7 @@
         function getProduct(bid) {
 
             $.ajax({
-                url: '{{route('pos.getproduct')}}',
+                url: '{{route('admin.pos.getproduct')}}',
                 type: 'POST',
                 data: {
                     "warehouse_id": bid, "_token": "{{ csrf_token() }}",
@@ -41,7 +41,7 @@
 
                     $("#product_div").html('');
                     $('#product_div').append('<label for="product_id" class="form-label">{{__('Product')}}</label>');
-                    $('#product_div').append('<select class="form-label" id="product_id" name="product_id[]"  multiple></select>');
+                    $('#product_div').append('<select class="form-control" id="product_id" name="product_id[]"  multiple></select>');
                     $('#product_id').append('<option value="">{{__('Select Product')}}</option>');
 
                     $.each(data, function (key, value) {
@@ -94,7 +94,7 @@
 
 @section('action-btn')
     <div class="float-end">
-        <a href="{{ route('pos.barcode') }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{__('Back')}}">
+        <a href="{{ route('admin.pos.barcode') }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{__('Back')}}">
             <i class="ti ti-arrow-left text-white"></i>
         </a>
 
@@ -107,10 +107,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    {{Form::open(array('route'=>'pos.receipt','method'=>'post'))}}
-
-
-
+                    {{Form::open(array('route'=>'admin.pos.receipt','method'=>'post'))}}
                         <div class="row" id="printableArea">
                             <div class="col-md-4">
                                 <div class="form-group">

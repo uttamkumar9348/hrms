@@ -404,17 +404,17 @@ class PosController extends Controller
 
     public function printBarcode()
     {
-        if(\Auth::user()->can('manage pos'))
-        {
+        // if(\Auth::user()->can('manage pos'))
+        // {
             $warehouses = warehouse::select('*', \DB::raw("CONCAT(name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
 
             return view('admin.pos.print',compact('warehouses'));
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Permission Denied.'));
-        }
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission Denied.'));
+        // }
 
     }
 

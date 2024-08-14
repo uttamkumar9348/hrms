@@ -1,5 +1,5 @@
 @php
-    $settings = Utility::settings();
+    $settings = App\Models\Utility::settings();
 @endphp
     <!DOCTYPE html>
 <html lang="en" dir="{{$settings == 'on'?'rtl':''}}">
