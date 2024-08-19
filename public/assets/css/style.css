@@ -3586,7 +3586,7 @@ textarea.is-invalid.typeahead.tt-hint, .select2-container--default .select2-sear
 }
 
 .btn-sm, .fc .fc-button-primary, .btn-group-sm > .btn, .wizard > .actions .btn-group-sm > a, div.tox .btn-group-sm > .tox-button, .swal2-popup .swal2-actions .btn-group-sm > button {
-  padding: 0.391rem 0.8rem;
+  padding: 0.391rem 1.8rem !important;
   font-size: 0.812rem;
   border-radius: 10px;
 }

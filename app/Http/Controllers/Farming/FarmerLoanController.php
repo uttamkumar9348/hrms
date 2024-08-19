@@ -44,11 +44,15 @@ class FarmerLoanController extends Controller
         try {
             $this->validate($request, [
                 'farming_id' => 'required',
-                // 'amount' => 'required',
                 'created_by' => 'required',
             ]);
             $farmerLoan = FarmerLoan::create($request->all());
-            return redirect()->to(route('admin.farmer.loan.index'))->with('success', 'Loan Added Successfully.');
+            $data = $farmerLoan;
+
+            $farming = Farming::findorfail($data['farming_id']);
+
+            return view('admin.farmer.loan.invoice', compact('data','farming'));
+            // return redirect()->to(route('admin.farmer.loan.index'))->with('success', 'Loan Added Successfully.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

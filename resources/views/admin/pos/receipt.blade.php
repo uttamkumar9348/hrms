@@ -29,10 +29,10 @@
 <div id="bot" class="mt-5">
     <div class="row">
         @foreach($productServices as $product)
-            @for($i=1;$i<=$quantity;$i++)
-                <div class="col-auto mb-2">
-                    <small class="">{{$product->name}}</small>
-                    <div data-id="{{$product->id}}" class="product_barcode product_barcode_hight_de product_barcode_{{$product->id}} mt-2" data-skucode="{{ $product->sku }}"></div>
+        @for($i=1;$i<=$quantity;$i++)
+        <div class="col-auto mb-2">
+            <small class="">{{$product->name}}</small>
+            <div data-id="{{$product->id}}" class="product_barcode product_barcode_hight_de product_barcode_{{$product->id}} mt-2" data-skucode="{{ $product->sku }}"></div>
                 </div>
             @endfor
         @endforeach
