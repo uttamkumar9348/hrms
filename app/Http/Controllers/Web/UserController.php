@@ -200,6 +200,7 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, UserAccountRequest $accountRequest, UserLeaveTypeRequest $leaveRequest, $id)
     {
         $this->authorize('edit_employee');
+        dd($request->all());
         try {
             $validatedData = $request->validated();
             $accountValidatedData = $accountRequest->validated();

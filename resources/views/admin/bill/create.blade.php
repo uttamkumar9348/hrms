@@ -1,6 +1,6 @@
 
 @extends('layouts.admin')
-@section('page-title')
+@section('title')
     {{__('Bill Create')}}
 @endsection
 @section('breadcrumb')

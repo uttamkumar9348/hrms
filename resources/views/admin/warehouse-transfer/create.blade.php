@@ -1,25 +1,21 @@
 @extends('layouts.master')
-@section('page-title')
+@section('title')
     {{ __('Warehouse Transfer Create') }}
 @endsection
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
-            var w_id = $('#warehouse_id').val();
-            getProduct(w_id);
-        });
+        // $(document).ready(function() {
+        //     var w_id = $('#warehouse_id').val();
+        //     getProduct(w_id);
+        // });
         $(document).on('change', 'select[name=from_warehouse]', function() {
             var warehouse_id = $(this).val();
-            getProduct(warehouse_id);
-        });
-
-        function getProduct(wid) {
             $.ajax({
                 url: '{{ route('admin.warehouse-transfer.getproduct') }}',
                 type: 'POST',
                 data: {
-                    "warehouse_id": wid,
+                    "warehouse_id": warehouse_id,
                     "_token": "{{ csrf_token() }}",
                 },
                 success: function(data) {
@@ -44,11 +40,11 @@
                 }
 
             });
-        }
+        });
 
         $(document).on('change', '#product_id', function() {
             var product_id = $(this).val();
-            var warehouse_id = $('#warehouse_id').val();
+            var warehouse_id = $('#from_warehouse_id').val();
             getQuantity(product_id, warehouse_id);
         });
 
@@ -83,7 +79,7 @@
         <div class="form-group col-md-6">
             {{ Form::label('from_warehouse', __('From Warehouse'), ['class' => 'form-label']) }}<span
                 class="text-danger">*</span>
-            <select class="form-control select" name="from_warehouse" id="warehouse_id" placeholder="Select Warehouse">
+            <select class="form-control select" name="from_warehouse" id="from_warehouse_id" placeholder="Select Warehouse">
                 <option value="">{{ __('Select Warehouse') }}</option>
                 @foreach ($from_warehouses as $warehouse)
                     <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
@@ -93,7 +89,13 @@
         <div class="form-group col-md-6">
             {{ Form::label('to_warehouse', __('To Warehouse'), ['class' => 'form-label']) }}<span
                 class="text-danger">*</span>
-            {{ Form::select('to_warehouse', $to_warehouses, null, ['class' => 'form-control select', 'required' => 'required']) }}
+            {{-- {{ Form::select('to_warehouse', $to_warehouses, null, ['class' => 'form-control select', 'required' => 'required']) }} --}}
+            <select class="form-control select" name="to_warehouse" id="to_warehouse_id" placeholder="Select Warehouse">
+                <option value="">{{ __('Select Warehouse') }}</option>
+                @foreach ($to_warehouses as $warehouse)
+                    <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="form-group col-md-6" id="product_div">
             {{ Form::label('product', __('Product'), ['class' => 'form-label']) }}

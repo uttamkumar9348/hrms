@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('page-title')
+@section('title')
     {{ __('Warehouse Transfer') }}
 @endsection
 

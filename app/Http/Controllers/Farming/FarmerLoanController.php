@@ -7,9 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Farming;
 use App\Models\ProductService;
 use App\Models\ProductServiceCategory;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class FarmerLoanController extends Controller
 {
@@ -50,10 +53,19 @@ class FarmerLoanController extends Controller
             $data = $farmerLoan;
 
             $farming = Farming::findorfail($data['farming_id']);
+            
+            $pdf = Pdf::loadView('admin.farmer.loan.invoice', compact('data','farming'));
 
-            return view('admin.farmer.loan.invoice', compact('data','farming'));
-            // return redirect()->to(route('admin.farmer.loan.index'))->with('success', 'Loan Added Successfully.');
+            $path = public_path('/farmer/allotment/');
+            if (!File::exists($path)) {
+                File::makeDirectory($path, 0755, true);
+            }
+            $pdf->save($path  . 'invoice.pdf');
+            $pdf->download('invoice.pdf');
+
+            return redirect()->to(route('admin.farmer.loan.index'))->with('success', 'Loan Added Successfully.');
         } catch (Exception $e) {
+            dd($e);
             return redirect()->back()->with('error', $e->getMessage());
         }
     }

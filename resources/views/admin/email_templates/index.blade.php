@@ -34,7 +34,7 @@
 
     </script>
 @endpush
-@section('page-title')
+@section('title')
     @if(\Auth::user()->type=='company')
         {{__('Email Notification')}}
     @else

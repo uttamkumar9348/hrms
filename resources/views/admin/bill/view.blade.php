@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('page-title')
+@section('title')
     {{__('Bill Detail')}}
 @endsection
 @section('scripts')

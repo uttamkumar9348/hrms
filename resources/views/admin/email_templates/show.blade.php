@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('page-title')
+@section('title')
     {{ $emailTemplate->name }}
 @endsection
 @push('css-page')
