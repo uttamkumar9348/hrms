@@ -11,11 +11,11 @@
             <li class="breadcrumb-item">{{ __('Seeds,Fertiliser & Pesticides Allotment') }}</li>
         </ol>
         <div class="float-end">
-            @can('create farmer loan')
-                <a href="{{ route('admin.farmer.loan.create') }}" class="btn btn-sm btn-primary">
-                    <i class="ti ti-plus"></i>
+            {{-- @can('create farmer loan') --}}
+                <a href="{{ route('admin.farmer.loan.create') }}" class="btn btn-primary">
+                    Add
                 </a>
-            @endcan
+            {{-- @endcan --}}
         </div>
     </nav>
     <div class="row">
@@ -52,27 +52,24 @@
                                         <td>{{ $loan->total_amount }}</td>
 
                                         <td class="Action">
-                                            @can('edit farmer loan')
-                                                <div class="action-btn bg-info ms-2">
-                                                    <a href="{{ route('admin.farmer.loan.edit', $loan->id) }}"
-                                                        class="mx-3 btn btn-sm  align-items-center">
-                                                        <i class="ti ti-pencil text-white"></i>
+                                            <ul class="d-flex list-unstyled mb-0 justify-content-center">
+                                            {{-- @can('edit farmer loan') --}}
+                                                <li class="me-2">
+                                                    <a href="{{ route('admin.farmer.loan.edit', $loan->id) }}">
+                                                        <i class="link-icon" data-feather="edit"></i>
                                                     </a>
-                                                </div>
-                                            @endcan
-                                            @can('delete farmer loan')
-                                                <div class="action-btn bg-danger ms-2">
-                                                    {!! Form::open([
-                                                        'method' => 'DELETE',
-                                                        'route' => ['admin.farmer.loan.destroy', $loan->id],
-                                                        'id' => 'delete-form-' . $loan->id,
-                                                    ]) !!}
-                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
-                                                        data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
-                                                            class="ti ti-trash text-white"></i></a>
-                                                    {!! Form::close() !!}
-                                                </div>
-                                            @endcan
+                                                </li>
+                                            {{-- @endcan --}}
+                                            {{-- @can('delete farmer loan') --}}
+                                                <li>
+                                                    <a class="deleteBtn"
+                                                        data-href="{{ route('admin.farmer.loan.destroy', $loan->id) }}"
+                                                        data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                                                        <i class="link-icon" data-feather="delete"></i>
+                                                    </a>
+                                                </li>
+                                            {{-- @endcan --}}
+                                            </ul>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -371,7 +371,7 @@
 @endsection
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
+    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('Settings')}}</li>
 @endsection
 @section('main-content')
@@ -4237,7 +4237,7 @@
                                                                 <a href="#" class="mx-3 btn btn-sm d-inline-flex align-items-center"
                                                                    data-url="{{ URL::to('webhook-settings/'.$webhooksetting->id.'/edit') }}" data-ajax-popup="true"
                                                                    data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Webhook Edit')}}">
-                                                                    <i class="ti ti-pencil text-white"></i>
+                                                                    <i class="link-icon" data-feather="edit"></i>
                                                                 </a>
                                                             </div>
                                                         @endcan
@@ -4465,7 +4465,7 @@
                                                                 <a  class="mx-3 btn btn-sm d-inline-flex align-items-center"
                                                                     data-url="{{ route('edit.ip', $ip->id) }}" data-ajax-popup="true"
                                                                     data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('IP Edit')}}">
-                                                                    <i class="ti ti-pencil text-white"></i>
+                                                                    <i class="link-icon" data-feather="edit"></i>
                                                                 </a>
                                                             </div>
                                                         @endcan

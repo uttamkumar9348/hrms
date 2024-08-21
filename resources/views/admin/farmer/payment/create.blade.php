@@ -30,7 +30,7 @@
             $('#receipt_type').change(function() {
                 let receipt_type = $(this).val();
                 console.log(receipt_type);
-                if(receipt_type == "gl_no"){
+                if (receipt_type == "gl_no") {
                     $('#date_of_deposite').hide();
                     $('#amount').hide();
                 } else {
@@ -48,7 +48,7 @@
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item"><a href="{{ route('admin.farmer.payment.index') }}">
-                {{ __('Farmer Security Deposit') }}</a>
+                    {{ __('Farmer Security Deposit') }}</a>
             </li>
             <li class="breadcrumb-item">{{ __('Farmer Security Deposit Create') }}</li>
         </ol>
@@ -74,7 +74,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">  
+                            <div class="form-group">
                                 {{ Form::label('receipt_type', __('Receipt Type'), ['class' => 'form-label']) }}
                                 <select class="form-control select" name="receipt_type" id="receipt_type" required
                                     placeholder="Select Country">
@@ -106,9 +106,10 @@
 
             <div class="modal-footer">
                 <input type="button" value="{{ __('Cancel') }}"
-                    onclick="location.href = '{{ route('admin.farmer.guarantor.index') }}';" class="btn btn-light">
+                    onclick="location.href = '{{ route('admin.farmer.payment.index') }}';" class="btn btn-light">
                 <input type="submit" value="{{ __('Create') }}" class="btn  btn-primary">
             </div>
             {{ Form::close() }}
         </div>
-    @endsection
+    </div>
+@endsection

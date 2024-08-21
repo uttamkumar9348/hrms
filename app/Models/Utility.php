@@ -22,7 +22,7 @@ class Utility extends Model
     private static $getsettingsid = NULL;
     private static $ratingData = NULL;
     private static $langData = NULL;
-    
+
     public static function getSetting()
     {
         if (self::$getsettings == null) {
@@ -62,16 +62,14 @@ class Utility extends Model
         //     $data =Utility::getSetting();
         // }
 
-       if(\Auth::check())
-        {$data =Utility::getSetting();
+        if (\Auth::check()) {
+            $data = Utility::getSetting();
             // $data=Utility::getSettingById(\Auth::user()->creatorId());
             // if(count($data)==0){
-                
+
             // }
-        }
-        else
-        {
-            $data =Utility::getSetting();
+        } else {
+            $data = Utility::getSetting();
         }
 
         $settings = [
@@ -86,7 +84,7 @@ class Utility extends Model
             "company_state" => "",
             "company_zipcode" => "",
             "company_country" => "",
-            "company_telephone" => "",        
+            "company_telephone" => "",
             "invoice_prefix" => "#INVO",
             "invoice_color" => "ffffff",
             "proposal_prefix" => "#PROP",
@@ -125,11 +123,11 @@ class Utility extends Model
             "company_end_time" => "18:00",
             'gdpr_cookie' => 'off',
             "interval_time" => "",
-            "zoom_apikey" =>"",
+            "zoom_apikey" => "",
             "zoom_apisecret" => "",
-            "slack_webhook" =>"",
+            "slack_webhook" => "",
             "telegram_accestoken" => "",
-            "telegram_chatid" =>"",
+            "telegram_chatid" => "",
             "enable_signup" => "on",
             'cookie_text' => 'We use cookies to ensure that we give you the best experience on our website. If you continue to use this site we will assume that you are happy with it.
 ',
@@ -167,84 +165,83 @@ class Utility extends Model
             "wasabi_max_upload_size" => "",
             "wasabi_storage_validation" => "",
 
-            "purchase_logo" =>"",
-            "proposal_logo" =>"",
-            "invoice_logo" =>"",
-            "pos_logo" =>"",
+            "purchase_logo" => "",
+            "proposal_logo" => "",
+            "invoice_logo" => "",
+            "pos_logo" => "",
             "contract_prefix" => "#CON",
 
             "barcode_type" => "code128",
-            "barcode_format" =>"css",
+            "barcode_format" => "css",
 
 
             'new_user' => '1',
             'new_client' => '1',
             'new_support_ticket' => '1',
             'lead_assigned' => '1',
-            'deal_assigned' =>'1',
-            'new_award' =>'1',
-            'customer_invoice_sent' =>'1',
-            'new_invoice_payment' =>'1',
-            'new_payment_reminder' =>'1',
-            'new_bill_payment' =>'1',
-            'bill_resent' =>'1',
-            'proposal_sent' =>'1',
-            'complaint_resent' =>'1',
-            'leave_action_sent' =>'1',
+            'deal_assigned' => '1',
+            'new_award' => '1',
+            'customer_invoice_sent' => '1',
+            'new_invoice_payment' => '1',
+            'new_payment_reminder' => '1',
+            'new_bill_payment' => '1',
+            'bill_resent' => '1',
+            'proposal_sent' => '1',
+            'complaint_resent' => '1',
+            'leave_action_sent' => '1',
             'payslip_sent' => '1',
-            'promotion_sent' =>'1',
+            'promotion_sent' => '1',
             'resignation_sent' => '1',
-            'termination_sent' =>'1',
-            'transfer_sent' =>'1',
+            'termination_sent' => '1',
+            'transfer_sent' => '1',
             'trip_sent' => '1',
             'vender_bill_sent' => '1',
-            'warning_sent' =>'1',
-            'new_contract' =>'1',
+            'warning_sent' => '1',
+            'new_contract' => '1',
 
-            'vat_gst_number_switch' =>'off',
+            'vat_gst_number_switch' => 'off',
             'google_calendar_enable' => 'off',
-            'google_calender_json_file'=>'',
+            'google_calender_json_file' => '',
 
-            'enable_cookie'=>'on',
-            'necessary_cookies'=>'on',
-            'cookie_logging'=>'on',
-            'cookie_title'=>'We use cookies!',
-            'cookie_description'=>'Hi, this website uses essential cookies to ensure its proper operation and tracking cookies to understand how you interact with it',
-            'strictly_cookie_title'=>'Strictly necessary cookies',
-            'strictly_cookie_description'=>'These cookies are essential for the proper functioning of my website. Without these cookies, the website would not work properly',
-            'more_information_description'=>'For any queries in relation to our policy on cookies and your choices, please contact us',
-            'contactus_url'=>'#',
+            'enable_cookie' => 'on',
+            'necessary_cookies' => 'on',
+            'cookie_logging' => 'on',
+            'cookie_title' => 'We use cookies!',
+            'cookie_description' => 'Hi, this website uses essential cookies to ensure its proper operation and tracking cookies to understand how you interact with it',
+            'strictly_cookie_title' => 'Strictly necessary cookies',
+            'strictly_cookie_description' => 'These cookies are essential for the proper functioning of my website. Without these cookies, the website would not work properly',
+            'more_information_description' => 'For any queries in relation to our policy on cookies and your choices, please contact us',
+            'contactus_url' => '#',
 
-            'twilio_sid'=>'',
-            'twilio_token'=>'',
-            'twilio_from'=>'',
+            'twilio_sid' => '',
+            'twilio_token' => '',
+            'twilio_from' => '',
             'ai_chatgpt_enable' => 'off',
             'chat_gpt_key' => '',
             "ip_restrict" => "off",
 
-            "mail_driver"=>'',
-            'mail_host'=>'',
-            'mail_port'=>'',
-            'mail_username'=>'',
-            'mail_password'=>'',
-            'mail_encryption'=>'',
-            'mail_from_address'=>'',
-            'mail_from_name'=>'',
-            'timezone'=>'',
-            
-            'recaptcha_module'=>'',
-            'google_recaptcha_key'=>'',
-            'google_recaptcha_secret'=>'',
+            "mail_driver" => '',
+            'mail_host' => '',
+            'mail_port' => '',
+            'mail_username' => '',
+            'mail_password' => '',
+            'mail_encryption' => '',
+            'mail_from_address' => '',
+            'mail_from_name' => '',
+            'timezone' => '',
 
-            'pusher_app_id'=>'',
-            'pusher_app_key'=>'',
-            'pusher_app_secret'=>'',
-            'pusher_app_cluster'=>'',
+            'recaptcha_module' => '',
+            'google_recaptcha_key' => '',
+            'google_recaptcha_secret' => '',
+
+            'pusher_app_id' => '',
+            'pusher_app_key' => '',
+            'pusher_app_secret' => '',
+            'pusher_app_cluster' => '',
 
         ];
 
-        foreach($data as $row)
-        {
+        foreach ($data as $row) {
             $settings[$row->name] = $row->value;
         }
 
@@ -263,7 +260,7 @@ class Utility extends Model
     public static function settingsById($user_id)
     {
 
-        $data =Utility::getSettingById($user_id);
+        $data = Utility::getSettingById($user_id);
         $settings = [
             "site_currency" => "USD",
             "site_currency_symbol" => "$",
@@ -276,7 +273,7 @@ class Utility extends Model
             "company_state" => "",
             "company_zipcode" => "",
             "company_country" => "",
-            "company_telephone" => "",            
+            "company_telephone" => "",
             "invoice_prefix" => "#INVO",
             "journal_prefix" => "#JUR",
             "invoice_color" => "ffffff",
@@ -316,11 +313,11 @@ class Utility extends Model
             "company_end_time" => "18:00",
             'gdpr_cookie' => 'off',
             "interval_time" => "",
-            "zoom_apikey" =>"",
+            "zoom_apikey" => "",
             "zoom_apisecret" => "",
-            "slack_webhook" =>"",
+            "slack_webhook" => "",
             "telegram_accestoken" => "",
-            "telegram_chatid" =>"",
+            "telegram_chatid" => "",
             "enable_signup" => "on",
             'cookie_text' => 'We use cookies to ensure that we give you the best experience on our website. If you continue to use this site we will assume that you are happy with it.
 ',
@@ -334,10 +331,10 @@ class Utility extends Model
             "purchase_prefix" => "#PUR",
             "purchase_color" => "ffffff",
             "purchase_template" => "template1",
-            "proposal_logo" =>"",
-            "purchase_logo" =>"",
-            "invoice_logo" =>"",
-            "pos_logo" =>"",
+            "proposal_logo" => "",
+            "purchase_logo" => "",
+            "invoice_logo" => "",
+            "pos_logo" => "",
             "pos_color" => "ffffff",
             "pos_template" => "template1",
             "bill_logo" => '',
@@ -363,63 +360,62 @@ class Utility extends Model
             "wasabi_storage_validation" => "",
 
             "barcode_type" => "code128",
-            "barcode_format" =>"css",
+            "barcode_format" => "css",
 
             'new_user' => '1',
             'new_client' => '1',
             'new_support_ticket' => '1',
             'lead_assigned' => '1',
-            'deal_assigned' =>'1',
-            'new_award' =>'1',
-            'customer_invoice_sent' =>'1',
-            'new_invoice_payment' =>'1',
-            'new_payment_reminder' =>'1',
-            'new_bill_payment' =>'1',
-            'bill_resent' =>'1',
-            'proposal_sent' =>'1',
-            'complaint_resent' =>'1',
-            'leave_action_sent' =>'1',
+            'deal_assigned' => '1',
+            'new_award' => '1',
+            'customer_invoice_sent' => '1',
+            'new_invoice_payment' => '1',
+            'new_payment_reminder' => '1',
+            'new_bill_payment' => '1',
+            'bill_resent' => '1',
+            'proposal_sent' => '1',
+            'complaint_resent' => '1',
+            'leave_action_sent' => '1',
             'payslip_sent' => '1',
             'promotion_sent' => '1',
             'resignation_sent' => '1',
-            'termination_sent' =>'1',
-            'transfer_sent' =>'1',
+            'termination_sent' => '1',
+            'transfer_sent' => '1',
             'trip_sent' => '1',
             'vender_bill_sent' => '1',
-            'warning_sent' =>'1',
-            'new_contract' =>'1',
+            'warning_sent' => '1',
+            'new_contract' => '1',
 
-            'vat_gst_number_switch' =>'off',
+            'vat_gst_number_switch' => 'off',
             'google_calendar_enable' => '',
-            'google_calender_json_file'=>'',
+            'google_calender_json_file' => '',
 
-            'enable_cookie'=>'on',
-            'necessary_cookies'=>'on',
-            'cookie_logging'=>'on',
-            'cookie_title'=>'We use cookies!',
-            'cookie_description'=>'Hi, this website uses essential cookies to ensure its proper operation and tracking cookies to understand how you interact with it',
-            'strictly_cookie_title'=>'Strictly necessary cookies',
-            'strictly_cookie_description'=>'These cookies are essential for the proper functioning of my website. Without these cookies, the website would not work properly',
-            'more_information_description'=>'For any queries in relation to our policy on cookies and your choices, please contact us',
-            'contactus_url'=>'#',
+            'enable_cookie' => 'on',
+            'necessary_cookies' => 'on',
+            'cookie_logging' => 'on',
+            'cookie_title' => 'We use cookies!',
+            'cookie_description' => 'Hi, this website uses essential cookies to ensure its proper operation and tracking cookies to understand how you interact with it',
+            'strictly_cookie_title' => 'Strictly necessary cookies',
+            'strictly_cookie_description' => 'These cookies are essential for the proper functioning of my website. Without these cookies, the website would not work properly',
+            'more_information_description' => 'For any queries in relation to our policy on cookies and your choices, please contact us',
+            'contactus_url' => '#',
 
-            'twilio_sid'=>'',
-            'twilio_token'=>'',
-            'twilio_from'=>'',
+            'twilio_sid' => '',
+            'twilio_token' => '',
+            'twilio_from' => '',
             'ai_chatgpt_enable' => 'off',
             'chat_gpt_key' => '',
             "ip_restrict" => "off",
 
-            'pusher_app_id'=>'',
-            'pusher_app_key'=>'',
-            'pusher_app_secret'=>'',
-            'pusher_app_cluster'=>'',
+            'pusher_app_id' => '',
+            'pusher_app_key' => '',
+            'pusher_app_secret' => '',
+            'pusher_app_cluster' => '',
 
 
         ];
 
-        foreach($data as $row)
-        {
+        foreach ($data as $row) {
             $settings[$row->name] = $row->value;
         }
 
@@ -428,17 +424,17 @@ class Utility extends Model
 
     public static $emailStatus = [
         'new_user' => 'New User',
-        'new_client' =>'New Client',
-        'new_support_ticket' =>'New Support Ticket',
-        'lead_assigned' =>'Lead Assigned',
-        'deal_assigned' =>'Deal Assigned',
+        'new_client' => 'New Client',
+        'new_support_ticket' => 'New Support Ticket',
+        'lead_assigned' => 'Lead Assigned',
+        'deal_assigned' => 'Deal Assigned',
         'new_award' => 'New Award',
         'customer_invoice_sent' => 'Customer Invoice Sent',
         'new_invoice_payment' => 'New Invoice Payment',
         'new_payment_reminder' => 'New Payment Reminder',
         'new_bill_payment' => 'New Bill Payment',
         'bill_resent' => 'Bill Resent',
-        'proposal_sent' =>'Proposal Sent',
+        'proposal_sent' => 'Proposal Sent',
         'complaint_resent' => 'Complaint Resent',
         'leave_action_sent' => 'Leave Action Sent',
         'payslip_sent' => 'Payslip Sent',
@@ -454,18 +450,16 @@ class Utility extends Model
 
     public static function languages()
     {
-        if(self::$langData == null)
-        {
-            $languages=Utility::langList();
+        if (self::$langData == null) {
+            $languages = Utility::langList();
 
-            if(\Schema::hasTable('languages')){
+            if (\Schema::hasTable('languages')) {
                 $settings = Utility::settings();
-                if(!empty($settings['disable_lang'])){
-                    $disabledlang =explode(',', $settings['disable_lang']);
-                    $languages = Language::whereNotIn('code',$disabledlang)->pluck('full_name','code');
-                }
-                else{
-                    $languages = Language::pluck('full_name','code');
+                if (!empty($settings['disable_lang'])) {
+                    $disabledlang = explode(',', $settings['disable_lang']);
+                    $languages = Language::whereNotIn('code', $disabledlang)->pluck('full_name', 'code');
+                } else {
+                    $languages = Language::pluck('full_name', 'code');
                 }
             }
 
@@ -478,8 +472,7 @@ class Utility extends Model
     public static function getValByName($key)
     {
         $setting = Utility::settings();
-        if(!isset($setting[$key]) || empty($setting[$key]))
-        {
+        if (!isset($setting[$key]) || empty($setting[$key])) {
             $setting[$key] = '';
         }
 
@@ -490,28 +483,22 @@ class Utility extends Model
     {
         $envFile = app()->environmentFilePath();
         $str     = file_get_contents($envFile);
-        if(count($values) > 0)
-        {
-            foreach($values as $envKey => $envValue)
-            {
+        if (count($values) > 0) {
+            foreach ($values as $envKey => $envValue) {
                 $keyPosition       = strpos($str, "{$envKey}=");
                 $endOfLinePosition = strpos($str, "\n", $keyPosition);
                 $oldLine           = substr($str, $keyPosition, $endOfLinePosition - $keyPosition);
                 // If key does not exist, add it
-                if(!$keyPosition || !$endOfLinePosition || !$oldLine)
-                {
+                if (!$keyPosition || !$endOfLinePosition || !$oldLine) {
                     $str .= "{$envKey}='{$envValue}'\n";
-                }
-                else
-                {
+                } else {
                     $str = str_replace($oldLine, "{$envKey}='{$envValue}'", $str);
                 }
             }
         }
         $str = substr($str, 0, -1);
         $str .= "\n";
-        if(!file_put_contents($envFile, $str))
-        {
+        if (!file_put_contents($envFile, $str)) {
             return false;
         }
 
@@ -656,8 +643,7 @@ class Utility extends Model
 
     public static function taxes($tax)
     {
-        if(self::$taxes == null)
-        {
+        if (self::$taxes == null) {
             $tax = Tax::find($tax);
             self::$taxes = $tax;
         }
@@ -669,12 +655,10 @@ class Utility extends Model
     public static function tax($taxes)
     {
 
-        if(self::$taxData == null)
-        {
+        if (self::$taxData == null) {
             $taxArr = explode(',', $taxes);
             $taxes  = [];
-            foreach($taxArr as $tax)
-            {
+            foreach ($taxArr as $tax) {
                 // $taxes[] = self::taxes($tax);
                 $taxes[] = Tax::find($tax);
             }
@@ -684,22 +668,20 @@ class Utility extends Model
         return self::$taxData;
     }
 
-    public static function taxRate($taxRate, $price, $quantity,$discount=0)
+    public static function taxRate($taxRate, $price, $quantity, $discount = 0)
     {
-        return (($price*$quantity) - $discount) * ($taxRate /100);
+        return (($price * $quantity) - $discount) * ($taxRate / 100);
     }
 
     private static $taxRateData =  NULL;
 
     public static function totalTaxRate($taxes)
     {
-        if(self::$taxRateData == null)
-        {
+        if (self::$taxRateData == null) {
             $taxArr  = explode(',', $taxes);
             $taxRate = 0;
-    
-            foreach($taxArr as $tax)
-            {
+
+            foreach ($taxArr as $tax) {
                 // $tax     = self::taxes($tax);
                 $tax = Tax::find($tax);
                 $taxRate += !empty($tax->rate) ? $tax->rate : 0;
@@ -713,26 +695,19 @@ class Utility extends Model
     //start for customer & vendor balance
     public static function userBalance($users, $id, $amount, $type)
     {
-        if($users == 'customer')
-        {
+        if ($users == 'customer') {
             $user = Customer::find($id);
-        }
-        else
-        {
+        } else {
             $user = Vender::find($id);
         }
 
-        if(!empty($user))
-        {
-            if($type == 'credit')
-            {
+        if (!empty($user)) {
+            if ($type == 'credit') {
                 $oldBalance    = $user->balance;
                 $userBalance = $oldBalance + $amount;
                 $user->balance = $userBalance;
                 $user->save();
-            }
-            elseif($type == 'debit')
-            {
+            } elseif ($type == 'debit') {
                 $oldBalance    = $user->balance;
                 $userBalance = $oldBalance - $amount;
                 $user->balance = $userBalance;
@@ -743,26 +718,19 @@ class Utility extends Model
 
     public static function updateUserBalance($users, $id, $amount, $type)
     {
-        if($users == 'customer')
-        {
+        if ($users == 'customer') {
             $user = Customer::find($id);
-        }
-        else
-        {
+        } else {
             $user = Vender::find($id);
         }
 
-        if(!empty($user))
-        {
-            if($type == 'credit')
-            {
+        if (!empty($user)) {
+            if ($type == 'credit') {
                 $oldBalance    = $user->balance;
                 $userBalance = $oldBalance - $amount;
                 $user->balance = $userBalance;
                 $user->save();
-            }
-            elseif($type == 'debit')
-            {
+            } elseif ($type == 'debit') {
                 $oldBalance    = $user->balance;
                 $userBalance = $oldBalance + $amount;
                 $user->balance = $userBalance;
@@ -776,22 +744,17 @@ class Utility extends Model
     public static function bankAccountBalance($id, $amount, $type)
     {
         $bankAccount = BankAccount::find($id);
-        if($bankAccount)
-        {
-            if($type == 'credit')
-            {
+        if ($bankAccount) {
+            if ($type == 'credit') {
                 $oldBalance                   = $bankAccount->opening_balance;
                 $bankAccount->opening_balance = $oldBalance + $amount;
                 $bankAccount->save();
-            }
-            elseif($type == 'debit')
-            {
+            } elseif ($type == 'debit') {
                 $oldBalance                   = $bankAccount->opening_balance;
                 $bankAccount->opening_balance = $oldBalance - $amount;
                 $bankAccount->save();
             }
         }
-
     }
 
     // get font-color code accourding to bg-color
@@ -799,14 +762,11 @@ class Utility extends Model
     {
         $hex = str_replace("#", "", $hex);
 
-        if(strlen($hex) == 3)
-        {
+        if (strlen($hex) == 3) {
             $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
             $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
             $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
-        }
-        else
-        {
+        } else {
             $r = hexdec(substr($hex, 0, 2));
             $g = hexdec(substr($hex, 2, 2));
             $b = hexdec(substr($hex, 4, 2));
@@ -835,26 +795,19 @@ class Utility extends Model
             $B / 255,
         ];
 
-        for($i = 0; $i < count($C); ++$i)
-        {
-            if($C[$i] <= 0.03928)
-            {
+        for ($i = 0; $i < count($C); ++$i) {
+            if ($C[$i] <= 0.03928) {
                 $C[$i] = $C[$i] / 12.92;
-            }
-            else
-            {
+            } else {
                 $C[$i] = pow(($C[$i] + 0.055) / 1.055, 2.4);
             }
         }
 
         $L = 0.2126 * $C[0] + 0.7152 * $C[1] + 0.0722 * $C[2];
 
-        if($L > 0.179)
-        {
+        if ($L > 0.179) {
             $color = 'black';
-        }
-        else
-        {
+        } else {
             $color = 'white';
         }
 
@@ -863,22 +816,17 @@ class Utility extends Model
 
     public static function delete_directory($dir)
     {
-        if(!file_exists($dir))
-        {
+        if (!file_exists($dir)) {
             return true;
         }
-        if(!is_dir($dir))
-        {
+        if (!is_dir($dir)) {
             return unlink($dir);
         }
-        foreach(scandir($dir) as $item)
-        {
-            if($item == '.' || $item == '..')
-            {
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') {
                 continue;
             }
-            if(!self::delete_directory($dir . DIRECTORY_SEPARATOR . $item))
-            {
+            if (!self::delete_directory($dir . DIRECTORY_SEPARATOR . $item)) {
                 return false;
             }
         }
@@ -930,8 +878,7 @@ class Utility extends Model
     public static function chartOfAccountTypeData($company_id)
     {
         $chartOfAccountTypes = Self::$chartOfAccountType;
-        foreach($chartOfAccountTypes as $k => $type)
-        {
+        foreach ($chartOfAccountTypes as $k => $type) {
 
             $accountType = ChartOfAccountType::create(
                 [
@@ -942,8 +889,7 @@ class Utility extends Model
 
             $chartOfAccountSubTypes = Self::$chartOfAccountSubType;
 
-            foreach($chartOfAccountSubTypes[$k] as $subType)
-            {
+            foreach ($chartOfAccountSubTypes[$k] as $subType) {
                 ChartOfAccountSubType::create(
                     [
                         'name' => $subType,
@@ -1081,7 +1027,8 @@ class Utility extends Model
             'name' => 'Purchase Tax',
             'type' => 2,
             'sub_type' => 4,
-        ],[
+        ],
+        [
             'code' => '2150',
             'name' => 'VAT Pay / Refund',
             'type' => 2,
@@ -1152,7 +1099,8 @@ class Utility extends Model
             'name' => 'Accr. Benefits - Central Provident Fund',
             'type' => 2,
             'sub_type' => 4,
-        ],[
+        ],
+        [
             'code' => '2320',
             'name' => 'Accr. Benefits - Stock Purchase',
             'type' => 2,
@@ -1756,7 +1704,8 @@ class Utility extends Model
             'name' => 'Purchase Tax',
             'type' => 'Liabilities',
             'sub_type' => 'Current Liabilities',
-        ],[
+        ],
+        [
             'code' => '2150',
             'name' => 'VAT Pay / Refund',
             'type' => 'Liabilities',
@@ -1827,7 +1776,8 @@ class Utility extends Model
             'name' => 'Accr. Benefits - Central Provident Fund',
             'type' => 'Liabilities',
             'sub_type' => 'Current Liabilities',
-        ],[
+        ],
+        [
             'code' => '2320',
             'name' => 'Accr. Benefits - Stock Purchase',
             'type' => 'Liabilities',
@@ -2308,11 +2258,10 @@ class Utility extends Model
     {
         $chartOfAccounts = Self::$chartOfAccount1;
 
-        foreach($chartOfAccounts as $account)
-        {
+        foreach ($chartOfAccounts as $account) {
 
-            $type=ChartOfAccountType::where('created_by',$user)->where('name',$account['type'])->first();
-            $sub_type=ChartOfAccountSubType::where('type',$type->id)->where('name',$account['sub_type'])->first();
+            $type = ChartOfAccountType::where('created_by', $user)->where('name', $account['type'])->first();
+            $sub_type = ChartOfAccountSubType::where('type', $type->id)->where('name', $account['sub_type'])->first();
 
             ChartOfAccount::create(
                 [
@@ -2324,15 +2273,13 @@ class Utility extends Model
                     'created_by' => $user,
                 ]
             );
-
         }
     }
 
     public static function chartOfAccountData($user)
     {
         $chartOfAccounts = Self::$chartOfAccount;
-        foreach($chartOfAccounts as $account)
-        {
+        foreach ($chartOfAccounts as $account) {
             ChartOfAccount::create(
                 [
                     'code' => $account['code'],
@@ -2343,7 +2290,6 @@ class Utility extends Model
                     'created_by' => $user->id,
                 ]
             );
-
         }
     }
 
@@ -2356,55 +2302,43 @@ class Utility extends Model
 
         $mailTo = array_values($mailTo);
 
-        if($usr->type != 'Super Admin')
-        {
+        if ($usr->type != 'Super Admin') {
             // find template is exist or not in our record
             $template = EmailTemplate::where('name', 'LIKE', $emailTemplate)->first();
 
-            if(isset($template) && !empty($template))
-            {
+            if (isset($template) && !empty($template)) {
                 // check template is active or not by company
                 $is_active = UserEmailTemplate::where('template_id', '=', $template->id)->where('user_id', '=', $usr->ownerId())->first();
 
-                if($is_active->is_active == 1)
-                {
+                if ($is_active->is_active == 1) {
                     $settings = self::settings();
 
                     // get email content language base
                     $content = EmailTemplateLang::where('parent_id', '=', $template->id)->where('lang', 'LIKE', $usr->lang)->first();
 
                     $content->from = $template->from;
-                    if(!empty($content->content))
-                    {
+                    if (!empty($content->content)) {
                         $content->content = self::replaceVariable($content->content, $obj);
 
                         // send email
-                        try
-                        {
+                        try {
                             Mail::to($mailTo)->send(new CommonEmailTemplate($content, $settings));
-                        }
-                        catch(\Exception $e)
-                        {
+                        } catch (\Exception $e) {
                             $error = $e->getMessage();
                         }
 
-                        if(isset($error))
-                        {
+                        if (isset($error)) {
                             $arReturn = [
                                 'is_success' => false,
                                 'error' => $error,
                             ];
-                        }
-                        else
-                        {
+                        } else {
                             $arReturn = [
                                 'is_success' => true,
                                 'error' => false,
                             ];
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $arReturn = [
                             'is_success' => false,
                             'error' => __('Mail not send, email is empty'),
@@ -2412,17 +2346,13 @@ class Utility extends Model
                     }
 
                     return $arReturn;
-                }
-                else
-                {
+                } else {
                     return [
                         'is_success' => true,
                         'error' => false,
                     ];
                 }
-            }
-            else
-            {
+            } else {
                 return [
                     'is_success' => false,
                     'error' => __('Mail not send, email not found'),
@@ -2577,12 +2507,12 @@ class Utility extends Model
             'password' => '-',
             'client_name' => '-',
             'client_email' => '-',
-            'client_password' =>'-',
-            'support_name' =>'-',
-            'support_title' =>'-',
-            'support_priority' =>'-',
-            'support_end_date' =>'-',
-            'support_description' =>'-',
+            'client_password' => '-',
+            'support_name' => '-',
+            'support_title' => '-',
+            'support_priority' => '-',
+            'support_end_date' => '-',
+            'support_description' => '-',
             'lead_name' => '-',
             'lead_email' => '-',
             'lead_subject' => '-',
@@ -2596,51 +2526,51 @@ class Utility extends Model
             'award_name' => '-',
             'award_email' => '-',
             'customer_name' => '-',
-            'customer_email' =>'-',
+            'customer_email' => '-',
             'invoice_name' => '-',
             'invoice_number' => '-',
-            'invoice_url' =>'-',
-            'invoice_payment_name' =>'-',
-            'invoice_payment_amount' =>'-',
-            'invoice_payment_date' =>'-',
-            'payment_dueAmount' =>'-',
-            'payment_reminder_name' =>'-',
-            'invoice_payment_number' =>'-',
-            'invoice_payment_dueAmount' =>'-',
-            'payment_reminder_date' =>'-',
-            'payment_name'=> '-',
-            'payment_bill'=> '-',
-            'payment_amount'=> '-',
-            'payment_date'=> '-',
-            'payment_method'=> '-',
-            'vender_name'=> '-',
-            'vender_email'=> '-',
-            'bill_name' =>'-',
-            'bill_number' =>'-',
+            'invoice_url' => '-',
+            'invoice_payment_name' => '-',
+            'invoice_payment_amount' => '-',
+            'invoice_payment_date' => '-',
+            'payment_dueAmount' => '-',
+            'payment_reminder_name' => '-',
+            'invoice_payment_number' => '-',
+            'invoice_payment_dueAmount' => '-',
+            'payment_reminder_date' => '-',
+            'payment_name' => '-',
+            'payment_bill' => '-',
+            'payment_amount' => '-',
+            'payment_date' => '-',
+            'payment_method' => '-',
+            'vender_name' => '-',
+            'vender_email' => '-',
+            'bill_name' => '-',
+            'bill_number' => '-',
             'bill_url' => '-',
-            'proposal_name' =>'-',
+            'proposal_name' => '-',
             'proposal_number' => '-',
             'proposal_url' => '-',
-            'complaint_name'=> '-',
-            'complaint_title'=> '-',
-            'complaint_against'=> '-',
-            'complaint_date'=> '-',
-            'complaint_description'=> '-',
+            'complaint_name' => '-',
+            'complaint_title' => '-',
+            'complaint_against' => '-',
+            'complaint_date' => '-',
+            'complaint_description' => '-',
             'leave_name' => '-',
             'leave_status' => '-',
             'leave_reason' => '-',
             'leave_start_date' => '-',
             'leave_end_date' => '-',
             'total_leave_days' => '-',
-            'employee_name'=>'-',
-            'employee_email' =>'-',
-            'payslip_name'=>'-',
-            'payslip_salary_month'=>'-',
-            'payslip_url'=>'-',
+            'employee_name' => '-',
+            'employee_email' => '-',
+            'payslip_name' => '-',
+            'payslip_salary_month' => '-',
+            'payslip_url' => '-',
             'promotion_designation' => '-',
             'promotion_title' => '-',
             'promotion_date' => '-',
-            'resignation_email'=> '-',
+            'resignation_email' => '-',
             'assign_user' => '-',
             'resignation_date' => '-',
             'notice_date' => '-',
@@ -2655,14 +2585,14 @@ class Utility extends Model
             'transfer_branch' => '-',
             'transfer_description' => '-',
             'trip_name' => '-',
-            'purpose_of_visit' =>'-',
+            'purpose_of_visit' => '-',
             'start_date' => '-',
             'end_date' => '-',
             'place_of_visit' => '-',
             'trip_description' => '-',
-            'vender_bill_name' =>'-',
-            'vender_bill_number' =>'-',
-            'vender_bill_url' =>'-',
+            'vender_bill_name' => '-',
+            'vender_bill_number' => '-',
+            'vender_bill_url' => '-',
             'employee_warning_name' => '-',
             'warning_subject' => '-',
             'warning_description' => '-',
@@ -2706,12 +2636,11 @@ class Utility extends Model
         ];
 
 
-        foreach($obj as $key => $val)
-        {
+        foreach ($obj as $key => $val) {
             $arrValue[$key] = $val;
         }
 
-//        dd($obj);
+        //        dd($obj);
         $settings = Utility::settings();
         $company_name = $settings['company_name'];
 
@@ -2719,8 +2648,8 @@ class Utility extends Model
         $arrValue['company_name'] = self::settings()['company_name'];
         $arrValue['app_url']      = '<a href="' . env('APP_URL') . '" target="_blank">' . env('APP_URL') . '</a>';
 
-//        dd($arrVariable);
-//        dd(str_replace($arrVariable, array_values($arrValue), $content));
+        //        dd($arrVariable);
+        //        dd(str_replace($arrVariable, array_values($arrValue), $content));
 
         return str_replace($arrVariable, array_values($arrValue), $content);
     }
@@ -2743,8 +2672,7 @@ class Utility extends Model
             'Revised',
             'Declined',
         ];
-        foreach($stages as $stage)
-        {
+        foreach ($stages as $stage) {
             LeadStage::create(
                 [
                     'name' => $stage,
@@ -2760,7 +2688,6 @@ class Utility extends Model
                 ]
             );
         }
-
     }
 
     public static function project_task_stages($created_id)
@@ -2771,8 +2698,7 @@ class Utility extends Model
             'Review',
             'Done',
         ];
-        foreach($projectStages as $key => $stage)
-        {
+        foreach ($projectStages as $key => $stage) {
             TaskStage::create(
                 [
                     'name' => $stage,
@@ -2807,8 +2733,7 @@ class Utility extends Model
                 'color' => 'success',
             ],
         ];
-        foreach($stages as $stage)
-        {
+        foreach ($stages as $stage) {
             Label::create(
                 [
                     'name' => $stage['name'],
@@ -2825,8 +2750,7 @@ class Utility extends Model
             'In Progress',
             'Verified',
         ];
-        foreach($bugStatus as $status)
-        {
+        foreach ($bugStatus as $status) {
             BugStatus::create(
                 [
                     'title' => $status,
@@ -2845,8 +2769,7 @@ class Utility extends Model
             'Phone',
             'LinkedIn',
         ];
-        foreach($stages as $stage)
-        {
+        foreach ($stages as $stage) {
             Source::create(
                 [
                     'name' => $stage,
@@ -2860,8 +2783,7 @@ class Utility extends Model
     {
         $latest = Employee::where('created_by', $user_id)->latest()->first();
 
-        if(!$latest)
-        {
+        if (!$latest) {
             return 1;
         }
 
@@ -2894,8 +2816,6 @@ class Utility extends Model
                 'email' => $user->email,
             ]
         );
-
-
     }
 
     public static function jobStage($id)
@@ -2907,8 +2827,7 @@ class Utility extends Model
             'Hired',
             'Rejected',
         ];
-        foreach($stages as $stage)
-        {
+        foreach ($stages as $stage) {
 
             JobStage::create(
                 [
@@ -2923,8 +2842,7 @@ class Utility extends Model
     {
         $err = '';
 
-        foreach($errors->all() as $msg)
-        {
+        foreach ($errors->all() as $msg) {
             $err .= $msg . '<br>';
         }
 
@@ -2934,12 +2852,9 @@ class Utility extends Model
     // get date formated
     public static function getDateFormated($date)
     {
-        if(!empty($date) && $date != '0000-00-00')
-        {
+        if (!empty($date) && $date != '0000-00-00') {
             return date("d M Y", strtotime($date));
-        }
-        else
-        {
+        } else {
             return '';
         }
     }
@@ -2949,24 +2864,15 @@ class Utility extends Model
     {
         $color = '';
 
-        if($percentage <= 20)
-        {
+        if ($percentage <= 20) {
             $color = 'danger';
-        }
-        elseif($percentage > 20 && $percentage <= 40)
-        {
+        } elseif ($percentage > 20 && $percentage <= 40) {
             $color = 'warning';
-        }
-        elseif($percentage > 40 && $percentage <= 60)
-        {
+        } elseif ($percentage > 40 && $percentage <= 60) {
             $color = 'info';
-        }
-        elseif($percentage > 60 && $percentage <= 80)
-        {
+        } elseif ($percentage > 60 && $percentage <= 80) {
             $color = 'primary';
-        }
-        elseif($percentage >= 80)
-        {
+        } elseif ($percentage >= 80) {
             $color = 'success';
         }
 
@@ -2977,8 +2883,7 @@ class Utility extends Model
     public static function getPercentage($val1 = 0, $val2 = 0)
     {
         $percentage = 0;
-        if($val1 > 0 && $val2 > 0)
-        {
+        if ($val1 > 0 && $val2 > 0) {
             $percentage = intval(($val1 / $val2) * 100);
         }
 
@@ -2989,10 +2894,9 @@ class Utility extends Model
     public static function getCrmPercentage($val1 = 0, $val2 = 0)
     {
         $percentage = 0;
-        if($val1 > 0 && $val2 > 0)
-        {
+        if ($val1 > 0 && $val2 > 0) {
             $percentage = ($val1 / $val2) * 100;
-            $percentage= number_format($percentage, \Utility::getValByName('decimal_number'));
+            $percentage = number_format($percentage, \Utility::getValByName('decimal_number'));
         }
 
         return $percentage;
@@ -3003,8 +2907,7 @@ class Utility extends Model
     {
         $totaltime = self::calculateTimesheetHours($times);
         $timeArray = explode(':', $totaltime);
-        if($timeArray[1] <= '30')
-        {
+        if ($timeArray[1] <= '30') {
             $totaltime = $timeArray[0];
         }
         $totaltime = $totaltime != '00' ? $totaltime : '0';
@@ -3015,8 +2918,7 @@ class Utility extends Model
     public static function calculateTimesheetHours($times)
     {
         $minutes = 0;
-        foreach($times as $time)
-        {
+        foreach ($times as $time) {
             list($hour, $minute) = explode(':', $time);
             $minutes += $hour * 60;
             $minutes += $minute;
@@ -3033,8 +2935,7 @@ class Utility extends Model
         $arrDuration   = [];
         $previous_week = strtotime("-1 week +1 day");
 
-        for($i = 0; $i < 7; $i++)
-        {
+        for ($i = 0; $i < 7; $i++) {
             $arrDuration[date('Y-m-d', $previous_week)] = date('D', $previous_week);
             $previous_week                              = strtotime(date('Y-m-d', $previous_week) . " +1 day");
         }
@@ -3046,10 +2947,8 @@ class Utility extends Model
     public static function checkFileExistsnDelete(array $files)
     {
         $status = false;
-        foreach($files as $key => $file)
-        {
-            if(Storage::exists($file))
-            {
+        foreach ($files as $key => $file) {
+            if (Storage::exists($file)) {
                 $status = Storage::delete($file);
             }
         }
@@ -3061,30 +2960,25 @@ class Utility extends Model
     public static function projectCurrencyFormat($project_id, $amount, $decimal = false)
     {
         $project = Project::find($project_id);
-        if(empty($project))
-        {
+        if (empty($project)) {
             $settings = Utility::settings();
 
             return (($settings['site_currency_symbol_position'] == "pre") ? $settings['site_currency_symbol'] : '') . number_format($price, Utility::getValByName('decimal_number')) . (($settings['site_currency_symbol_position'] == "post") ? $settings['site_currency_symbol'] : '');
         }
-
-
     }
 
     // Return Week first day and last day
     public static function getFirstSeventhWeekDay($week = null)
     {
         $first_day = $seventh_day = null;
-        if(isset($week))
-        {
+        if (isset($week)) {
             $first_day   = Carbon::now()->addWeeks($week)->startOfWeek();
             $seventh_day = Carbon::now()->addWeeks($week)->endOfWeek();
         }
         $dateCollection['first_day']   = $first_day;
         $dateCollection['seventh_day'] = $seventh_day;
         $period                        = CarbonPeriod::create($first_day, $seventh_day);
-        foreach($period as $key => $dateobj)
-        {
+        foreach ($period as $key => $dateobj) {
             $dateCollection['datePeriod'][$key] = $dateobj;
         }
 
@@ -3229,12 +3123,9 @@ class Utility extends Model
     public static function companyData($company_id, $string)
     {
         $setting = DB::table('settings')->where('created_by', $company_id)->where('name', $string)->first();
-        if(!empty($setting))
-        {
+        if (!empty($setting)) {
             return $setting->value;
-        }
-        else
-        {
+        } else {
             return '';
         }
     }
@@ -3297,7 +3188,7 @@ class Utility extends Model
             'manage farmer guarantor',
             'create farmer guarantor',
             'edit farmer guarantor',
-            'delete farmer guarantor',            
+            'delete farmer guarantor',
             'manage farmer security deposit',
             'create farmer security deposit',
             'edit farmer security deposit',
@@ -3317,12 +3208,10 @@ class Utility extends Model
             'delete farmer detail',
             'manage cutting order',
         ];
-        foreach($arrPermissions as $ap)
-        {
+        foreach ($arrPermissions as $ap) {
             // check if permission is not created then create it.
             $permission = Permission::where('name', 'LIKE', $ap)->first();
-            if(empty($permission))
-            {
+            if (empty($permission)) {
                 Permission::create(['name' => $ap]);
             }
         }
@@ -3398,17 +3287,13 @@ class Utility extends Model
             'delete farmer detail',
             'manage cutting order',
         ];
-        foreach($companyNewPermission as $op)
-        {
+        foreach ($companyNewPermission as $op) {
             // check if permission is not assign to owner then assign.
-            if(!in_array($op, $companyPermissions))
-            {
+            if (!in_array($op, $companyPermissions)) {
                 $permission = Permission::findByName($op);
                 $companyRole->givePermissionTo($permission);
             }
         }
-
-
     }
 
 
@@ -3418,18 +3303,14 @@ class Utility extends Model
         $data     = \DB::table('admin_payment_settings');
 
         $settings = [];
-        if(\Auth::check())
-        {
+        if (\Auth::check()) {
 
             $user_id = 1;
             $data    = $data->where('created_by', '=', $user_id);
-
-
         }
         $data = $data->get();
-//        dd($data);
-        foreach($data as $row)
-        {
+        //        dd($data);
+        foreach ($data as $row) {
             $settings[$row->name] = $row->value;
         }
 
@@ -3443,8 +3324,7 @@ class Utility extends Model
         $settings = [];
         $data     = $data->where('created_by', '=', $user_id);
         $data     = $data->get();
-        foreach($data as $row)
-        {
+        foreach ($data as $row) {
             $settings[$row->name] = $row->value;
         }
 
@@ -3456,15 +3336,12 @@ class Utility extends Model
 
         $data     = \DB::table('company_payment_settings');
         $settings = [];
-        if(\Auth::check())
-        {
+        if (\Auth::check()) {
             $user_id = \Auth::user()->creatorId();
             $data    = $data->where('created_by', '=', $user_id);
-
         }
         $data = $data->get();
-        foreach($data as $row)
-        {
+        foreach ($data as $row) {
             $settings[$row->name] = $row->value;
         }
 
@@ -3505,21 +3382,18 @@ class Utility extends Model
     {
         $totalMigration = 0;
         $messengerPath  = glob(base_path() . '/vendor/munafio/chatify/database/migrations' . DIRECTORY_SEPARATOR . '*.php');
-        if(!empty($messengerPath))
-        {
+        if (!empty($messengerPath)) {
             $messengerMigration = str_replace('.php', '', $messengerPath);
             $totalMigration     = count($messengerMigration);
         }
 
         return $totalMigration;
-
     }
 
     public static function getselectedThemeColor()
     {
         $color = env('THEME_COLOR');
-        if($color == "" || $color == null)
-        {
+        if ($color == "" || $color == null) {
             $color = 'blue';
         }
 
@@ -3573,44 +3447,35 @@ class Utility extends Model
 
 
     //Slack notification
-    public static function send_slack_msg($slug,$obj,$user_id = null)
+    public static function send_slack_msg($slug, $obj, $user_id = null)
     {
 
-        $notification_template = NotificationTemplates::where('slug',$slug)->first();
+        $notification_template = NotificationTemplates::where('slug', $slug)->first();
 
-        if (!empty($notification_template) && !empty($obj))
-        {
-            if(!empty($user_id))
-            {
+        if (!empty($notification_template) && !empty($obj)) {
+            if (!empty($user_id)) {
                 $user = User::find($user_id);
-            }
-            else
-            {
+            } else {
                 $user = \Auth::user();
             }
             $curr_noti_tempLang = NotificationTemplateLangs::where('parent_id', '=', $notification_template->id)->where('lang', $user->lang)->where('created_by', '=', $user->id)->first();
 
-            if(empty($curr_noti_tempLang))
-            {
+            if (empty($curr_noti_tempLang)) {
                 $curr_noti_tempLang = NotificationTemplateLangs::where('parent_id', '=', $notification_template->id)->where('lang', $user->lang)->first();
             }
-            if(empty($curr_noti_tempLang))
-            {
+            if (empty($curr_noti_tempLang)) {
                 $curr_noti_tempLang       = NotificationTemplateLangs::where('parent_id', '=', $notification_template->id)->where('lang', 'en')->first();
             }
-            if (!empty($curr_noti_tempLang) && !empty($curr_noti_tempLang->content))
-            {
+            if (!empty($curr_noti_tempLang) && !empty($curr_noti_tempLang->content)) {
                 $msg = self::replaceVariable($curr_noti_tempLang->content, $obj);
             }
         }
 
 
-        if (isset($msg))
-        {
+        if (isset($msg)) {
             $settings = Utility::settingsById($user->id);
             try {
-                if (isset($settings['slack_webhook']) && !empty($settings['slack_webhook']))
-                {
+                if (isset($settings['slack_webhook']) && !empty($settings['slack_webhook'])) {
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $settings['slack_webhook']);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -3633,32 +3498,25 @@ class Utility extends Model
     }
 
     //Telegram Notification
-    public static function send_telegram_msg($slug,$obj,$user_id = null)
+    public static function send_telegram_msg($slug, $obj, $user_id = null)
     {
-        $notification_template = NotificationTemplates::where('slug',$slug)->first();
+        $notification_template = NotificationTemplates::where('slug', $slug)->first();
 
-        if (!empty($notification_template) && !empty($obj))
-        {
-            if(!empty($user_id))
-            {
+        if (!empty($notification_template) && !empty($obj)) {
+            if (!empty($user_id)) {
                 $user = User::find($user_id);
-            }
-            else
-            {
+            } else {
                 $user = \Auth::user();
             }
             $curr_noti_tempLang = NotificationTemplateLangs::where('parent_id', '=', $notification_template->id)->where('lang', $user->lang)->where('created_by', '=', $user->id)->first();
 
-            if(empty($curr_noti_tempLang))
-            {
+            if (empty($curr_noti_tempLang)) {
                 $curr_noti_tempLang = NotificationTemplateLangs::where('parent_id', '=', $notification_template->id)->where('lang', $user->lang)->first();
             }
-            if(empty($curr_noti_tempLang))
-            {
+            if (empty($curr_noti_tempLang)) {
                 $curr_noti_tempLang       = NotificationTemplateLangs::where('parent_id', '=', $notification_template->id)->where('lang', 'en')->first();
             }
-            if (!empty($curr_noti_tempLang) && !empty($curr_noti_tempLang->content))
-            {
+            if (!empty($curr_noti_tempLang) && !empty($curr_noti_tempLang->content)) {
                 $msg = self::replaceVariable($curr_noti_tempLang->content, $obj);
             }
         }
@@ -3666,12 +3524,10 @@ class Utility extends Model
 
 
 
-        if (isset($msg))
-        {
+        if (isset($msg)) {
             $settings = Utility::settingsById($user->id);
             try {
-                if (isset($settings['telegram_accestoken']) && !empty($settings['telegram_accestoken']))
-                {
+                if (isset($settings['telegram_accestoken']) && !empty($settings['telegram_accestoken'])) {
                     // Set your Bot ID and Chat ID.
                     $telegrambot = $settings['telegram_accestoken'];
                     $telegramchatid = $settings['telegram_chatid'];
@@ -3695,45 +3551,36 @@ class Utility extends Model
             } catch (\Exception $e) {
             }
         }
-
     }
 
     //Twilio Notification
-    public static function send_twilio_msg($to,$slug,$obj,$user_id = null)
+    public static function send_twilio_msg($to, $slug, $obj, $user_id = null)
     {
 
-        $notification_template = NotificationTemplates::where('slug',$slug)->first();
+        $notification_template = NotificationTemplates::where('slug', $slug)->first();
 
-        if (!empty($notification_template) && !empty($obj))
-        {
-            if(!empty($user_id))
-            {
+        if (!empty($notification_template) && !empty($obj)) {
+            if (!empty($user_id)) {
                 $user = User::find($user_id);
-            }
-            else
-            {
+            } else {
                 $user = \Auth::user();
             }
             $curr_noti_tempLang = NotificationTemplateLangs::where('parent_id', '=', $notification_template->id)->where('lang', $user->lang)->where('created_by', '=', $user->id)->first();
 
-            if(empty($curr_noti_tempLang))
-            {
+            if (empty($curr_noti_tempLang)) {
                 $curr_noti_tempLang = NotificationTemplateLangs::where('parent_id', '=', $notification_template->id)->where('lang', $user->lang)->first();
             }
-            if(empty($curr_noti_tempLang))
-            {
+            if (empty($curr_noti_tempLang)) {
                 $curr_noti_tempLang       = NotificationTemplateLangs::where('parent_id', '=', $notification_template->id)->where('lang', 'en')->first();
             }
-            if (!empty($curr_noti_tempLang) && !empty($curr_noti_tempLang->content))
-            {
+            if (!empty($curr_noti_tempLang) && !empty($curr_noti_tempLang->content)) {
                 $msg = self::replaceVariable($curr_noti_tempLang->content, $obj);
             }
         }
 
 
 
-        if (isset($msg))
-        {
+        if (isset($msg)) {
             $settings = Utility::settingsById($user->id);
             $account_sid = $settings['twilio_sid'];
             $auth_token = $settings['twilio_token'];
@@ -3745,11 +3592,8 @@ class Utility extends Model
                     'body' => $msg,
                 ]);
             } catch (\Exception $e) {
-
             }
         }
-
-
     }
 
     //inventory management (Quantity)
@@ -3757,88 +3601,74 @@ class Utility extends Model
     {
 
         $product      = ProductService::find($product_id);
-        if(($product->type == 'product'))
-        {
+        if (($product->type == 'product')) {
             $pro_quantity = $product->quantity;
 
-            if($type == 'minus')
-            {
+            if ($type == 'minus') {
                 $product->quantity = $pro_quantity - $quantity;
-            }
-            else
-            {
+            } else {
                 $product->quantity = $pro_quantity + $quantity;
-
-
             }
             $product->save();
         }
-
     }
 
     //quantity update in warehouse details
-    public static function warehouse_quantity($type, $quantity, $product_id,$warehouse_id)
+    public static function warehouse_quantity($type, $quantity, $product_id, $warehouse_id)
     {
 
-        $product      = WarehouseProduct::where('warehouse_id',$warehouse_id)->where('product_id',$product_id)->first();
+        $product      = WarehouseProduct::where('warehouse_id', $warehouse_id)->where('product_id', $product_id)->first();
 
-        $pro_quantity = (!empty($product) && !empty($product->quantity))?$product->quantity:0;
+        $pro_quantity = (!empty($product) && !empty($product->quantity)) ? $product->quantity : 0;
 
-        if($type == 'minus')
-        {
-            $product->quantity = $pro_quantity!=0 ? $pro_quantity - $quantity : $quantity;
-        }
-        else
-        {
+        if ($type == 'minus') {
+            $product->quantity = $pro_quantity != 0 ? $pro_quantity - $quantity : $quantity;
+        } else {
             $product->quantity = $pro_quantity + $quantity;
-
         }
-       $product->quantity=!empty($product->quantity)?$product->quantity:0;
+        $product->quantity = !empty($product->quantity) ? $product->quantity : 0;
 
         $product->save();
-
     }
 
     //warehouse transfer
-    public static function warehouse_transfer_qty($from_warehouse,$to_warehouse,$product_id,$quantity)
+    public static function warehouse_transfer_qty($from_warehouse, $to_warehouse, $product_id, $quantity)
     {
 
-        $toWarehouse      = WarehouseProduct::where('warehouse_id',$to_warehouse)->where('product_id',$product_id)->first();
-        if(empty($toWarehouse)){
+        $toWarehouse      = WarehouseProduct::where('warehouse_id', $to_warehouse)->where('product_id', $product_id)->first();
+        if (empty($toWarehouse)) {
             $transfer                = new WarehouseProduct();
             $transfer->warehouse_id  = $to_warehouse;
             $transfer->product_id    = $product_id;
             $transfer->quantity      = $quantity;
             $transfer->created_by    = \Auth::user()->creatorId();
             $transfer->save();
-        }else{
-            $toWarehouse->quantity   = $toWarehouse->quantity+$quantity;
+        } else {
+            $toWarehouse->quantity   = $toWarehouse->quantity + $quantity;
             $toWarehouse->save();
         }
-        $fromWarehouse               = WarehouseProduct::where('warehouse_id',$from_warehouse)->where('product_id',$product_id)->first();
+        $fromWarehouse               = WarehouseProduct::where('warehouse_id', $from_warehouse)->where('product_id', $product_id)->first();
         $fromWarehouse->quantity     = ($fromWarehouse->quantity) - ($quantity);
-        if($fromWarehouse->quantity <= 0){
+        if ($fromWarehouse->quantity <= 0) {
             $fromWarehouse->delete();
-        }
-        else{
+        } else {
             $fromWarehouse->save();
         }
-
     }
 
 
 
     //add quantity in product stock
-    public static function addProductStock($product_id, $quantity, $type, $description,$type_id)
+    public static function addProductStock($product_id, $quantity, $type, $description, $type_id)
     {
 
         $stocks             = new StockReport();
         $stocks->product_id = $product_id;
-        $stocks->quantity	 = $quantity;
+        $stocks->quantity     = $quantity;
         $stocks->type = $type;
         $stocks->type_id = $type_id;
         $stocks->description = $description;
-        $stocks->created_by =\Auth::user()->creatorId();
+        $stocks->created_by = \Auth::user()->creatorId();
         $stocks->save();
     }
 
@@ -3848,11 +3678,10 @@ class Utility extends Model
 
         if (\Auth::check()) {
 
-            $data=$data->where('created_by','=',\Auth::user()->creatorId())->get();
-            if(count($data)==0){
-                $data =DB::table('settings')->where('created_by', '=', 1 )->get();
+            $data = $data->where('created_by', '=', \Auth::user()->creatorId())->get();
+            if (count($data) == 0) {
+                $data = DB::table('settings')->where('created_by', '=', 1)->get();
             }
-
         } else {
 
             $data->where('created_by', '=', 1);
@@ -3867,8 +3696,7 @@ class Utility extends Model
             "cust_theme_bg" => "on",
             "color" => ''
         ];
-        foreach($data as $row)
-        {
+        foreach ($data as $row) {
             $settings[$row->name] = $row->value;
         }
         return $settings;
@@ -3876,18 +3704,15 @@ class Utility extends Model
 
     public static function colorset()
     {
-        if(\Auth::check())
-        {
-            $setting = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->pluck('value','name')->toArray();
-        }else
-        {
+        if (\Auth::check()) {
+            $setting = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->pluck('value', 'name')->toArray();
+        } else {
 
-            $user = User::where('type','company')->first();
-            $setting = DB::table('settings')->where('created_by', $user->id)->pluck('value','name')->toArray();
+            $user = User::where('type', 'company')->first();
+            $setting = DB::table('settings')->where('created_by', $user->id)->pluck('value', 'name')->toArray();
         }
 
-        if(!isset($setting['color']))
-        {
+        if (!isset($setting['color'])) {
             $setting = Utility::settings();
         }
         return $setting;
@@ -3897,49 +3722,37 @@ class Utility extends Model
     public static function get_superadmin_logo()
     {
         $is_dark_mode = self::getValByName('cust_darklayout');
-        $setting = DB::table('settings')->where('created_by', Auth::user()->id)->pluck('value','name')->toArray();
-        if(!empty($setting['cust_darklayout'])){
+        $setting = DB::table('settings')->where('created_by', Auth::user()->id)->pluck('value', 'name')->toArray();
+        if (!empty($setting['cust_darklayout'])) {
             $is_dark_mode = $setting['cust_darklayout'];
             // dd($is_dark_mode);
-            if($is_dark_mode == 'on'){
+            if ($is_dark_mode == 'on') {
                 return 'logo-light.png';
-            }else{
+            } else {
                 return 'logo-dark.png';
             }
-
-        }
-        else {
+        } else {
             return 'logo-dark.png';
         }
-
     }
 
     public static function GetLogo()
     {
         $setting = Utility::colorset();
 
-        if(\Auth::user() && \Auth::user()->type != 'super admin')
-        {
+        if (\Auth::user() && \Auth::user()->type != 'super admin') {
 
-            if(Utility::getValByName('cust_darklayout') == 'on')
-            {
+            if (Utility::getValByName('cust_darklayout') == 'on') {
 
                 return Utility::getValByName('company_logo_light');
-            }
-            else
-            {
+            } else {
                 return Utility::getValByName('company_logo_dark');
             }
-        }
-        else
-        {
-            if(Utility::getValByName('cust_darklayout') == 'on')
-            {
+        } else {
+            if (Utility::getValByName('cust_darklayout') == 'on') {
 
                 return Utility::getValByName('light_logo');
-            }
-            else
-            {
+            } else {
                 return Utility::getValByName('dark_logo');
             }
         }
@@ -3978,35 +3791,28 @@ class Utility extends Model
     public static function addWarehouseStock($product_id, $quantity, $warehouse_id)
     {
 
-        $product     = WarehouseProduct::where('product_id' , $product_id)->where('warehouse_id' , $warehouse_id)->first();
-        if($product){
+        $product     = WarehouseProduct::where('product_id', $product_id)->where('warehouse_id', $warehouse_id)->first();
+        if ($product) {
             $pro_quantity = $product->quantity;
             $product_quantity = $pro_quantity + $quantity;
-        }else{
+        } else {
             $product_quantity = $quantity;
         }
 
         $data = WarehouseProduct::updateOrCreate(
-            ['warehouse_id' => $warehouse_id, 'product_id' => $product_id,'created_by' => \Auth::user()->id],
-            ['warehouse_id' => $warehouse_id, 'product_id' => $product_id, 'quantity' => $product_quantity,'created_by' => \Auth::user()->id])
-          ;
-
+            ['warehouse_id' => $warehouse_id, 'product_id' => $product_id, 'created_by' => \Auth::user()->id],
+            ['warehouse_id' => $warehouse_id, 'product_id' => $product_id, 'quantity' => $product_quantity, 'created_by' => \Auth::user()->id]
+        );
     }
 
     public static function starting_number($id, $type)
     {
 
-        if($type == 'invoice')
-        {
+        if ($type == 'invoice') {
             $data = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->where('name', 'invoice_starting_number')->update(array('value' => $id));
-        }
-        elseif($type == 'proposal')
-        {
+        } elseif ($type == 'proposal') {
             $data = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->where('name', 'proposal_starting_number')->update(array('value' => $id));
-        }
-
-        elseif($type == 'bill')
-        {
+        } elseif ($type == 'bill') {
             $data = DB::table('settings')->where('created_by', \Auth::user()->creatorId())->where('name', 'bill_starting_number')->update(array('value' => $id));
         }
 
@@ -4015,15 +3821,15 @@ class Utility extends Model
 
     //  Start Storage Setting
 
-    public static function upload_file($request,$key_name,$name,$path,$custom_validation =[])
+    public static function upload_file($request, $key_name, $name, $path, $custom_validation = [])
     {
-        try{
+        try {
             $settings = Utility::getStorageSetting();
-//                dd($settings);
+            //                dd($settings);
 
-            if(!empty($settings['storage_setting'])){
+            if (!empty($settings['storage_setting'])) {
 
-                if($settings['storage_setting'] == 'wasabi'){
+                if ($settings['storage_setting'] == 'wasabi') {
 
                     config(
                         [
@@ -4031,14 +3837,13 @@ class Utility extends Model
                             'filesystems.disks.wasabi.secret' => $settings['wasabi_secret'],
                             'filesystems.disks.wasabi.region' => $settings['wasabi_region'],
                             'filesystems.disks.wasabi.bucket' => $settings['wasabi_bucket'],
-                            'filesystems.disks.wasabi.endpoint' => 'https://s3.'.$settings['wasabi_region'].'.wasabisys.com'
+                            'filesystems.disks.wasabi.endpoint' => 'https://s3.' . $settings['wasabi_region'] . '.wasabisys.com'
                         ]
                     );
 
-                    $max_size = !empty($settings['wasabi_max_upload_size'])? $settings['wasabi_max_upload_size']:'2048';
-                    $mimes =  !empty($settings['wasabi_storage_validation'])? $settings['wasabi_storage_validation']:'';
-
-                }else if($settings['storage_setting'] == 's3'){
+                    $max_size = !empty($settings['wasabi_max_upload_size']) ? $settings['wasabi_max_upload_size'] : '2048';
+                    $mimes =  !empty($settings['wasabi_storage_validation']) ? $settings['wasabi_storage_validation'] : '';
+                } else if ($settings['storage_setting'] == 's3') {
                     config(
                         [
                             'filesystems.disks.s3.key' => $settings['s3_key'],
@@ -4048,37 +3853,34 @@ class Utility extends Model
                             'filesystems.disks.s3.use_path_style_endpoint' => false,
                         ]
                     );
-                    $max_size = !empty($settings['s3_max_upload_size'])? $settings['s3_max_upload_size']:'2048';
-                    $mimes =  !empty($settings['s3_storage_validation'])? $settings['s3_storage_validation']:'';
+                    $max_size = !empty($settings['s3_max_upload_size']) ? $settings['s3_max_upload_size'] : '2048';
+                    $mimes =  !empty($settings['s3_storage_validation']) ? $settings['s3_storage_validation'] : '';
+                } else {
 
+                    $max_size = !empty($settings['local_storage_max_upload_size']) ? $settings['local_storage_max_upload_size'] : '20480000000';
 
-                }else{
-
-                    $max_size = !empty($settings['local_storage_max_upload_size'])? $settings['local_storage_max_upload_size']:'20480000000';
-
-                    $mimes =  !empty($settings['local_storage_validation'])? $settings['local_storage_validation']:'';
+                    $mimes =  !empty($settings['local_storage_validation']) ? $settings['local_storage_validation'] : '';
                 }
 
 
                 $file = $request->$key_name;
 
-                if(count($custom_validation) > 0){
+                if (count($custom_validation) > 0) {
 
-                    $validation =$custom_validation;
-                }else{
+                    $validation = $custom_validation;
+                } else {
 
-                    $validation =[
-                        'mimes:'.$mimes,
-                        'max:'.$max_size,
+                    $validation = [
+                        'mimes:' . $mimes,
+                        'max:' . $max_size,
                     ];
-
                 }
 
                 $validator = \Validator::make($request->all(), [
-                    $key_name =>$validation
+                    $key_name => $validation
                 ]);
 
-                if($validator->fails()){
+                if ($validator->fails()) {
 
                     $res = [
                         'flag' => 0,
@@ -4090,13 +3892,11 @@ class Utility extends Model
 
                     $name = $name;
 
-                    if($settings['storage_setting']=='local')
-                    {
-//                    dd(\Storage::disk(),$path);
+                    if ($settings['storage_setting'] == 'local') {
+                        //                    dd(\Storage::disk(),$path);
                         $request->$key_name->move(storage_path($path), $name);
-                        $path = $path.$name;
-                    }
-                    else if($settings['storage_setting'] == 'wasabi'){
+                        $path = $path . $name;
+                    } else if ($settings['storage_setting'] == 'wasabi') {
 
                         $path = \Storage::disk('wasabi')->putFileAs(
                             $path,
@@ -4106,7 +3906,7 @@ class Utility extends Model
 
                         // $path = $path.$name;
 
-                    }else if($settings['storage_setting'] == 's3'){
+                    } else if ($settings['storage_setting'] == 's3') {
 
                         $path = \Storage::disk('s3')->putFileAs(
                             $path,
@@ -4121,21 +3921,19 @@ class Utility extends Model
 
                     $res = [
                         'flag' => 1,
-                        'msg'  =>'success',
+                        'msg'  => 'success',
                         'url'  => $path
                     ];
                     return $res;
                 }
-
-            }else{
+            } else {
                 $res = [
                     'flag' => 0,
                     'msg' => __('Please set proper configuration for storage.'),
                 ];
                 return $res;
             }
-
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
 
             $res = [
                 'flag' => 0,
@@ -4147,16 +3945,16 @@ class Utility extends Model
 
     //only employee edit storage setting upload_coustom_file function
 
-    public static function upload_coustom_file($request,$key_name,$name,$path,$data_key,$custom_validation =[])
+    public static function upload_coustom_file($request, $key_name, $name, $path, $data_key, $custom_validation = [])
     {
 
-        try{
+        try {
             $settings = Utility::getStorageSetting();
 
 
-            if(!empty($settings['storage_setting'])){
+            if (!empty($settings['storage_setting'])) {
 
-                if($settings['storage_setting'] == 'wasabi'){
+                if ($settings['storage_setting'] == 'wasabi') {
 
                     config(
                         [
@@ -4164,14 +3962,13 @@ class Utility extends Model
                             'filesystems.disks.wasabi.secret' => $settings['wasabi_secret'],
                             'filesystems.disks.wasabi.region' => $settings['wasabi_region'],
                             'filesystems.disks.wasabi.bucket' => $settings['wasabi_bucket'],
-                            'filesystems.disks.wasabi.endpoint' => 'https://s3.'.$settings['wasabi_region'].'.wasabisys.com'
+                            'filesystems.disks.wasabi.endpoint' => 'https://s3.' . $settings['wasabi_region'] . '.wasabisys.com'
                         ]
                     );
 
-                    $max_size = !empty($settings['wasabi_max_upload_size'])? $settings['wasabi_max_upload_size']:'2048';
-                    $mimes =  !empty($settings['wasabi_storage_validation'])? $settings['wasabi_storage_validation']:'';
-
-                }else if($settings['storage_setting'] == 's3'){
+                    $max_size = !empty($settings['wasabi_max_upload_size']) ? $settings['wasabi_max_upload_size'] : '2048';
+                    $mimes =  !empty($settings['wasabi_storage_validation']) ? $settings['wasabi_storage_validation'] : '';
+                } else if ($settings['storage_setting'] == 's3') {
                     config(
                         [
                             'filesystems.disks.s3.key' => $settings['s3_key'],
@@ -4181,35 +3978,32 @@ class Utility extends Model
                             'filesystems.disks.s3.use_path_style_endpoint' => false,
                         ]
                     );
-                    $max_size = !empty($settings['s3_max_upload_size'])? $settings['s3_max_upload_size']:'2048';
-                    $mimes =  !empty($settings['s3_storage_validation'])? $settings['s3_storage_validation']:'';
+                    $max_size = !empty($settings['s3_max_upload_size']) ? $settings['s3_max_upload_size'] : '2048';
+                    $mimes =  !empty($settings['s3_storage_validation']) ? $settings['s3_storage_validation'] : '';
+                } else {
+                    $max_size = !empty($settings['local_storage_max_upload_size']) ? $settings['local_storage_max_upload_size'] : '2048';
 
-
-                }else{
-                    $max_size = !empty($settings['local_storage_max_upload_size'])? $settings['local_storage_max_upload_size']:'2048';
-
-                    $mimes =  !empty($settings['local_storage_validation'])? $settings['local_storage_validation']:'';
+                    $mimes =  !empty($settings['local_storage_validation']) ? $settings['local_storage_validation'] : '';
                 }
 
 
                 $file = $request->$key_name;
 
 
-                if(count($custom_validation) > 0){
-                    $validation =$custom_validation;
-                }else{
+                if (count($custom_validation) > 0) {
+                    $validation = $custom_validation;
+                } else {
 
-                    $validation =[
-                        'mimes:'.$mimes,
-                        'max:'.$max_size,
+                    $validation = [
+                        'mimes:' . $mimes,
+                        'max:' . $max_size,
                     ];
-
                 }
                 $validator = \Validator::make($request->all(), [
-                    $name =>$validation
+                    $name => $validation
                 ]);
 
-                if($validator->fails()){
+                if ($validator->fails()) {
                     $res = [
                         'flag' => 0,
                         'msg' => $validator->messages()->first(),
@@ -4219,7 +4013,7 @@ class Utility extends Model
 
                     $name = $name;
 
-                    if($settings['storage_setting']=='local'){
+                    if ($settings['storage_setting'] == 'local') {
 
 
 
@@ -4231,7 +4025,7 @@ class Utility extends Model
 
 
                         $path = $name;
-                    }else if($settings['storage_setting'] == 'wasabi'){
+                    } else if ($settings['storage_setting'] == 'wasabi') {
 
                         $path = \Storage::disk('wasabi')->putFileAs(
                             $path,
@@ -4241,7 +4035,7 @@ class Utility extends Model
 
                         // $path = $path.$name;
 
-                    }else if($settings['storage_setting'] == 's3'){
+                    } else if ($settings['storage_setting'] == 's3') {
 
                         $path = \Storage::disk('s3')->putFileAs(
                             $path,
@@ -4254,21 +4048,19 @@ class Utility extends Model
 
                     $res = [
                         'flag' => 1,
-                        'msg'  =>'success',
+                        'msg'  => 'success',
                         'url'  => $path
                     ];
                     return $res;
                 }
-
-            }else{
+            } else {
                 $res = [
                     'flag' => 0,
                     'msg' => __('Please set proper configuration for storage.'),
                 ];
                 return $res;
             }
-
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             $res = [
                 'flag' => 0,
                 'msg' => $e->getMessage(),
@@ -4277,21 +4069,22 @@ class Utility extends Model
         }
     }
 
-    public static function get_file($path){
+    public static function get_file($path)
+    {
         $settings = Utility::getStorageSetting();
 
         try {
-            if($settings['storage_setting'] == 'wasabi'){
+            if ($settings['storage_setting'] == 'wasabi') {
                 config(
                     [
                         'filesystems.disks.wasabi.key' => $settings['wasabi_key'],
                         'filesystems.disks.wasabi.secret' => $settings['wasabi_secret'],
                         'filesystems.disks.wasabi.region' => $settings['wasabi_region'],
                         'filesystems.disks.wasabi.bucket' => $settings['wasabi_bucket'],
-                        'filesystems.disks.wasabi.endpoint' => 'https://s3.'.$settings['wasabi_region'].'.wasabisys.com'
+                        'filesystems.disks.wasabi.endpoint' => 'https://s3.' . $settings['wasabi_region'] . '.wasabisys.com'
                     ]
                 );
-            }elseif($settings['storage_setting'] == 's3'){
+            } elseif ($settings['storage_setting'] == 's3') {
                 config(
                     [
                         'filesystems.disks.s3.key' => $settings['s3_key'],
@@ -4336,8 +4129,7 @@ class Utility extends Model
             "wasabi_storage_validation" => "",
 
         ];
-        foreach($data as $row)
-        {
+        foreach ($data as $row) {
             $settings[$row->name] = $row->value;
         }
         return $settings;
@@ -4347,15 +4139,13 @@ class Utility extends Model
 
     public static function getTargetrating($designationid, $competencyCount)
     {
-        if(self::$ratingData == null)
-        {
+        if (self::$ratingData == null) {
             $indicator = Indicator::where('designation', $designationid)->first();
 
-            if (!empty($indicator->rating) && ($competencyCount != 0))
-            {
+            if (!empty($indicator->rating) && ($competencyCount != 0)) {
                 $rating = json_decode($indicator->rating, true);
                 $starsum = array_sum($rating);
-    
+
                 $overallrating = $starsum / $competencyCount;
             } else {
                 $overallrating = 0;
@@ -4371,77 +4161,49 @@ class Utility extends Model
     //start Google Calendar
     public static function colorCodeData($type)
     {
-        if($type == 'event')
-        {
+        if ($type == 'event') {
             return 1;
-        }
-        elseif ($type == 'zoom_meeting')
-        {
+        } elseif ($type == 'zoom_meeting') {
             return 2;
-        }
-        elseif ($type == 'task')
-        {
+        } elseif ($type == 'task') {
             return 3;
-        }
-        elseif ($type == 'appointment')
-        {
+        } elseif ($type == 'appointment') {
             return 11;
-        }
-        elseif ($type == 'rotas')
-        {
+        } elseif ($type == 'rotas') {
             return 3;
-        }
-        elseif ($type == 'holiday')
-        {
+        } elseif ($type == 'holiday') {
             return 4;
-        }
-        elseif ($type == 'call')
-        {
+        } elseif ($type == 'call') {
             return 10;
-        }
-        elseif ($type == 'meeting')
-        {
+        } elseif ($type == 'meeting') {
             return 5;
-        }
-        elseif ($type == 'leave')
-        {
+        } elseif ($type == 'leave') {
             return 6;
-        }
-        elseif ($type == 'work_order')
-        {
+        } elseif ($type == 'work_order') {
             return 7;
-        }
-        elseif ($type == 'lead')
-        {
+        } elseif ($type == 'lead') {
             return 7;
-        }
-        elseif ($type == 'deal')
-        {
+        } elseif ($type == 'deal') {
             return 8;
-        }
-        elseif ($type == 'interview_schedule')
-        {
+        } elseif ($type == 'interview_schedule') {
             return 9;
-        }
-        else{
+        } else {
             return 11;
         }
-
-
     }
 
-    public static $colorCode=[
-        1=>'event-warning',
-        2=>'event-secondary',
-        3=>'event-info',
-        4=>'event-warning',
-        5=>'event-danger',
-        6=>'event-dark',
-        7=>'event-black',
-        8=>'event-info',
-        9=>'event-dark',
-        10=>'event-success',
-        11=>'event-warning',
+    public static $colorCode = [
+        1 => 'event-warning',
+        2 => 'event-secondary',
+        3 => 'event-info',
+        4 => 'event-warning',
+        5 => 'event-danger',
+        6 => 'event-dark',
+        7 => 'event-black',
+        8 => 'event-info',
+        9 => 'event-dark',
+        10 => 'event-success',
+        11 => 'event-warning',
 
     ];
 
@@ -4454,14 +4216,14 @@ class Utility extends Model
             'google-calendar.auth_profiles.service_account.credentials_json' => $path,
             'google-calendar.auth_profiles.oauth.credentials_json' => $path,
             'google-calendar.auth_profiles.oauth.token_json' => $path,
-            'google-calendar.calendar_id' => isset($setting['google_clender_id'])?$setting['google_clender_id']:'',
+            'google-calendar.calendar_id' => isset($setting['google_clender_id']) ? $setting['google_clender_id'] : '',
             'google-calendar.user_to_impersonate' => '',
 
 
         ]);
     }
 
-    public static function addCalendarData($request , $type)
+    public static function addCalendarData($request, $type)
     {
         Self::googleCalendarConfig();
         $event = new GoogleEvent();
@@ -4472,25 +4234,24 @@ class Utility extends Model
         $event->save();
     }
 
-    public static function getCalendarData( $type)
+    public static function getCalendarData($type)
     {
 
         Self::googleCalendarConfig();
-        $data= GoogleEvent::get();
+        $data = GoogleEvent::get();
 
-        $type=Self::colorCodeData($type);
+        $type = Self::colorCodeData($type);
         $arrayJson = [];
-        foreach($data as $val)
-        {
-            $end_date=date_create($val->endDateTime);
-            date_add($end_date,date_interval_create_from_date_string("1 days"));
-            if($val->colorId=="$type"){
+        foreach ($data as $val) {
+            $end_date = date_create($val->endDateTime);
+            date_add($end_date, date_interval_create_from_date_string("1 days"));
+            if ($val->colorId == "$type") {
 
                 $arrayJson[] = [
-                    "id"=> $val->id,
+                    "id" => $val->id,
                     "title" => $val->summary,
                     "start" => $val->startDateTime,
-                    "end" => date_format($end_date,"Y-m-d H:i:s"),
+                    "end" => date_format($end_date, "Y-m-d H:i:s"),
                     "className" => Self::$colorCode[$type],
                     "allDay" => true,
 
@@ -4506,27 +4267,23 @@ class Utility extends Model
 
     public static function getSeoSetting()
     {
-        $data= \DB::table('settings')->whereIn('name', ['meta_title','meta_desc','meta_image'])->get();
-        $settings=[];
+        $data = \DB::table('settings')->whereIn('name', ['meta_title', 'meta_desc', 'meta_image'])->get();
+        $settings = [];
         foreach ($data as $row) {
             $settings[$row->name] = $row->value;
         }
         return $settings;
-
     }
 
-    public static function webhookSetting($module,$user_id=null)
+    public static function webhookSetting($module, $user_id = null)
     {
-        if(!empty($user_id))
-        {
+        if (!empty($user_id)) {
             $user = User::find($user_id);
-        }
-        else
-        {
+        } else {
             $user = \Auth::user();
         }
-        $webhook = WebhookSetting::where('module',$module)->where('created_by', '=', $user->id)->first();
-        if(!empty($webhook)){
+        $webhook = WebhookSetting::where('module', $module)->where('created_by', '=', $user->id)->first();
+        if (!empty($webhook)) {
             $url = $webhook->url;
             $method = $webhook->method;
             $reference_url  = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -4538,10 +4295,9 @@ class Utility extends Model
         }
         return false;
     }
-    public static function WebhookCall($url = null,$parameter = null , $method = 'POST')
+    public static function WebhookCall($url = null, $parameter = null, $method = 'POST')
     {
-        if(!empty($url) && !empty($parameter))
-        {
+        if (!empty($url) && !empty($parameter)) {
             try {
 
                 $curlHandle = curl_init($url);
@@ -4550,22 +4306,15 @@ class Utility extends Model
                 curl_setopt($curlHandle, CURLOPT_CUSTOMREQUEST, strtoupper($method));
                 $curlResponse = curl_exec($curlHandle);
                 curl_close($curlHandle);
-                if(empty($curlResponse))
-                {
+                if (empty($curlResponse)) {
                     return true;
-                }
-                else
-                {
+                } else {
                     return false;
                 }
-            }
-            catch (\Throwable $th)
-            {
+            } catch (\Throwable $th) {
                 return false;
             }
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -4574,20 +4323,28 @@ class Utility extends Model
     public static function getCookieSetting()
     {
 
-        $data= \DB::table('settings')->whereIn('name', ['enable_cookie','cookie_logging','cookie_title',
-            'cookie_description','necessary_cookies','strictly_cookie_title',
-            'strictly_cookie_description','more_information_description','contactus_url'])->get();
+        $data = \DB::table('settings')->whereIn('name', [
+            'enable_cookie',
+            'cookie_logging',
+            'cookie_title',
+            'cookie_description',
+            'necessary_cookies',
+            'strictly_cookie_title',
+            'strictly_cookie_description',
+            'more_information_description',
+            'contactus_url'
+        ])->get();
         $settings = [
 
-            'enable_cookie'=>'on',
-            'necessary_cookies'=>'on',
-            'cookie_logging'=>'on',
-            'cookie_title'=>'We use cookies!',
-            'cookie_description'=>'Hi, this website uses essential cookies to ensure its proper operation and tracking cookies to understand how you interact with it',
-            'strictly_cookie_title'=>'Strictly necessary cookies',
-            'strictly_cookie_description'=>'These cookies are essential for the proper functioning of my website. Without these cookies, the website would not work properly',
-            'more_information_description'=>'For any queries in relation to our policy on cookies and your choices, please contact us',
-            'contactus_url'=>'#',
+            'enable_cookie' => 'on',
+            'necessary_cookies' => 'on',
+            'cookie_logging' => 'on',
+            'cookie_title' => 'We use cookies!',
+            'cookie_description' => 'Hi, this website uses essential cookies to ensure its proper operation and tracking cookies to understand how you interact with it',
+            'strictly_cookie_title' => 'Strictly necessary cookies',
+            'strictly_cookie_description' => 'These cookies are essential for the proper functioning of my website. Without these cookies, the website would not work properly',
+            'more_information_description' => 'For any queries in relation to our policy on cookies and your choices, please contact us',
+            'contactus_url' => '#',
 
         ];
         foreach ($data as $row) {
@@ -4600,25 +4357,22 @@ class Utility extends Model
     {
         $mobile_regex = '/(?:phone|windows\s+phone|ipod|blackberry|(?:android|bb\d+|meego|silk|googlebot) .+? mobile|palm|windows\s+ce|opera mini|avantgo|mobilesafari|docomo)/i';
         $tablet_regex = '/(?:ipad|playbook|(?:android|bb\d+|meego|silk)(?! .+? mobile))/i';
-        if(preg_match_all($mobile_regex, $user_agent))
-        {
+        if (preg_match_all($mobile_regex, $user_agent)) {
             return 'mobile';
-        }
-        else
-        {
-            if(preg_match_all($tablet_regex, $user_agent)) {
+        } else {
+            if (preg_match_all($tablet_regex, $user_agent)) {
                 return 'tablet';
             } else {
                 return 'desktop';
             }
-
         }
     }
 
     //end for cookie settings
 
     //for AI module
-    public static function flagOfCountry(){
+    public static function flagOfCountry()
+    {
         $arr = [
             'ar' => '🇦🇪 ar',
             'zh' => '🇨🇳 zh',
@@ -4630,7 +4384,7 @@ class Utility extends Model
             'it' =>  '🇮🇹 it',
             'ja' => '🇯🇵 ja',
             'nl' => '🇳🇱 nl',
-            'pl'=> '🇵🇱 pl',
+            'pl' => '🇵🇱 pl',
             'ru' => '🇷🇺 ru',
             'pt' => '🇵🇹 pt',
             'en' => '🇮🇳 en',
@@ -4640,7 +4394,8 @@ class Utility extends Model
         return $arr;
     }
 
-    public static function langList(){
+    public static function langList()
+    {
         $languages = [
             "ar" => "Arabic",
             "zh" => "Chinese",
@@ -4664,13 +4419,11 @@ class Utility extends Model
 
     public static function languagecreate()
     {
-        $languages=Utility::langList();
+        $languages = Utility::langList();
 
-        foreach($languages as $key => $lang)
-        {
-            $languageExist = Language::where('code',$key)->first();
-            if(empty($languageExist))
-            {
+        foreach ($languages as $key => $lang) {
+            $languageExist = Language::where('code', $key)->first();
+            if (empty($languageExist)) {
                 $language = new Language();
                 $language->code = $key;
                 $language->full_name = $lang;
@@ -4679,13 +4432,14 @@ class Utility extends Model
         }
     }
 
-    public static function langSetting(){
+    public static function langSetting()
+    {
         $data = DB::table('settings');
         $data = $data->where('created_by', '=', 1)->get();
         if (count($data) == 0) {
             $data = DB::table('settings')->where('created_by', '=', 1)->get();
         }
-        $settings= [];
+        $settings = [];
         foreach ($data as $row) {
             $settings[$row->name] = $row->value;
         }
@@ -4694,93 +4448,83 @@ class Utility extends Model
 
     //start for chartOfAccount data show
 
-    public static function getAccountBalance($account_id,$start_date=null,$end_date=null)
+    public static function getAccountBalance($account_id, $start_date = null, $end_date = null)
     {
-        if(!empty($start_date) && !empty($end_date))
-        {
+        if (!empty($start_date) && !empty($end_date)) {
             $start = $start_date;
             $end   = $end_date;
-        }
-        else
-        {
+        } else {
             $start = date('Y-01-01');
             $end   = date('Y-m-d', strtotime('+1 day'));
         }
 
-        $invoice_product = ProductService::where('sale_chartaccount_id',$account_id)->get()->pluck('id');
+        $invoice_product = ProductService::where('sale_chartaccount_id', $account_id)->get()->pluck('id');
         $invoiceData = InvoiceProduct::select(DB::raw('sum(price * quantity) as amount'));
-        if(!empty($start_date) && !empty($end_date))
-        {
+        if (!empty($start_date) && !empty($end_date)) {
             $invoiceData->where('created_at', '>=', $start);
             $invoiceData->where('created_at', '<=', $end);
         }
-        $invoiceData=$invoiceData->whereIn('product_id',$invoice_product)->first();
-        $invoiceAmount=!empty($invoiceData->amount)?$invoiceData->amount:0;
+        $invoiceData = $invoiceData->whereIn('product_id', $invoice_product)->first();
+        $invoiceAmount = !empty($invoiceData->amount) ? $invoiceData->amount : 0;
 
-        $getAccount = BankAccount::where('chart_account_id',$account_id)->where('created_by',\Auth::user()->creatorId())->get()->pluck('id');
+        $getAccount = BankAccount::where('chart_account_id', $account_id)->where('created_by', \Auth::user()->creatorId())->get()->pluck('id');
 
-        $invoicePaymentAmount = InvoicePayment::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $invoicePaymentAmount = InvoicePayment::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $invoicePaymentAmount->where('date', '>=', $start);
             $invoicePaymentAmount->where('date', '<=', $end);
         }
-        $invoicePaymentAmount= $invoicePaymentAmount->sum('amount');
+        $invoicePaymentAmount = $invoicePaymentAmount->sum('amount');
 
-        $revenueAmount = Revenue::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $revenueAmount = Revenue::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $revenueAmount->where('date', '>=', $start);
             $revenueAmount->where('date', '<=', $end);
         }
-        
-        $revenueAmount= $revenueAmount->sum('amount');
 
-        $bill_product = ProductService::where('expense_chartaccount_id',$account_id)->get()->pluck('id');
+        $revenueAmount = $revenueAmount->sum('amount');
+
+        $bill_product = ProductService::where('expense_chartaccount_id', $account_id)->get()->pluck('id');
         $billData = BillProduct::select(DB::raw('sum(price * quantity) as amount'));
-        if(!empty($start_date) && !empty($end_date))
-        {
+        if (!empty($start_date) && !empty($end_date)) {
             $billData->where('created_at', '>=', $start);
             $billData->where('created_at', '<=', $end);
         }
-        $billData=$billData->whereIn('product_id',$bill_product)->first();
-        $billProductAmount=!empty($billData->amount)?$billData->amount:0;
+        $billData = $billData->whereIn('product_id', $bill_product)->first();
+        $billProductAmount = !empty($billData->amount) ? $billData->amount : 0;
 
 
-        $billAmount = BillAccount::where('chart_account_id',$account_id);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $billAmount = BillAccount::where('chart_account_id', $account_id);
+        if (!empty($start_date) && !empty($end_date)) {
             $billAmount->where('created_at', '>=', $start);
             $billAmount->where('created_at', '<=', $end);
         }
-        $billAmount= $billAmount->sum('price');
+        $billAmount = $billAmount->sum('price');
 
 
-        $billPaymentAmount= BillPayment::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $billPaymentAmount = BillPayment::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $billPaymentAmount->where('date', '>=', $start);
             $billPaymentAmount->where('date', '<=', $end);
         }
-        $billPaymentAmount= $billPaymentAmount->sum('amount');
+        $billPaymentAmount = $billPaymentAmount->sum('amount');
 
 
-        $paymentAmount = Payment::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $paymentAmount = Payment::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $paymentAmount->where('date', '>=', $start);
             $paymentAmount->where('date', '<=', $end);
         }
-        $paymentAmount= $paymentAmount->sum('amount');
+        $paymentAmount = $paymentAmount->sum('amount');
 
         $journalCredit = JournalItem::select('journal_entries.journal_id', 'journal_entries.date as transaction_date', 'journal_items.*')
-        ->leftjoin('journal_entries', 'journal_entries.id', 'journal_items.journal')->where('journal_entries.created_by', '=', \Auth::user()->creatorId())->where('account', $account_id);
+            ->leftjoin('journal_entries', 'journal_entries.id', 'journal_items.journal')->where('journal_entries.created_by', '=', \Auth::user()->creatorId())->where('account', $account_id);
         $journalCredit->where('journal_items.created_at', '>=', $start);
         $journalCredit->where('journal_items.created_at', '<=', $end);
         $journalCredit = $journalCredit->sum('credit');
 
         $journalDebit = JournalItem::select('journal_entries.journal_id', 'journal_entries.date as transaction_date', 'journal_items.*')
-        ->leftjoin('journal_entries', 'journal_entries.id', 'journal_items.journal')->where('journal_entries.created_by', '=', \Auth::user()->creatorId())->where('account', $account_id);
+            ->leftjoin('journal_entries', 'journal_entries.id', 'journal_items.journal')->where('journal_entries.created_by', '=', \Auth::user()->creatorId())->where('account', $account_id);
         $journalDebit->where('journal_items.created_at', '>=', $start);
         $journalDebit->where('journal_items.created_at', '<=', $end);
         $journalDebit = $journalDebit->sum('debit');
@@ -4788,94 +4532,84 @@ class Utility extends Model
         return $balance;
     }
 
-    public static function getAccountData($account_id,$start_date=null,$end_date=null)
+    public static function getAccountData($account_id, $start_date = null, $end_date = null)
     {
 
-        if(!empty($start_date) && !empty($end_date))
-        {
+        if (!empty($start_date) && !empty($end_date)) {
             $start = $start_date;
             $end   = $end_date;
-        }
-        else
-        {
-                $start = date('Y-01-01');
-                $end   = date('Y-m-d', strtotime('+1 day'));
+        } else {
+            $start = date('Y-01-01');
+            $end   = date('Y-m-d', strtotime('+1 day'));
         }
 
         //For Invoice Product Create
-        $invoice_product = ProductService::where('sale_chartaccount_id',$account_id)->get()->pluck('id');
-        $invoice = InvoiceProduct::whereIn('product_id',$invoice_product);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $invoice_product = ProductService::where('sale_chartaccount_id', $account_id)->get()->pluck('id');
+        $invoice = InvoiceProduct::whereIn('product_id', $invoice_product);
+        if (!empty($start_date) && !empty($end_date)) {
             $invoice->where('created_at', '>=', $start);
             $invoice->where('created_at', '<=', $end);
         }
-        $invoice= $invoice->get();
+        $invoice = $invoice->get();
 
 
-        $getAccount = BankAccount::where('chart_account_id',$account_id)->get()->pluck('id');
+        $getAccount = BankAccount::where('chart_account_id', $account_id)->get()->pluck('id');
         //For Invoice Payment
-        $invoicePayment = InvoicePayment::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $invoicePayment = InvoicePayment::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $invoicePayment->where('date', '>=', $start);
             $invoicePayment->where('date', '<=', $end);
         }
-        $invoicePayment= $invoicePayment->get();
+        $invoicePayment = $invoicePayment->get();
 
         //For Revenue
-        $revenue = Revenue::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $revenue = Revenue::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $revenue->where('date', '>=', $start);
             $revenue->where('date', '<=', $end);
         }
-        $revenue= $revenue->get();
+        $revenue = $revenue->get();
 
         //For Bill
 
-        $bill_product = ProductService::where('expense_chartaccount_id',$account_id)->get()->pluck('id');
-        $bill = BillProduct::whereIn('product_id',$bill_product);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $bill_product = ProductService::where('expense_chartaccount_id', $account_id)->get()->pluck('id');
+        $bill = BillProduct::whereIn('product_id', $bill_product);
+        if (!empty($start_date) && !empty($end_date)) {
             $bill->where('created_at', '>=', $start);
             $bill->where('created_at', '<=', $end);
         }
-        $bill= $bill->get();
+        $bill = $bill->get();
 
-        $billData = BillAccount::where('chart_account_id',$account_id);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $billData = BillAccount::where('chart_account_id', $account_id);
+        if (!empty($start_date) && !empty($end_date)) {
             $billData->where('created_at', '>=', $start);
             $billData->where('created_at', '<=', $end);
         }
-        $billData= $billData->get();
+        $billData = $billData->get();
 
-        $billPayment= BillPayment::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $billPayment = BillPayment::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $billPayment->where('date', '>=', $start);
             $billPayment->where('date', '<=', $end);
         }
-        $billPayment= $billPayment->get();
+        $billPayment = $billPayment->get();
 
 
-        $payment = Payment::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $payment = Payment::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $payment->where('date', '>=', $start);
             $payment->where('date', '<=', $end);
         }
-        $payment= $payment->get();
+        $payment = $payment->get();
 
 
         $journalItems = JournalItem::select('journal_entries.journal_id', 'journal_entries.date as transaction_date', 'journal_items.*')
-        ->leftjoin('journal_entries', 'journal_entries.id', 'journal_items.journal')->where('journal_entries.created_by', '=', \Auth::user()->creatorId())->where('account', $account_id);
+            ->leftjoin('journal_entries', 'journal_entries.id', 'journal_items.journal')->where('journal_entries.created_by', '=', \Auth::user()->creatorId())->where('account', $account_id);
         $journalItems->where('journal_items.created_at', '>=', $start);
         $journalItems->where('journal_items.created_at', '<=', $end);
         $journalItems = $journalItems->get();
 
-        $data=[];
+        $data = [];
         $data['invoice'] = $invoice;
         $data['invoicepayment'] = $invoicePayment;
         $data['revenue'] = $revenue;
@@ -4892,107 +4626,93 @@ class Utility extends Model
 
     //export balance sheet report
 
-    public static function getBalanceSheetCredit($account_id,$start_date=null,$end_date=null)
+    public static function getBalanceSheetCredit($account_id, $start_date = null, $end_date = null)
     {
 
-        if(!empty($start_date) && !empty($end_date))
-        {
+        if (!empty($start_date) && !empty($end_date)) {
             $start = $start_date;
             $end   = $end_date;
-        }
-        else
-        {
+        } else {
             $start = date('Y-m-01');
             $end   = date('Y-m-t');
         }
 
-        $invoice_product = ProductService::where('sale_chartaccount_id',$account_id)->get()->pluck('id');
+        $invoice_product = ProductService::where('sale_chartaccount_id', $account_id)->get()->pluck('id');
         $invoiceData = InvoiceProduct::select(DB::raw('sum(price * quantity) as amount'));
 
-        if(!empty($start_date) && !empty($end_date))
-        {
+        if (!empty($start_date) && !empty($end_date)) {
             $invoiceData->where('created_at', '>=', $start);
             $invoiceData->where('created_at', '<=', $end);
         }
-        $invoiceData=$invoiceData->whereIn('product_id',$invoice_product)->first();
-        $invoiceAmount=!empty($invoiceData->amount)?$invoiceData->amount:0;
-        $getAccount = BankAccount::where('chart_account_id',$account_id)->get()->pluck('id');
+        $invoiceData = $invoiceData->whereIn('product_id', $invoice_product)->first();
+        $invoiceAmount = !empty($invoiceData->amount) ? $invoiceData->amount : 0;
+        $getAccount = BankAccount::where('chart_account_id', $account_id)->get()->pluck('id');
 
-        $invoicePaymentAmount = InvoicePayment::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $invoicePaymentAmount = InvoicePayment::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $invoicePaymentAmount->where('date', '>=', $start);
             $invoicePaymentAmount->where('date', '<=', $end);
         }
-        $invoicePaymentAmount= $invoicePaymentAmount->sum('amount');
+        $invoicePaymentAmount = $invoicePaymentAmount->sum('amount');
 
 
-        $revenueAmount = Revenue::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $revenueAmount = Revenue::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $revenueAmount->where('date', '>=', $start);
             $revenueAmount->where('date', '<=', $end);
         }
-        $revenueAmount= $revenueAmount->sum('amount');
+        $revenueAmount = $revenueAmount->sum('amount');
 
 
         $balance   =  ($invoiceAmount + $invoicePaymentAmount + $revenueAmount);
         return $balance;
-
     }
 
-    public static function getBalanceSheetDebit($account_id,$start_date=null,$end_date=null)
+    public static function getBalanceSheetDebit($account_id, $start_date = null, $end_date = null)
     {
 
-        if(!empty($start_date) && !empty($end_date))
-        {
+        if (!empty($start_date) && !empty($end_date)) {
             $start = $start_date;
             $end   = $end_date;
-        }
-        else
-        {
+        } else {
             $start = date('Y-m-01');
             $end   = date('Y-m-t');
         }
 
-        $bill_product = ProductService::where('expense_chartaccount_id',$account_id)->get()->pluck('id');
+        $bill_product = ProductService::where('expense_chartaccount_id', $account_id)->get()->pluck('id');
         $billData = BillProduct::select(DB::raw('sum(price * quantity) as amount'));
-        if(!empty($start_date) && !empty($end_date))
-        {
+        if (!empty($start_date) && !empty($end_date)) {
             $billData->where('created_at', '>=', $start);
             $billData->where('created_at', '<=', $end);
         }
-        $billData=$billData->whereIn('product_id',$bill_product)->first();
-        $billProductAmount=!empty($billData->amount)?$billData->amount:0;
+        $billData = $billData->whereIn('product_id', $bill_product)->first();
+        $billProductAmount = !empty($billData->amount) ? $billData->amount : 0;
 
 
-        $billAmount = BillAccount::where('chart_account_id',$account_id);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $billAmount = BillAccount::where('chart_account_id', $account_id);
+        if (!empty($start_date) && !empty($end_date)) {
             $billAmount->where('created_at', '>=', $start);
             $billAmount->where('created_at', '<=', $end);
         }
-        $billAmount= $billAmount->sum('price');
+        $billAmount = $billAmount->sum('price');
 
-        $getAccount = BankAccount::where('chart_account_id',$account_id)->get()->pluck('id');
+        $getAccount = BankAccount::where('chart_account_id', $account_id)->get()->pluck('id');
 
 
-        $billPaymentAmount= BillPayment::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $billPaymentAmount = BillPayment::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $billPaymentAmount->where('date', '>=', $start);
             $billPaymentAmount->where('date', '<=', $end);
         }
-        $billPaymentAmount= $billPaymentAmount->sum('amount');
+        $billPaymentAmount = $billPaymentAmount->sum('amount');
 
 
-        $paymentAmount = Payment::whereIn('account_id',$getAccount);
-        if(!empty($start_date) && !empty($end_date))
-        {
+        $paymentAmount = Payment::whereIn('account_id', $getAccount);
+        if (!empty($start_date) && !empty($end_date)) {
             $paymentAmount->where('date', '>=', $start);
             $paymentAmount->where('date', '<=', $end);
         }
-        $paymentAmount= $paymentAmount->sum('amount');
+        $paymentAmount = $paymentAmount->sum('amount');
 
         $balance   =  ($billProductAmount + $billAmount + $billPaymentAmount + $paymentAmount);
         return $balance;
@@ -5004,94 +4724,94 @@ class Utility extends Model
 
     public static function trialBalance($account_id, $start, $end)
     {
-        $journalItem = JournalItem::select('chart_of_accounts.id','chart_of_accounts.code','chart_of_accounts.name', \DB::raw('sum(debit) as totalDebit'), \DB::raw('sum(credit) as totalCredit'));
+        $journalItem = JournalItem::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name', \DB::raw('sum(debit) as totalDebit'), \DB::raw('sum(credit) as totalCredit'));
         $journalItem->leftjoin('journal_entries', 'journal_entries.id', 'journal_items.journal');
         $journalItem->leftjoin('chart_of_accounts', 'journal_items.account', 'chart_of_accounts.id');
-        $journalItem->leftjoin('chart_of_account_types','chart_of_accounts.type','chart_of_account_types.id');
-        $journalItem->where('chart_of_accounts.type',$account_id); 
-        $journalItem->where('chart_of_account_types.name','!=','Assets');
-        $journalItem->where('chart_of_accounts.created_by',\Auth::user()->creatorId());
+        $journalItem->leftjoin('chart_of_account_types', 'chart_of_accounts.type', 'chart_of_account_types.id');
+        $journalItem->where('chart_of_accounts.type', $account_id);
+        $journalItem->where('chart_of_account_types.name', '!=', 'Assets');
+        $journalItem->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
         $journalItem->where('journal_items.created_at', '>=', $start);
         $journalItem->where('journal_items.created_at', '<=', $end);
         $journalItem->groupBy('account');
         $journalItem = $journalItem->get()->toArray();
 
-        $journalItemAssets = JournalItem::select('chart_of_accounts.id','chart_of_accounts.code','chart_of_accounts.name', \DB::raw('sum(debit + credit) as totalDebit'), \DB::raw('0.0 as totalCredit'));
+        $journalItemAssets = JournalItem::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name', \DB::raw('sum(debit + credit) as totalDebit'), \DB::raw('0.0 as totalCredit'));
         $journalItemAssets->leftjoin('journal_entries', 'journal_entries.id', 'journal_items.journal');
         $journalItemAssets->leftjoin('chart_of_accounts', 'journal_items.account', 'chart_of_accounts.id');
-        $journalItemAssets->leftjoin('chart_of_account_types','chart_of_accounts.type','chart_of_account_types.id');
-        $journalItemAssets->where('chart_of_accounts.type',$account_id);  
-        $journalItemAssets->where('chart_of_account_types.name','=','Assets');
-        $journalItemAssets->where('chart_of_accounts.created_by',\Auth::user()->creatorId());
+        $journalItemAssets->leftjoin('chart_of_account_types', 'chart_of_accounts.type', 'chart_of_account_types.id');
+        $journalItemAssets->where('chart_of_accounts.type', $account_id);
+        $journalItemAssets->where('chart_of_account_types.name', '=', 'Assets');
+        $journalItemAssets->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
         $journalItemAssets->where('journal_items.created_at', '>=', $start);
         $journalItemAssets->where('journal_items.created_at', '<=', $end);
         $journalItemAssets->groupBy('account');
         $journalItemAssets = $journalItemAssets->get()->toArray();
-    
-        $invoice = InvoiceProduct::select('chart_of_accounts.id','chart_of_accounts.code','chart_of_accounts.name' , \DB::raw('0 as totalDebit'), \DB::raw('sum(price*invoice_products.quantity) as totalCredit'));
-        $invoice->leftjoin('product_services','product_services.id','invoice_products.product_id');
+
+        $invoice = InvoiceProduct::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name', \DB::raw('0 as totalDebit'), \DB::raw('sum(price*invoice_products.quantity) as totalCredit'));
+        $invoice->leftjoin('product_services', 'product_services.id', 'invoice_products.product_id');
         $invoice->leftjoin('chart_of_accounts', 'product_services.sale_chartaccount_id', 'chart_of_accounts.id');
-        $invoice->where('chart_of_accounts.type',$account_id);
-        $invoice->where('chart_of_accounts.created_by',\Auth::user()->creatorId());
+        $invoice->where('chart_of_accounts.type', $account_id);
+        $invoice->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
         $invoice->where('invoice_products.created_at', '>=', $start);
         $invoice->where('invoice_products.created_at', '<=', $end);
         $invoice->groupBy('product_services.sale_chartaccount_id');
         $invoice = $invoice->get()->toArray();
 
-        $invoicePayment = InvoicePayment::select('chart_of_accounts.id','chart_of_accounts.code','chart_of_accounts.name' , \DB::raw('sum(amount) as totalDebit'), \DB::raw('0 as totalCredit'));
-        $invoicePayment->leftjoin('bank_accounts','bank_accounts.id','invoice_payments.account_id');
+        $invoicePayment = InvoicePayment::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name', \DB::raw('sum(amount) as totalDebit'), \DB::raw('0 as totalCredit'));
+        $invoicePayment->leftjoin('bank_accounts', 'bank_accounts.id', 'invoice_payments.account_id');
         $invoicePayment->leftjoin('chart_of_accounts', 'bank_accounts.chart_account_id', 'chart_of_accounts.id');
-        $invoicePayment->where('chart_of_accounts.type',$account_id);
-        $invoicePayment->where('chart_of_accounts.created_by',\Auth::user()->creatorId());
+        $invoicePayment->where('chart_of_accounts.type', $account_id);
+        $invoicePayment->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
         $invoicePayment->where('invoice_payments.created_at', '>=', $start);
         $invoicePayment->where('invoice_payments.created_at', '<=', $end);
         $invoicePayment->groupBy('account_id');
         $invoicePayment = $invoicePayment->get()->toArray();
 
-        $revenue = Revenue::select('chart_of_accounts.id','chart_of_accounts.code','chart_of_accounts.name' , \DB::raw('sum(amount) as totalDebit'), \DB::raw('0 as totalCredit'));
-        $revenue->leftjoin('bank_accounts','bank_accounts.id','revenues.account_id');
+        $revenue = Revenue::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name', \DB::raw('sum(amount) as totalDebit'), \DB::raw('0 as totalCredit'));
+        $revenue->leftjoin('bank_accounts', 'bank_accounts.id', 'revenues.account_id');
         $revenue->leftjoin('chart_of_accounts', 'bank_accounts.chart_account_id', 'chart_of_accounts.id');
-        $revenue->where('chart_of_accounts.type',$account_id);
-        $revenue->where('chart_of_accounts.created_by',\Auth::user()->creatorId());
+        $revenue->where('chart_of_accounts.type', $account_id);
+        $revenue->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
         $revenue->where('revenues.created_at', '>=', $start);
         $revenue->where('revenues.created_at', '<=', $end);
         $revenue->groupBy('chart_account_id');
         $revenue = $revenue->get()->toArray();
 
-        $bill = BillProduct::select('chart_of_accounts.id','chart_of_accounts.code','chart_of_accounts.name' , \DB::raw('sum(price*bill_products.quantity) as totalDebit') , \DB::raw('0 as totalCredit'));
-        $bill->leftjoin('product_services','product_services.id','bill_products.product_id');
+        $bill = BillProduct::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name', \DB::raw('sum(price*bill_products.quantity) as totalDebit'), \DB::raw('0 as totalCredit'));
+        $bill->leftjoin('product_services', 'product_services.id', 'bill_products.product_id');
         $bill->leftjoin('chart_of_accounts', 'product_services.expense_chartaccount_id', 'chart_of_accounts.id');
-        $bill->where('chart_of_accounts.type',$account_id);
-        $bill->where('chart_of_accounts.created_by',\Auth::user()->creatorId());
+        $bill->where('chart_of_accounts.type', $account_id);
+        $bill->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
         $bill->where('bill_products.created_at', '>=', $start);
         $bill->where('bill_products.created_at', '<=', $end);
         $bill->groupBy('product_services.expense_chartaccount_id');
         $bill = $bill->get()->toArray();
-        
-        $billAccount = BillAccount::select('chart_of_accounts.id','chart_of_accounts.code','chart_of_accounts.name' , \DB::raw('sum(price) as totalDebit'), \DB::raw('0 as totalCredit'));
+
+        $billAccount = BillAccount::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name', \DB::raw('sum(price) as totalDebit'), \DB::raw('0 as totalCredit'));
         $billAccount->leftjoin('chart_of_accounts', 'bill_accounts.chart_account_id', 'chart_of_accounts.id');
-        $billAccount->where('chart_of_accounts.type',$account_id);
-        $billAccount->where('chart_of_accounts.created_by',\Auth::user()->creatorId());
+        $billAccount->where('chart_of_accounts.type', $account_id);
+        $billAccount->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
         $billAccount->where('bill_accounts.created_at', '>=', $start);
         $billAccount->where('bill_accounts.created_at', '<=', $end);
         $billAccount->groupBy('chart_account_id');
         $billAccount = $billAccount->get()->toArray();
 
-        $billPayment = BillPayment::select('chart_of_accounts.id','chart_of_accounts.code','chart_of_accounts.name' , \DB::raw('sum(amount) as totalDebit'), \DB::raw('0 as totalCredit'));
-        $billPayment->leftjoin('bank_accounts','bank_accounts.id','bill_payments.account_id');
+        $billPayment = BillPayment::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name', \DB::raw('sum(amount) as totalDebit'), \DB::raw('0 as totalCredit'));
+        $billPayment->leftjoin('bank_accounts', 'bank_accounts.id', 'bill_payments.account_id');
         $billPayment->leftjoin('chart_of_accounts', 'bank_accounts.chart_account_id', 'chart_of_accounts.id');
-        $billPayment->where('chart_of_accounts.type',$account_id);
-        $billPayment->where('chart_of_accounts.created_by',\Auth::user()->creatorId());
+        $billPayment->where('chart_of_accounts.type', $account_id);
+        $billPayment->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
         $billPayment->where('bill_payments.created_at', '>=', $start);
         $billPayment->where('bill_payments.created_at', '<=', $end);
         $billPayment->groupBy('account_id');
         $billPayment = $billPayment->get()->toArray();
 
-        $payments = Payment::select('chart_of_accounts.id','chart_of_accounts.code','chart_of_accounts.name' , \DB::raw('sum(amount) as totalDebit'), \DB::raw('0 as totalCredit'));
-        $payments->leftjoin('bank_accounts','bank_accounts.id','payments.account_id');
+        $payments = Payment::select('chart_of_accounts.id', 'chart_of_accounts.code', 'chart_of_accounts.name', \DB::raw('sum(amount) as totalDebit'), \DB::raw('0 as totalCredit'));
+        $payments->leftjoin('bank_accounts', 'bank_accounts.id', 'payments.account_id');
         $payments->leftjoin('chart_of_accounts', 'bank_accounts.chart_account_id', 'chart_of_accounts.id');
-        $payments->where('chart_of_accounts.type',$account_id);
-        $payments->where('chart_of_accounts.created_by',\Auth::user()->creatorId());
+        $payments->where('chart_of_accounts.type', $account_id);
+        $payments->where('chart_of_accounts.created_by', \Auth::user()->creatorId());
         $payments->where('payments.created_at', '>=', $start);
         $payments->where('payments.created_at', '<=', $end);
         $payments->groupBy('account_id');
@@ -5106,8 +4826,7 @@ class Utility extends Model
         //     }
         // }
 
-        if($billPayment != [])
-        {
+        if ($billPayment != []) {
             for ($i = 0; $i < count($invoicePayment); $i++) {
                 $invoicePayment[$i]["totalDebit"] = (
                     ($invoicePayment[$i]["totalDebit"]) - ($billPayment[$i]["totalDebit"])
@@ -5115,7 +4834,7 @@ class Utility extends Model
             }
         }
 
-        $total = array_merge($invoice , $journalItem ,$journalItemAssets,$revenue , $bill ,$billAccount , $payments, $invoicePayment);
+        $total = array_merge($invoice, $journalItem, $journalItemAssets, $revenue, $bill, $billAccount, $payments, $invoicePayment);
         return $total;
     }
     //end trial balance sheet report

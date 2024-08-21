@@ -1,9 +1,9 @@
 @extends('layouts.admin')
-@section('page-title')
+@section('title')
     {{__('Bill Edit')}}
 @endsection
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
+    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item"><a href="{{route('bill.index')}}">{{__('Bill')}}</a></li>
     <li class="breadcrumb-item">{{__('Bill Edit')}}</li>
 @endsection
@@ -601,7 +601,7 @@
         });
     </script>
 @endsection
-@section('content')
+@section('main-content')
     <div class="row">
         {{ Form::model($bill, array('route' => array('bill.update', $bill->id), 'method' => 'PUT','class'=>'w-100')) }}
         <div class="col-12">

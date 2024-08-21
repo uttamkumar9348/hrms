@@ -157,8 +157,8 @@ class PurchaseController extends Controller
      */
     public function show($ids)
     {
-
-        if (\Auth::user()->can('show purchase')) {
+        // dd($ids);
+        // if (\Auth::user()->can('show purchase')) {
             try {
                 $id = Crypt::decrypt($ids);
             } catch (\Throwable $th) {
@@ -177,9 +177,9 @@ class PurchaseController extends Controller
             } else {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
-        } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+        // } else {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
     }
 
     /**
@@ -202,9 +202,6 @@ class PurchaseController extends Controller
             $venders          = Vender::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $product_services = ProductService::where('created_by', \Auth::user()->creatorId())->where('type', '!=', 'service')->get()->pluck('name', 'id');
 
-
-
-
             return view('admin.purchase.edit', compact('venders', 'product_services', 'purchase', 'warehouse', 'purchase_number', 'category'));
         } else {
             return response()->json(['error' => __('Permission denied.')], 401);
@@ -219,8 +216,6 @@ class PurchaseController extends Controller
      */
     public function update(Request $request, Purchase $purchase)
     {
-
-
         if (\Auth::user()->can('edit purchase')) {
 
             if ($purchase->created_by == \Auth::user()->creatorId()) {
@@ -282,9 +277,6 @@ class PurchaseController extends Controller
                     if (isset($products[$i]['item'])) {
                         Utility::addProductStock($products[$i]['item'], $products[$i]['quantity'], $type, $description, $type_id);
                     }
-
-
-
 
                     //Warehouse Stock Report
                     $new_qty = $purchaseProduct->quantity;
@@ -357,7 +349,6 @@ class PurchaseController extends Controller
                 $purchase->delete();
                 PurchaseProduct::where('purchase_id', '=', $purchase->id)->delete();
 
-
                 return redirect()->route('admin.purchase.index')->with('success', __('Purchase successfully deleted.'));
             } else {
                 return redirect()->back()->with('error', __('Permission denied.'));
@@ -379,7 +370,7 @@ class PurchaseController extends Controller
     }
     public function sent($id)
     {
-        if (\Auth::user()->can('send purchase')) {
+        // if (\Auth::user()->can('send purchase')) {
             $purchase            = Purchase::where('id', $id)->first();
             $purchase->send_date = date('Y-m-d');
             $purchase->status    = 1;
@@ -404,9 +395,9 @@ class PurchaseController extends Controller
             $resp = Utility::sendEmailTemplate('vender_bill_sent', [$vender->id => $vender->email], $vendorArr);
 
             return redirect()->back()->with('success', __('Purchase successfully sent.') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
-        } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+        // } else {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
     }
 
     public function resent($id)
@@ -433,7 +424,7 @@ class PurchaseController extends Controller
     {
         $settings = Utility::settings();
         $purchaseId   = Crypt::decrypt($purchase_id);
-        
+
         $purchase  = Purchase::where('id', $purchaseId)->first();
         $data  = DB::table('settings');
         $data  = $data->where('created_by', '=', $purchase->created_by);
@@ -672,7 +663,7 @@ class PurchaseController extends Controller
 
     public function payment($purchase_id)
     {
-        if (\Auth::user()->can('create payment purchase')) {
+        // if (\Auth::user()->can('create payment purchase')) {
             $purchase    = Purchase::where('id', $purchase_id)->first();
             $venders = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
@@ -680,15 +671,15 @@ class PurchaseController extends Controller
             $accounts   = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
             return view('admin.purchase.payment', compact('venders', 'categories', 'accounts', 'purchase'));
-        } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+        // } else {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
     }
 
     public function createPayment(Request $request, $purchase_id)
     {
         $url = \Crypt::encrypt($purchase_id);
-        if (\Auth::user()->can('create payment purchase')) {
+        // if (\Auth::user()->can('create payment purchase')) {
             $validator = \Validator::make(
                 $request->all(),
                 [
@@ -779,7 +770,7 @@ class PurchaseController extends Controller
             }
 
             return redirect()->back()->with('success', __('Payment successfully added.'));
-        }
+        // }
     }
 
     public function paymentDestroy(Request $request, $purchase_id, $payment_id)
@@ -830,7 +821,7 @@ class PurchaseController extends Controller
         $quantity            = 1;
         $taxPrice            = ($taxRate / 100) * ($salePrice * $quantity);
         $data['totalAmount'] = ($salePrice * $quantity);
-        
+
         return json_encode($data);
     }
 

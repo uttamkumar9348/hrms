@@ -24,7 +24,7 @@
                 <a class="nav-link {{ Request::is('admin/farmer/reimbursement*') ? ' active' : '' }}" href="{{ route('admin.farmer.reimbursement.index') }}">{{ __('Reimbursement') }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/farmer/farming_detail*') ? ' active' : '' }}" href="{{ route('admin.farmer.farming_detail.index') }}">{{ __('Farmer Detail') }}</a>
+                <a class="nav-link {{ Request::is('admin/farmer/farming_detail*') ? ' active' : '' }}" href="{{ route('admin.farmer.farming_detail.index') }}">{{ __('Plot') }}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/farmer/cutting_order*') ? ' active' : '' }}" href="{{ route('admin.farmer.cutting_order.index') }}">{{ __('Issue Cutting Order') }}</a>

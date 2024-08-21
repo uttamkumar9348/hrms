@@ -49,7 +49,8 @@
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
                                                 @can('edit farmer security deposit')
                                                     <li class="me-2">
-                                                        <a href="{{ route('admin.farmer.payment.edit', $payment->id) }}">
+                                                        <a href="{{ route('admin.farmer.payment.edit', $payment->id) }}"
+                                                            data-bs-toggle="tooltip" title="{{ __('Edit') }}">
                                                             <i class="link-icon" data-feather="edit"></i>
                                                         </a>
                                                     </li>
@@ -61,7 +62,6 @@
                                                             title="{{ __('Delete') }}">
                                                             <i class="link-icon" data-feather="delete"></i>
                                                         </a>
-                                                        {!! Form::close() !!}
                                                     </li>
                                                 @endcan
                                             </ul>

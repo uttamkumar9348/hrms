@@ -69,7 +69,7 @@
                                                 @can('edit_salary_component')
                                                     <li class="me-2">
                                                         <a href="{{route('admin.salary-components.edit',$value->id)}}"
-                                                           title="Edit Detail">
+                                                            data-bs-toggle="tooltip" title="{{ __('Edit') }}">
                                                             <i class="link-icon" data-feather="edit"></i>
                                                         </a>
                                                     </li>

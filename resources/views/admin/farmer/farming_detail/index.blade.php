@@ -10,7 +10,7 @@
     <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ __('Farmer Detail') }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ __('Plot') }}</li>
         </ol>
 
         <div class="float-end">
@@ -33,8 +33,8 @@
                                     <th>{{ __('Farmer') }}</th>
                                     <th>{{ __('Plot Number') }}</th>
                                     <th>{{ __('Area in Acar') }}</th>
-                                    <th>{{ __('Date of Harvesting') }}</th>
-                                    <th>{{ __('Tentative Harvest Quantity') }}</th>
+                                    <th>{{ __('Date of Planting') }}</th>
+                                    <th>{{ __('Tentative Plant Quantity') }}</th>
                                     <th>{{ __('Seed Category') }}</th>
                                     <th>{{ __('Cutting Order') }}</th>
                                     <th>{{ __('Action') }}</th>
@@ -63,7 +63,8 @@
                                             @if ($farming_detail->is_cutting_order != '1')
                                                 @can('edit farmer detail')
                                                     <li class="me-2">
-                                                        <a href="{{ route('admin.farmer.farming_detail.edit', $farming_detail->id) }}">
+                                                        <a href="{{ route('admin.farmer.farming_detail.edit', $farming_detail->id) }}"
+                                                            data-bs-toggle="tooltip" title="{{ __('Edit') }}">
                                                             <i class="link-icon" data-feather="edit"></i>
                                                         </a>
                                                     </li>

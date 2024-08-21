@@ -20,9 +20,13 @@ class FarmingDetail extends Model
         'tentative_harvest_quantity',
         'created_by',
         'type',
+        'planting_category',
         'block_id',
+        'can_field_block_id',
         'gram_panchyat_id',
+        'can_field_gram_panchyat_id',
         'village_id',
+        'can_field_village_id',
         'zone_id',
         'center_id',
         'is_cutting_order'

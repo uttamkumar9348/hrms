@@ -201,7 +201,7 @@ class User extends Authenticatable
 
     public function creatorId()
     {
-        if($this->type == 'company' || $this->type == 'super admin')
+        if($this->role->name == 'company' || $this->role->name == 'admin')
         {
             return $this->id;
         }
@@ -269,7 +269,7 @@ class User extends Authenticatable
 
     public function ownerId()
     {
-        if($this->type == 'company' || $this->type == 'super admin')
+        if($this->role->name == 'company' || $this->role->name == 'admin')
         {
             return $this->id;
         }
@@ -278,8 +278,14 @@ class User extends Authenticatable
             return $this->created_by;
         }
     }    
+
     public function assetAssignments(){
         return $this->hasMany(AssetAssignment::class);
+    }
+
+    public function isUser()
+    {
+        return $this->role->name === 'user' ? 1 : 0;
     }
 
 }

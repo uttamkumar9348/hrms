@@ -1,5 +1,5 @@
-@extends('email.common')
+@extends('admin.email.common')
 
-@section('content')
+@section('main-content')
     {!! $content !!}
 @endsection

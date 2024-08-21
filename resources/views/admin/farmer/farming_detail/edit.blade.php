@@ -8,6 +8,7 @@
     <script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+
             $('#farming_id').change(function() {
                 let farming_id = $(this).val();
                 $.ajax({
@@ -38,7 +39,7 @@
                             $('#village_id').append(response.villageHtml);
                         } else {
                             $('#village_id').append(
-                            '<option  value="">Select Village</option>');
+                                '<option  value="">Select Village</option>');
                         }
                         $('#zone_id').empty();
                         if (response.zoneHtml) {
@@ -54,6 +55,69 @@
                         }
                     }
                 });
+            });
+            $('#can_field_block_id').change(function() {
+                let block_id = $(this).val();
+                $.ajax({
+                    url: "{{ route('admin.farmer.location.get_gram_panchyats') }}",
+                    method: 'post',
+                    data: {
+                        block_id: block_id,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        gram_panchyats = response.gram_panchyats;
+                        $('#can_field_gram_panchyat_id').empty();
+                        $('#can_field_gram_panchyat_id').append(
+                            '<option  value="">Select Gram Panchyat</option>');
+                        for (i = 0; i < gram_panchyats.length; i++) {
+                            $('#can_field_gram_panchyat_id').append('<option value="' +
+                                gram_panchyats[i]
+                                .id + '">' + gram_panchyats[i].name + '</option>');
+                        }
+                    }
+                });
+            });
+            $('#can_field_gram_panchyat_id').change(function() {
+                let gram_panchyat_id = $(this).val();
+                $.ajax({
+                    url: "{{ route('admin.farmer.location.get_villages') }}",
+                    method: 'post',
+                    data: {
+                        gram_panchyat_id: gram_panchyat_id,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        villages = response.villages;
+                        $('#can_field_village_id').empty();
+                        $('#can_field_village_id').append(
+                            '<option  value="">Select Village</option>');
+                        for (i = 0; i < villages.length; i++) {
+                            $('#can_field_village_id').append('<option value="' + villages[i]
+                                .id + '">' +
+                                villages[i].name + '</option>');
+                        }
+                    }
+                });
+            });
+            $("input[name=type]").on('click', function() {
+                var type = $(this).val();
+                console.log(type);
+                if (type == "Plant") {
+                    $("#ratun_type").removeAttr("name");
+                    $('#plant_type').show();
+                    $('#plant_type').attr('name', "planting_category");
+                    $('#ratun_type').hide();
+                } else if (type == "Ratun") {
+                    $("#plant_type").removeAttr("name");
+                    $('#ratun_type').show();
+                    $('#ratun_type').attr('name', "planting_category");
+                    $('#plant_type').hide();
+                }
             });
         });
     </script>
@@ -188,10 +252,44 @@
                             {{ Form::label('plot_number', __('Plot Number'), ['class' => 'form-label']) }}
                             {{ Form::text('plot_number', $farming_detail->plot_number, ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ Form::label('block_id', __('Can Field Block'), ['class' => 'form-label']) }}
+                                <select class="form-control select" id="can_field_block_id" name="can_field_block_id">
+                                    <option value="">{{ __('Select Block') }}</option>
+                                    @foreach ($blocks as $block)
+                                        <option value="{{ $block->id }}" {{ ($farming_detail->can_field_block_id == $block->id) ? 'selected' : '' }}>{{ $block->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ Form::label('gram_panchyat_id', __('Can Field Gram Panchyat'), ['class' => 'form-label']) }}
+                                <select class="form-control select" id="can_field_gram_panchyat_id" name="can_field_gram_panchyat_id">
+                                    <option value="">{{ __('Select Gram Panchyat') }}</option> 
+                                    @foreach ($gp as $GP)
+                                        <option value="{{ $GP->id }}" {{ ($farming_detail->can_field_gram_panchyat_id == $GP->id) ? 'selected' : '' }}>{{ $GP->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ Form::label('village_id', __('Can Field Village'), ['class' => 'form-label']) }}
+                                <select class="form-control select" name="can_field_village_id" id="can_field_village_id"
+                                    placeholder="Select Village">
+                                    <option value="">{{ __('Select Village') }}</option>
+                                    @foreach ($village as $villagee)
+                                        <option value="{{ $villagee->id }}" {{ ($farming_detail->can_field_village_id == $villagee->id) ? 'selected' : '' }}>{{ $villagee->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <!-- <div class="form-group col-md-6">
-                                {{ Form::label('kata_number', __('Kata Number'), ['class' => 'form-label']) }}
-                                {{ Form::text('kata_number', $farming_detail->kata_number, ['class' => 'form-control', 'required' => 'required']) }}
-                            </div> -->
+                                        {{ Form::label('kata_number', __('Kata Number'), ['class' => 'form-label']) }}
+                                        {{ Form::text('kata_number', $farming_detail->kata_number, ['class' => 'form-control', 'required' => 'required']) }}
+                                    </div> -->
                         <div class="form-group col-md-6">
                             {{ Form::label('area_in_acar', __('Area in acar'), ['class' => 'form-label']) }}
                             {{ Form::text('area_in_acar', $farming_detail->area_in_acar, ['class' => 'form-control', 'required' => 'required']) }}
@@ -201,9 +299,9 @@
                             {{ Form::date('date_of_harvesting', $farming_detail->date_of_harvesting, ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
                         <!-- <div class="form-group col-md-6">
-                                {{ Form::label('quantity', __('Quantity'), ['class' => 'form-label']) }}
-                                {{ Form::number('quantity', $farming_detail->quantity, ['class' => 'form-control', 'required' => 'required']) }}
-                            </div> -->
+                                        {{ Form::label('quantity', __('Quantity'), ['class' => 'form-label']) }}
+                                        {{ Form::number('quantity', $farming_detail->quantity, ['class' => 'form-control', 'required' => 'required']) }}
+                                    </div> -->
                         <div class="form-group col-md-6">
                             {{ Form::label('tentative_harvest_quantity', __('Tentative Harvest Quantity'), ['class' => 'form-label']) }}
                             {{ Form::number('tentative_harvest_quantity', $farming_detail->tentative_harvest_quantity, ['class' => 'form-control', 'required' => 'required']) }}
@@ -223,17 +321,28 @@
                             </div>
                         </div>
                         <div class="form-group col-md-6">
-                            {{ Form::label('type', __('Type'), ['class' => 'form-label']) }}
-                            <select class="form-control select" name="type" id="type" placeholder="Select Type">
-                                <option value="">{{ __('Select Type') }}</option>
-                                <option {{ $farming_detail->type == 'Plant' ? 'selected' : '' }} value="Plant">Plant
-                                </option>
-                                <option {{ $farming_detail->type == 'R-1' ? 'selected' : '' }} value="R-1">R-1</option>
-                                <option {{ $farming_detail->type == 'R-2' ? 'selected' : '' }} value="R-2">R-2</option>
-                                <option {{ $farming_detail->type == 'R-3' ? 'selected' : '' }} value="R-3">R-3</option>
-                                <option {{ $farming_detail->type == 'R-4' ? 'selected' : '' }} value="R-4">R-4</option>
-                                <option {{ $farming_detail->type == 'R-5' ? 'selected' : '' }} value="R-5">R-5</option>
+                            {{ Form::label('type', __('Planting Type'), ['class' => 'form-label']) }} <br>
+                            <input name="type" type="radio" value="Plant" {{ ($farming_detail->type == "Plant") ? 'checked':'' }}> Plant
+                            <input name="type" type="radio" value="Ratun" {{ ($farming_detail->type == "Ratun") ? 'checked':'' }}> Ratun
+                        </div>
+                        <div class="form-group col-md-6" id="planting_category">
+                            {{ Form::label('type', __('Planting Category'), ['class' => 'form-label']) }}
+                            @if($farming_detail->type == "Plant")
+                            <select class="form-control select" id="plant_type">
+                                <option value="">{{ __('Select') }}</option>
+                                <option value="Plant" {{ ($farming_detail->planting_category == "Plant") ? 'selected':'' }}>Plant</option>
+                                <option value="Seed" {{ ($farming_detail->planting_category == "Seed") ? 'selected':'' }}>Seed</option>
                             </select>
+                            @elseif($farming_detail->type == "Ratun")
+                            <select class="form-control select" id="ratun_type">
+                                <option value="">{{ __('Select') }}</option>
+                                <option value="R-1" {{ ($farming_detail->planting_category == "R-1") ? 'selected':'' }}>R-1</option>
+                                <option value="R-2" {{ ($farming_detail->planting_category == "R-2") ? 'selected':'' }}>R-2</option>
+                                <option value="R-3" {{ ($farming_detail->planting_category == "R-3") ? 'selected':'' }}>R-3</option>
+                                <option value="R-4" {{ ($farming_detail->planting_category == "R-4") ? 'selected':'' }}>R-4</option>
+                                <option value="R-5" {{ ($farming_detail->planting_category == "R-5") ? 'selected':'' }}>R-5</option>
+                            </select>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -246,5 +355,5 @@
             </div>
             {{ Form::close() }}
         </div>
-
-    @endsection
+    </div>
+@endsection

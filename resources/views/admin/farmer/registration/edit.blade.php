@@ -353,11 +353,11 @@
                             <label><input type="radio" name="land_type" value="Owned Land"
                                     {{ $farming->land_type == 'Owned Land' ? 'checked' : '' }}> Owned Land</label>
                         </div>
-                        @if($farming->land_type == 'Owned Land')
-                        <div class="form-group col-md-6" id="land_holding_fields">
-                            {{ Form::label('land_holding', __('Land Holding (In Acre)'), ['class' => 'form-label']) }}
-                            {{ Form::number('land_holding', $farming->land_holding, ['class' => 'form-control', 'step' => '0.01']) }}
-                        </div>
+                        @if ($farming->land_type == 'Owned Land')
+                            <div class="form-group col-md-6" id="land_holding_fields">
+                                {{ Form::label('land_holding', __('Land Holding (In Acre)'), ['class' => 'form-label']) }}
+                                {{ Form::number('land_holding', $farming->land_holding, ['class' => 'form-control', 'step' => '0.01']) }}
+                            </div>
                         @endif
                         <div class="form-group col-md-6">
                             {{ Form::label('offered_area', __('Offered Area'), ['class' => 'form-label']) }}
@@ -404,9 +404,11 @@
 
             <div class="modal-footer">
                 <input type="button" value="{{ __('Cancel') }}"
-                    onclick="location.href = '{{ route('admin.farmer.farming_registration.index') }}';" class="btn btn-light">
+                    onclick="location.href = '{{ route('admin.farmer.farming_registration.index') }}';"
+                    class="btn btn-light">
                 <input type="submit" value="{{ __('Update') }}" class="btn  btn-primary">
             </div>
             {{ Form::close() }}
         </div>
-    @endsection
+    </div>
+@endsection

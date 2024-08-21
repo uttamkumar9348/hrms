@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('page-title')
+@section('title')
     {{ __('Warehouse Transfer') }}
 @endsection
 
@@ -53,7 +53,7 @@
                                                 {{--                                            @can('edit warehouse') --}}
                                                 {{--                                                <div class="action-btn bg-info ms-2"> --}}
                                                 {{--                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center" data-url="{{ route('admin.warehouse-transfer.edit',$warehouse_transfer->id) }}" data-ajax-popup="true"  data-size="lg " data-bs-toggle="tooltip" title="{{__('Edit')}}"  data-title="{{__('Edit Warehouse')}}"> --}}
-                                                {{--                                                        <i class="ti ti-pencil text-white"></i> --}}
+                                                {{--                                                        <i class="link-icon" data-feather="edit"></i> --}}
                                                 {{--                                                    </a> --}}
                                                 {{--                                                </div> --}}
                                                 {{--                                            @endcan --}}
@@ -85,69 +85,3 @@
     </div>
 @endsection
 
-@section('scripts')
-    <script>
-        $(document).ready(function() {
-            var w_id = $('#warehouse_id').val();
-            getProduct(w_id);
-        });
-        $(document).on('change', 'select[name=from_warehouse]', function() {
-            var warehouse_id = $(this).val();
-            getProduct(warehouse_id);
-        });
-
-        function getProduct(wid) {
-            $.ajax({
-                url: '{{ route('admin.warehouse-transfer.getproduct') }}',
-                type: 'POST',
-                data: {
-                    "warehouse_id": wid,
-                    "_token": "{{ csrf_token() }}",
-                },
-                success: function(data) {
-                    $('#product_id').empty();
-
-                    $("#product_div").html('');
-                    $('#product_div').append(
-                        '<label for="product" class="form-label">{{ __('Product') }}</label>');
-                    $('#product_div').append(
-                        '<select class="form-control" id="product_id" name="product_id"></select>');
-                    $('#product_id').append('<option value="">{{ __('Select Product') }}</option>');
-
-                    $.each(data.ware_products, function(key, value) {
-                        $('#product_id').append('<option value="' + key + '">' + value + '</option>');
-                    });
-
-                    $('select[name=to_warehouse]').empty();
-                    $.each(data.to_warehouses, function(key, value) {
-                        var option = '<option value="' + key + '">' + value + '</option>';
-                        $('select[name=to_warehouse]').append(option);
-                    });
-                }
-
-            });
-        }
-
-        $(document).on('change', '#product_id', function() {
-            var product_id = $(this).val();
-            var warehouse_id = $('#warehouse_id').val();
-            getQuantity(product_id, warehouse_id);
-        });
-
-        function getQuantity(pid, wid) {
-            $.ajax({
-                url: '{{ route('admin.warehouse-transfer.getquantity') }}',
-                type: 'POST',
-                data: {
-                    "product_id": pid,
-                    "warehouse_id": wid,
-                    "_token": "{{ csrf_token() }}",
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#quantity').val(data);
-                }
-            });
-        }
-    </script>
-@endsection

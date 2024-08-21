@@ -21,7 +21,9 @@
         -->
         $(document).on("change",
         "select[name='purchase_template'],
-        input[name = 'purchase_color']
+        input[name
+        =
+        'purchase_color']
         ",
         function
         ()

@@ -30,8 +30,8 @@ class BillController extends Controller
 
     public function index(Request $request)
     {
-        if(\Auth::user()->can('manage bill'))
-        {
+        // if(\Auth::user()->can('manage bill'))
+        // {
 
             $vender = Vender::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $vender->prepend('Select Vendor', '');
@@ -62,11 +62,11 @@ class BillController extends Controller
             $bills = $query->with(['category'])->get();
 
             return view('bill.index', compact('bills', 'vender', 'status'));
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Permission Denied.'));
-        }
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission Denied.'));
+        // }
     }
 
     function venderNumber()

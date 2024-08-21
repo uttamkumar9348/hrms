@@ -14,6 +14,10 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\WarehouseTransferController;
+use App\Http\Controllers\ProductServiceCategoryController;
+use App\Http\Controllers\ProductServiceController;
+use App\Http\Controllers\ProductServiceUnitController;
+use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\Web\AppSettingController;
 use App\Http\Controllers\Web\AssetController;
 use App\Http\Controllers\Web\AssetTypeController;
@@ -97,7 +101,7 @@ Route::group([
         Route::resource('users', UserController::class);
         Route::get('users/toggle-status/{id}', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
         Route::get('users/export/forms', [UserController::class, 'exportForm'])->name('users.exportForm');
-        
+
         Route::get('employees/import-csv', [UserController::class, 'employeeImport'])->name('employees.import-csv.show');
         Route::post('employees/import-csv', [UserController::class, 'importEmployee'])->name('employees.import-excel.store');
 
@@ -188,11 +192,11 @@ Route::group([
         Route::get('employees/attendance/delete/{id}', [AttendanceController::class, 'delete'])->name('attendance.delete');
         Route::get('employees/attendance/change-status/{id}', [AttendanceController::class, 'changeAttendanceStatus'])->name('attendances.change-status');
         Route::get('employees/attendance/{type}', [AttendanceController::class, 'dashboardAttendance'])->name('dashboard.takeAttendance');
-        
+
         //Attendance Regularization
-        Route::resource('regularization',RegularizationController::class);
-        Route::get('regularization/approve/{id}',[RegularizationController::class,'approveRegularization'])->name('regularization.approveRegularization');
-        Route::get('regularization/reject/{id}',[RegularizationController::class,'rejectRegularization'])->name('regularization.rejectRegularization');
+        Route::resource('regularization', RegularizationController::class);
+        Route::get('regularization/approve/{id}', [RegularizationController::class, 'approveRegularization'])->name('regularization.approveRegularization');
+        Route::get('regularization/reject/{id}', [RegularizationController::class, 'rejectRegularization'])->name('regularization.rejectRegularization');
         Route::post('ajax-regularization', [RegularizationController::class, 'checkAttendance'])->name('ajaxRegularizationModal');
         Route::post('create-regularization', [RegularizationController::class, 'createRegularization'])->name('createAjaxRegularization');
 
@@ -302,7 +306,7 @@ Route::group([
         Route::resource('assets', AssetController::class, [
             'except' => ['destroy']
         ]);
-        Route::resource('asset_assignment', AssetAssignmentController::class,[
+        Route::resource('asset_assignment', AssetAssignmentController::class, [
             'except' => ['destroy']
         ]);
         Route::get('assets/delete/{id}', [AssetController::class, 'delete'])->name('assets.delete');
@@ -430,39 +434,42 @@ Route::group([
                 Route::post('location/get_villages', [FarmingController::class, 'getVillages'])->name('location.get_villages');
                 Route::post('location/get_centers', [FarmingController::class, 'getCenters'])->name('location.get_centers');
                 Route::post('location/get_country_state', [FarmingController::class, 'get_country_state'])->name('location.get_country_state');
-                
+
                 Route::get('farming_registration/validate/{id}', [FarmingController::class, 'validateProfile'])->name('farming_registration.validate');
                 Route::resource('farming_registration', FarmingController::class);
                 Route::post('search_filter', [FarmingController::class, 'search'])->name('farming_registration.search_filter');
                 Route::get('farming_registration/{id}/destroy', [FarmingController::class, 'destroy'])->name('farming_registration.destroy');
                 Route::post('registration_id', [FarmingController::class, 'registration_id'])->name('registration_id');
-                
+
                 Route::resource('guarantor', GuarantorController::class);
                 Route::get('guarantor/{id}/destroy', [GuarantorController::class, 'destroy'])->name('guarantor.destroy');
-                
+
                 Route::get('bank_guarantee', [FarmingPaymentController::class, 'bankGuarantee'])->name('bank_guarantee.index');
                 Route::get('bank_guarantee/{id}', [FarmingPaymentController::class, 'editBankGuarantee'])->name('bank_guarantee.edit');
                 Route::get('bank_guarantee/pdf/{id}', [FarmingPaymentController::class, 'pdfBankGuarantee'])->name('bank_guarantee.pdf');
                 Route::resource('payment', FarmingPaymentController::class);
                 Route::get('payment/{id}/destroy', [FarmingPaymentController::class, 'destroy'])->name('payment.destroy');
                 Route::post('g_code', [FarmingPaymentController::class, 'g_code'])->name('g_code');
-                
+
                 Route::view('allotment', 'admin.farmer.allotment.index')->name('allotment.index');
-                
+
                 Route::post('get_product_service_by_category', [FarmerLoanController::class, 'getProductServiceByCategory'])->name('loan.get_product_service_by_category');
                 Route::post('get_product_service_detail', [FarmerLoanController::class, 'getProductServiceDetail'])->name('loan.get_product_service_detail');
                 Route::post('get_farming_detail', [FarmerLoanController::class, 'getFarmingDetail'])->name('loan.get_farming_detail');
                 Route::resource('loan', FarmerLoanController::class);
-                
+                Route::get('loan/{id}/destroy', [FarmerLoanController::class, 'destroy'])->name('loan.destroy');
+
                 Route::get('reimbursement/create', [FarmingPaymentController::class, 'reimbursementCreate'])->name('reimbursement.create');
                 Route::get('reimbursement', [FarmingPaymentController::class, 'reimbursement'])->name('reimbursement.index');
-                
+                Route::get('reimbursement/{id}/delete', [FarmingPaymentController::class, 'reimbursement_delete'])->name('reimbursement.delete');
+
                 Route::resource('seed_category', SeedCategoryController::class);
-                
+                Route::get('seed_category/{id}/destroy', [SeedCategoryController::class, 'destroy'])->name('seed_category.destroy');
+
                 Route::post('get_detail', [FarmingDetailController::class, 'getFarmingDetail'])->name('farming.get_detail');
                 Route::resource('farming_detail', FarmingDetailController::class);
                 Route::get('farming_detail/{id}/destroy', [FarmingDetailController::class, 'destroy'])->name('farming_detail.destroy');
-                
+
                 Route::post('update_cutting_order', [CuttingOrderController::class, 'updateCuttingOrder'])->name('farming.update_cutting_order');
                 Route::resource('cutting_order', CuttingOrderController::class);
             }
@@ -530,6 +537,28 @@ Route::group([
         Route::get('bill/items', [BillController::class, 'items'])->name('bill.items');
         Route::resource('bill', BillController::class);
         Route::get('bill/create/{cid}', [BillController::class, 'create'])->name('bill.create');
+
+        //Product Service
+        Route::get('productservice/index', [ProductServiceController::class, 'index'])->name('productservice.index');
+        Route::get('productservice/{id}/detail', [ProductServiceController::class, 'warehouseDetail'])->name('productservice.detail');
+        Route::post('empty-cart', [ProductServiceController::class, 'emptyCart']);
+        Route::post('warehouse-empty-cart', [ProductServiceController::class, 'warehouseemptyCart'])->name('warehouse-empty-cart');
+        Route::resource('productservice', ProductServiceController::class);
+        Route::resource('product-category', ProductServiceCategoryController::class);
+        Route::post('product-category/getaccount', [ProductServiceCategoryController::class, 'getAccount'])->name('productServiceCategory.getaccount');
+        Route::resource('product-unit', ProductServiceUnitController::class);
+        Route::get('export/productservice', [ProductServiceController::class, 'export'])->name('productservice.export');
+        Route::get('import/productservice/file', [ProductServiceController::class, 'importFile'])->name('productservice.file.import');
+        Route::post('import/productservice', [ProductServiceController::class, 'import'])->name('productservice.import');
+        Route::get('product-categories', [ProductServiceCategoryController::class, 'getProductCategories'])->name('product.categories');
+        Route::get('add-to-cart/{id}/{session}', [ProductServiceController::class, 'addToCart']);
+        Route::patch('update-cart', [ProductServiceController::class, 'updateCart']);
+        Route::delete('remove-from-cart', [ProductServiceController::class, 'removeFromCart']);
+        Route::get('name-search-products', [ProductServiceCategoryController::class, 'searchProductsByName'])->name('name.search.products');
+        Route::get('search-products', [ProductServiceController::class, 'searchProducts'])->name('search.products');
+
+        //Product Stock
+        Route::resource('productstock', ProductStockController::class);
     });
 });
 

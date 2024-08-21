@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@push('script-page')
+@section('scripts')
     <script type="text/javascript">
 
         $(document).on("click", ".email-template-checkbox", function () {
@@ -34,7 +34,7 @@
 
     </script>
 @endpush
-@section('page-title')
+@section('title')
     @if(\Auth::user()->type=='company')
         {{__('Email Notification')}}
     @else
@@ -51,7 +51,7 @@
     </div>
 @endsection
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
+    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{__('Dashboard')}}</a></li>
     @if(\Auth::user()->type=='company')
         <li class="breadcrumb-item active" aria-current="page">{{__('Email Notification')}}</li>
     @else
@@ -67,7 +67,7 @@
 {{--    </div>--}}
 
 {{--@endsection--}}
-@section('content')
+@section('main-content')
 
     <div class="col-xl-12">
         <div class="card">
