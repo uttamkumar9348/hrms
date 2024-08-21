@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Spatie\GoogleCalendar\Event as GoogleEvent;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -3825,7 +3826,6 @@ class Utility extends Model
     {
         try {
             $settings = Utility::getStorageSetting();
-            //                dd($settings);
 
             if (!empty($settings['storage_setting'])) {
 
@@ -3856,7 +3856,6 @@ class Utility extends Model
                     $max_size = !empty($settings['s3_max_upload_size']) ? $settings['s3_max_upload_size'] : '2048';
                     $mimes =  !empty($settings['s3_storage_validation']) ? $settings['s3_storage_validation'] : '';
                 } else {
-
                     $max_size = !empty($settings['local_storage_max_upload_size']) ? $settings['local_storage_max_upload_size'] : '20480000000';
 
                     $mimes =  !empty($settings['local_storage_validation']) ? $settings['local_storage_validation'] : '';
@@ -3869,14 +3868,13 @@ class Utility extends Model
 
                     $validation = $custom_validation;
                 } else {
-
                     $validation = [
                         'mimes:' . $mimes,
                         'max:' . $max_size,
                     ];
                 }
 
-                $validator = \Validator::make($request->all(), [
+                $validator = Validator::make($request->all(), [
                     $key_name => $validation
                 ]);
 
@@ -3889,11 +3887,10 @@ class Utility extends Model
 
                     return $res;
                 } else {
-
                     $name = $name;
 
                     if ($settings['storage_setting'] == 'local') {
-                        //                    dd(\Storage::disk(),$path);
+                        // dd(\Storage::disk(), $path);
                         $request->$key_name->move(storage_path($path), $name);
                         $path = $path . $name;
                     } else if ($settings['storage_setting'] == 'wasabi') {

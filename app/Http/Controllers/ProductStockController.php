@@ -17,16 +17,16 @@ class ProductStockController extends Controller
     public function index()
     {
 
-        if(\Auth::user()->can('manage product & service'))
-        {
+        // if(\Auth::user()->can('manage product & service'))
+        // {
             $productServices = ProductService::where('created_by', '=', \Auth::user()->creatorId())->where('type', '=', 'product')->get();
 
-            return view('productstock.index', compact('productServices'));
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+            return view('admin.productstock.index', compact('productServices'));
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
     }
 
     /**
@@ -79,7 +79,7 @@ class ProductStockController extends Controller
         {
             if($productService->created_by == \Auth::user()->creatorId())
             {
-                return view('productstock.edit', compact('productService'));
+                return view('admin.productstock.edit', compact('productService'));
             }
             else
             {
@@ -121,7 +121,7 @@ class ProductStockController extends Controller
                 Utility::addProductStock($productService->id, $request->quantity, $type, $description, $type_id);
 
 
-                return redirect()->route('productstock.index')->with('success', __('Product quantity updated manually.'));
+                return redirect()->route('admin.productstock.index')->with('success', __('Product quantity updated manually.'));
             }
             else
             {

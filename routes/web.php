@@ -544,6 +544,7 @@ Route::group([
         Route::post('empty-cart', [ProductServiceController::class, 'emptyCart']);
         Route::post('warehouse-empty-cart', [ProductServiceController::class, 'warehouseemptyCart'])->name('warehouse-empty-cart');
         Route::resource('productservice', ProductServiceController::class);
+        Route::get('productservice/{id}/destroy', [ProductServiceController::class, 'destroy'])->name('productservice.destroy');
         Route::resource('product-category', ProductServiceCategoryController::class);
         Route::post('product-category/getaccount', [ProductServiceCategoryController::class, 'getAccount'])->name('productServiceCategory.getaccount');
         Route::resource('product-unit', ProductServiceUnitController::class);

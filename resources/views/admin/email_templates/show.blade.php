@@ -4,11 +4,11 @@
 @endsection
 @push('css-page')
     <link rel="stylesheet" href="{{asset('css/summernote/summernote-bs4.css')}}">
-@endpush
+@endsection
 
 @section('scripts')
     <script src="{{asset('css/summernote/summernote-bs4.js')}}"></script>
-@endpush
+@endsection
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ __('Email Template') }}</li>

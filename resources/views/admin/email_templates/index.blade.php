@@ -33,7 +33,7 @@
         });
 
     </script>
-@endpush
+@endsection
 @section('title')
     @if(\Auth::user()->type=='company')
         {{__('Email Notification')}}

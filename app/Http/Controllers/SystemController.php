@@ -1904,7 +1904,6 @@ class SystemController extends Controller
         if (!is_dir($dir)) {
             File::makeDirectory($dir, $mode = 0777, true, true);
         }
-        $file_name = $request->meta_image->getClientOriginalName();
         $file_path = $request->meta_image->getClientOriginalName();
         $file = $request->file('meta_image');
         $file->move($dir, $file_path);

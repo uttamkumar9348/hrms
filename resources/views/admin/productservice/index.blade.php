@@ -13,17 +13,16 @@
         <div class="float-end">
             <a href="#" data-size="md" data-bs-toggle="tooltip" title="{{ __('Import') }}"
                 data-url="{{ route('admin.productservice.file.import') }}" data-ajax-popup="true"
-                data-title="{{ __('Import product CSV file') }}" class="btn btn-sm btn-primary">
-                <i class="ti ti-file-import"></i>
+                data-title="{{ __('Import product CSV file') }}" class="btn btn-primary">
+                Import
             </a>
             <a href="{{ route('admin.productservice.export') }}" data-bs-toggle="tooltip" title="{{ __('Export') }}"
-                class="btn btn-sm btn-primary">
-                <i class="ti ti-file-export"></i>
+                class="btn btn-primary">
+                Export
             </a>
 
-            <a href="#" data-size="lg" data-url="{{ route('admin.productservice.create') }}" data-ajax-popup="true"
-                data-bs-toggle="tooltip" title="{{ __('Create New Product') }}" class="btn btn-sm btn-primary">
-                <i class="ti ti-plus"></i>
+            <a href="{{ route('admin.productservice.create') }}" title="{{ __('Create New Product') }}" class="btn btn-primary">
+                Add
             </a>
         </div>
     </nav>
@@ -41,14 +40,14 @@
                                 </div>
                             </div>
                             <div class="col-auto float-end ms-2 mt-4">
-                                <a href="#" class="btn btn-sm btn-primary"
+                                <a href="#" class="btn btn-primary"
                                     onclick="document.getElementById('product_service').submit(); return false;"
                                     data-bs-toggle="tooltip" title="{{ __('apply') }}">
-                                    <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
+                                    <span class="btn-inner--icon">search</span>
                                 </a>
-                                <a href="{{ route('admin.productservice.index') }}" class="btn btn-sm btn-danger"
+                                <a href="{{ route('admin.productservice.index') }}" class="btn btn-danger"
                                     data-bs-toggle="tooltip" title="{{ __('Reset') }}">
-                                    <span class="btn-inner--icon"><i class="ti ti-trash-off "></i></span>
+                                    <span class="btn-inner--icon">reset</span>
                                 </a>
                             </div>
 
@@ -132,7 +131,7 @@
                                                 {{-- @endcan --}}
                                                 {{-- @can('delete product & service') --}}
                                                 <li>
-                                                    <a class="deleteBtn"
+                                                    <a href="#" class="deleteBtn"
                                                         data-href="{{ route('admin.productservice.destroy', $productService->id) }}"
                                                         data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                                                         <i class="link-icon" data-feather="delete"></i>
