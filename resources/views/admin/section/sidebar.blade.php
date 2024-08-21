@@ -19,6 +19,7 @@
                 @include('admin.section.partial.hrm')
                 @include('admin.section.partial.farmermanagement')
                 @include('admin.section.partial.inventory')
+                @include('admin.section.partial.product')
             </ul>
         </div>
     </nav>

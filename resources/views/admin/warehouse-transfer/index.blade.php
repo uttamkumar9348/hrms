@@ -53,7 +53,7 @@
                                                 {{--                                            @can('edit warehouse') --}}
                                                 {{--                                                <div class="action-btn bg-info ms-2"> --}}
                                                 {{--                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center" data-url="{{ route('admin.warehouse-transfer.edit',$warehouse_transfer->id) }}" data-ajax-popup="true"  data-size="lg " data-bs-toggle="tooltip" title="{{__('Edit')}}"  data-title="{{__('Edit Warehouse')}}"> --}}
-                                                {{--                                                        <i class="ti ti-pencil text-white"></i> --}}
+                                                {{--                                                        <i class="link-icon" data-feather="edit"></i> --}}
                                                 {{--                                                    </a> --}}
                                                 {{--                                                </div> --}}
                                                 {{--                                            @endcan --}}

@@ -70,7 +70,6 @@
                                                             data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                                                             <i class="link-icon" data-feather="delete"></i>
                                                         </a>
-                                                        {!! Form::close() !!}
                                                     </li>
                                                 @endcan
                                             </ul>

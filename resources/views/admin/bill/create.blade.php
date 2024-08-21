@@ -4,7 +4,7 @@
     {{__('Bill Create')}}
 @endsection
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
+    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item"><a href="{{route('bill.index')}}">{{__('Bill')}}</a></li>
     <li class="breadcrumb-item">{{__('Bill Create')}}</li>
 @endsection
@@ -511,7 +511,7 @@
         });
     </script>
 @endsection
-@section('content')
+@section('main-content')
     <div class="row">
         {{ Form::open(array('url' => 'bill','class'=>'w-100')) }}
         <div class="col-12">

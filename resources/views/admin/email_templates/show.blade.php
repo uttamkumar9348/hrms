@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{asset('css/summernote/summernote-bs4.css')}}">
 @endpush
 
-@push('script-page')
+@section('scripts')
     <script src="{{asset('css/summernote/summernote-bs4.js')}}"></script>
 @endpush
 @section('breadcrumb')
@@ -67,7 +67,7 @@
 @endsection
 
 
-@section('content')
+@section('main-content')
     <div class="row">
         <div class="col-xl-12">
             <div class="card">

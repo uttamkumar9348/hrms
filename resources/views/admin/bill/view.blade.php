@@ -27,12 +27,12 @@
     $settings = Utility::settings();
 @endphp
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
+    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item"><a href="{{route('bill.index')}}">{{__('Bill')}}</a></li>
     <li class="breadcrumb-item">{{ Auth::user()->billNumberFormat($bill->bill_id) }}</li>
 @endsection
 
-@section('content')
+@section('main-content')
 
     @can('send bill')
         @if($bill->status!=4)
@@ -509,7 +509,7 @@
                                     <td>
                                         @can('edit debit note')
                                             <a data-url="{{ route('bill.edit.debit.note',[$debitNote->bill,$debitNote->id]) }}" data-ajax-popup="true" data-title="{{__('Add Debit Note')}}" href="#" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}">
-                                                <i class="ti ti-pencil text-white"></i>
+                                                <i class="link-icon" data-feather="edit"></i>
                                             </a>
                                         @endcan
                                         @can('delete debit note')

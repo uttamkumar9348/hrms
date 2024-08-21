@@ -19,7 +19,7 @@
     </script>
 @endsection
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
+    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('Bill')}}</li>
 @endsection
 
@@ -38,7 +38,7 @@
 @endsection
 
 
-@section('content')
+@section('main-content')
     <div class="row">
         <div class="col-sm-12">
             <div class=" mt-2 " id="multiCollapseExample1">
@@ -127,7 +127,7 @@
                                     @if(Gate::check('edit bill') || Gate::check('delete bill') || Gate::check('show bill'))
                                         <td class="Action">
                                             <span>
-                                                @can('duplicate bill')
+                                                {{-- @can('duplicate bill') --}}
                                                     <div class="action-btn bg-success ms-2">
                                                         {!! Form::open(['method' => 'get', 'route' => ['bill.duplicate', $bill->id],'id'=>'duplicate-form-'.$bill->id]) !!}
 
@@ -136,29 +136,29 @@
                                                             {!! Form::close() !!}
                                                         </a>
                                                     </div>
-                                                @endcan
-                                                @can('show bill')
+                                                {{-- @endcan --}}
+                                                {{-- @can('show bill') --}}
                                                     <div class="action-btn bg-info ms-2">
                                                             <a href="{{ route('bill.show',\Crypt::encrypt($bill->id)) }}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Show')}}" data-original-title="{{__('Detail')}}">
                                                                 <i class="ti ti-eye text-white"></i>
                                                             </a>
                                                         </div>
-                                                @endcan
-                                                @can('edit bill')
+                                                {{-- @endcan --}}
+                                                {{-- @can('edit bill') --}}
                                                     <div class="action-btn bg-primary ms-2">
                                                         <a href="{{ route('bill.edit',\Crypt::encrypt($bill->id)) }}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="Edit" data-original-title="{{__('Edit')}}">
-                                                            <i class="ti ti-pencil text-white"></i>
+                                                            <i class="link-icon" data-feather="edit"></i>
                                                         </a>
                                                     </div>
-                                                @endcan
-                                                @can('delete bill')
+                                                {{-- @endcan --}}
+                                                {{-- @can('delete bill') --}}
                                                     <div class="action-btn bg-danger ms-2">
                                                         {!! Form::open(['method' => 'DELETE', 'route' => ['bill.destroy', $bill->id],'class'=>'delete-form-btn','id'=>'delete-form-'.$bill->id]) !!}
                                                         <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$bill->id}}').submit();">
                                                             <i class="ti ti-trash text-white"></i>
                                                         </a>
                                                         {!! Form::close() !!}
-                                                    </div>
+                                                    {{-- </div> --}}
                                                 @endcan
                                             </span>
                                         </td>
