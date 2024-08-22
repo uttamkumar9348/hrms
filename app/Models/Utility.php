@@ -3890,8 +3890,7 @@ class Utility extends Model
                     $name = $name;
 
                     if ($settings['storage_setting'] == 'local') {
-                        // dd(\Storage::disk(), $path);
-                        $request->$key_name->move(storage_path($path), $name);
+                        $request->$key_name->storeAs($path, $name, 'public');
                         $path = $path . $name;
                     } else if ($settings['storage_setting'] == 'wasabi') {
 
@@ -3913,8 +3912,6 @@ class Utility extends Model
                         // $path = $path.$name;
                         // dd($path);
                     }
-
-
 
                     $res = [
                         'flag' => 1,

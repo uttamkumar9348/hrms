@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 
@@ -248,23 +249,19 @@ class ProductServiceController extends Controller
             $productService->category_id                = $request->category_id;
 
             if (!empty($request->pro_image)) {
-                // dd($productService->pro_image, $request->pro_image);
-                $dir        = 'uploads/pro_image/';
-                if (!is_dir($dir)) {
-                    File::makeDirectory($dir, $mode = 0777, true, true);
+                
+                $dir = 'uploads/pro_image/';
+                if ($productService->pro_image && Storage::disk('public')->exists($dir.$productService->pro_image)) {
+                    Storage::disk('public')->delete($dir.$productService->pro_image);
                 }
 
-                if ($productService->pro_image) {
-                    $path = storage_path('uploads/pro_image/' . $productService->pro_image);
-                    if (file_exists($path)) {
-                        File::delete($path);
-                    }
-                }
                 $fileName = $request->pro_image->getClientOriginalName();
-                $productService->pro_image = $fileName;
+                $extension = $request->pro_image->getClientOriginalExtension();
+                $file_name = \Str::random(10).'.'.$extension;
 
-                $path = Utility::upload_file($request, 'pro_image', $fileName, $dir, []);
-                // $request->pro_image  = '';
+                $path = Utility::upload_file($request, 'pro_image', $file_name, $dir, []);
+                $productService->pro_image = $file_name;
+
             }
 
             $productService->created_by     = \Auth::user()->creatorId();
@@ -322,7 +319,7 @@ class ProductServiceController extends Controller
             'file' => 'required',
         ];
 
-        $validator = \Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             $messages = $validator->getMessageBag();
@@ -342,12 +339,10 @@ class ProductServiceController extends Controller
             $taxesData = [];
             foreach ($taxes as $tax) {
                 $taxes       = Tax::where('id', $tax)->first();
-                //                $taxesData[] = $taxes->id;
                 $taxesData[] = !empty($taxes->id) ? $taxes->id : 0;
             }
 
             $taxData = implode(',', $taxesData);
-            //            dd($taxData);
 
             if (!empty($productBySku)) {
                 $productService = $productBySku;

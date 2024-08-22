@@ -560,6 +560,7 @@ Route::group([
 
         //Product Stock
         Route::resource('productstock', ProductStockController::class);
+        Route::get('sample/download', [ProductStockController::class, 'sample_download'])->name('sample.download');
     });
 });
 

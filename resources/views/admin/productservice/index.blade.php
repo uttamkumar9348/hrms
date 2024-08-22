@@ -13,7 +13,7 @@
         <div class="float-end">
             <a href="#" data-size="md" data-bs-toggle="tooltip" title="{{ __('Import') }}"
                 data-url="{{ route('admin.productservice.file.import') }}" data-ajax-popup="true"
-                data-title="{{ __('Import product CSV file') }}" class="btn btn-primary">
+                data-title="{{ __('Import product CSV file') }}" class="btn btn-primary popup">
                 Import
             </a>
             <a href="{{ route('admin.productservice.export') }}" data-bs-toggle="tooltip" title="{{ __('Export') }}"

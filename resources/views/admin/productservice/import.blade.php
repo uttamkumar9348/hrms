@@ -1,9 +1,9 @@
-{{ Form::open(array('route' => array('productservice.import'),'method'=>'post', 'enctype' => "multipart/form-data")) }}
+{{ Form::open(array('route' => array('admin.productservice.import'),'method'=>'post', 'enctype' => "multipart/form-data")) }}
 <div class="modal-body">
     <div class="row">
-        <div class="col-md-12 mb-6">
+        <div class="col-md-12">
             {{Form::label('file',__('Download sample product CSV file'),['class'=>'form-label'])}}
-            <a href="{{asset(Storage::url('uploads/sample')).'/sample-product.csv'}}" class="btn btn-sm btn-primary">
+            <a href="{{ route('admin.sample.download') }}" class="btn btn-sm btn-primary">
                 <i class="ti ti-download"></i> {{__('Download')}}
             </a>
         </div>

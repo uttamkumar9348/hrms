@@ -75,8 +75,8 @@ class ProductStockController extends Controller
     public function edit($id)
     {
         $productService = ProductService::find($id);
-        if(\Auth::user()->can('edit product & service'))
-        {
+        // if(\Auth::user()->can('edit product & service'))
+        // {
             if($productService->created_by == \Auth::user()->creatorId())
             {
                 return view('admin.productstock.edit', compact('productService'));
@@ -85,11 +85,11 @@ class ProductStockController extends Controller
             {
                 return response()->json(['error' => __('Permission denied.')], 401);
             }
-        }
-        else
-        {
-            return response()->json(['error' => __('Permission denied.')], 401);
-        }
+        // }
+        // else
+        // {
+        //     return response()->json(['error' => __('Permission denied.')], 401);
+        // }
     }
 
 
@@ -103,8 +103,8 @@ class ProductStockController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(\Auth::user()->can('edit product & service'))
-        {
+        // if(\Auth::user()->can('edit product & service'))
+        // {
             $productService = ProductService::find($id);
             $total          = $productService->quantity + $request->quantity;
 
@@ -127,11 +127,11 @@ class ProductStockController extends Controller
             {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+        // }
+        // else
+        // {
+        //     return redirect()->back()->with('error', __('Permission denied.'));
+        // }
     }
 
     /**
@@ -144,5 +144,15 @@ class ProductStockController extends Controller
     public function destroy(ProductStock $productStock)
     {
         //
+    }
+    
+    public function sample_download()
+    {
+        $path = storage_path('uploads/sample/sample-product.csv');
+        if (!file_exists($path)) {
+            abort(404);
+        }
+    
+        return response()->download($path);
     }
 }

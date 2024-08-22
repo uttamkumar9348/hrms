@@ -35,10 +35,10 @@
                                         <td class="Action">
                                             <div>
                                                 <a data-size="md" href="#"
-                                                    class="btn btn-primary"
+                                                    class="btn btn-primary popup"
                                                     data-url="{{ route('admin.productstock.edit', $productService->id) }}"
                                                     data-ajax-popup="true" data-size="xl" data-bs-toggle="tooltip"
-                                                    title="{{ __('Update Quantity') }}">
+                                                    title="{{ __('Update Quantity') }}" data-title="{{ __('Update Quantity') }}">
                                                     Add
                                                 </a>
                                             </div>
@@ -52,4 +52,36 @@
             </div>
         </div>
     </div>
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            // When the link is clicked
+            $(document).on('click', '.popup', function(event) {
+                event.preventDefault(); // Prevent the default link behavior
+                var url = $(this).data('url'); // Get the URL from the data attribute
+                var title = $(this).data('title'); // Get the title from the data attribute
+                
+                // Update modal title
+                $('#exampleModalLabel').text(title);
+
+                // Load content via AJAX
+                $.ajax({
+                    url: url,
+                    success: function(data) {
+                        console.log(data);
+                        // Inject the HTML content into the modal body
+                        $('#commonModal .modal-body').html(data);
+
+                        // Open the modal
+                        $('#commonModal').modal('show');
+                    },
+                    error: function() {
+                        $('#commonModal .modal-body').html(
+                            '<p>An error occurred while loading the content.</p>');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
