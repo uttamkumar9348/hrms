@@ -44,14 +44,34 @@ class FarmerLoanController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all(),Auth::user()->id);
         try {
             $this->validate($request, [
                 'farming_id' => 'required',
                 'created_by' => 'required',
             ]);
-            $farmerLoan = FarmerLoan::create($request->all());
+            $encoded_loan_category_id = json_encode($request->loan_category_id);
+            $encoded_loan_type_id = json_encode($request->loan_type_id);
+            $encoded_price_kg = json_encode($request->price_kg);
+            $encoded_quantity = json_encode($request->quantity);
+            $encoded_total_amount = json_encode($request->total_amount);
+            
+            // $farmerLoan = FarmerLoan::create($request->all(),$encoded);
+            $farmerLoan = new FarmerLoan;
+            $farmerLoan->farming_id = $request->farming_id;
+            $farmerLoan->registration_number = $request->registration_number;
+            $farmerLoan->agreement_number = $request->agreement_number;
+            $farmerLoan->date = $request->date;
+            $farmerLoan->loan_category_id = $encoded_loan_category_id;
+            $farmerLoan->loan_type_id = $encoded_loan_type_id;
+            $farmerLoan->price_kg = $encoded_price_kg;
+            $farmerLoan->quantity = $encoded_quantity;
+            $farmerLoan->total_amount = $encoded_total_amount;
+            $farmerLoan->created_by = $request->created_by;
+            $farmerLoan->save();
+            
             $data = $farmerLoan;
-
+            
             $farming = Farming::findorfail($data['farming_id']);
             
             $pdf = Pdf::loadView('admin.farmer.loan.invoice', compact('data','farming'));

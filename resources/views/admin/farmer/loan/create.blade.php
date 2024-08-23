@@ -2,7 +2,13 @@
 @section('title')
     {{ __('Farmer Allotments') }}
 @endsection
-
+@section('styles')
+    <style>
+        .pd_right_0 {
+            padding-right: 0;
+        }
+    </style>
+@endsection
 @section('scripts')
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
@@ -71,9 +77,9 @@
                 let price = $('#price_kg').val();
                 $('#total_amount').val(quantity * price);
             });
-            $(document).on('change', '.loan_category_id', function() {
+            $('#row_div').on('change', '.loan_category_id', function() {
                 let loan_category_id = $(this).val();
-
+                let $this = $(this).closest('.append_div');
                 $.ajax({
                     url: "{{ route('admin.farmer.loan.get_product_service_by_category') }}",
                     method: 'post',
@@ -85,19 +91,20 @@
                     },
                     success: function(response) {
                         product_services = response.product_services;
-                        $(document).closest('.loan_type_id').empty();
-                        $(document).closest('.loan_type_id').append(
+                        let $loanTypeSelect = $this.find('.loan_type_id');
+                        $loanTypeSelect.empty();
+                        $loanTypeSelect.append(
                             '<option value="">Select Product Service</option>');
-                        for (i = 0; i < product_services.length; i++) {
-                            $(document).closest('.loan_type_id').append('<option value="' +
-                                product_services[i]
-                                .id + '">' + product_services[i].name + '</option>');
+                        for (let i = 0; i < product_services.length; i++) {
+                            $loanTypeSelect.append('<option value="' + product_services[i].id +
+                                '">' + product_services[i].name + '</option>');
                         }
                     }
                 });
             });
-            $(document).on('change', '.loan_type_id', function() {
+            $('#row_div').on('change', '.loan_type_id', function() {
                 let loan_type_id = $(this).val();
+                let $this = $(this).closest('.append_div');
                 $.ajax({
                     url: "{{ route('admin.farmer.loan.get_product_service_detail') }}",
                     method: 'post',
@@ -108,59 +115,23 @@
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },
                     success: function(response) {
-                        $(this).closest('.price_kg').val(response.product_service.sale_price);
-                        $(this).closest('.quantity').attr('max', response.quantity);
-                        $(this).closest('.max_text').html('Total Allowed Stock : ' + response
+                        $this.find('.price_kg').val(response.product_service.sale_price);
+                        $this.find('.quantity').attr('max', response.quantity);
+                        $this.find('.max_text').html('Total Allowed Stock : ' + response
                             .quantity);
                     }
                 });
             });
-            $(document).on('change', '.quantity', function() {
+            $('#row_div').on('change', '.quantity', function() {
                 let quantity = $(this).val();
-                let price = $(this).closest('.price_kg').val();
-                $(this).closest('.total_amount').val(quantity * price);
+                let price = $(this).closest('.append_div').find('.price_kg').val();
+                $(this).closest('.append_div').find('.total_amount').val(quantity * price);
             });
-            $(document).on('click', '.delete', function() {
-                $(document).closest('<div class="col-md-6">' +
-                    '<div class="form-group">' +
-                    '{{ Form::label('loan_category_id', __('Allotment Category'), ['class' => 'form-label']) }}' +
-                    '<select class="form-control select loan_category_id" name="loan_category_id[]" required' +
-                    'placeholder="Select Country">' +
-                    '<option value="">{{ __('Select Category') }}</option>' +
-                    '@foreach ($categories as $category)' +
-                    '<option value="{{ $category->id }}">{{ $category->name }}</option>' +
-                    '@endforeach' +
-                    '</select>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="col-md-6">' +
-                    '<div class="form-group">' +
-                    '{{ Form::label('loan_type_id', __('Item'), ['class' => 'form-label']) }}' +
-                    '<select class="form-control select loan_type_id" name="loan_type_id"' +
-                    'placeholder="Select Loan Type" required>' +
-                    '<option value="">{{ __('Select Item') }}</option>' +
-                    '</select>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="form-group col-md-6">' +
-                    '{{ Form::label('price_kg', __('Price Kg'), ['class' => 'form-label']) }}' +
-                    '{{ Form::text('price_kg', '', ['class' => 'form-control', 'id' => 'price_kg', 'required' => 'required', 'readonly' => true, 'placeholder' => 'Price Kg']) }}' +
-                    '</div>' +
-                    '<div class="form-group col-md-6">' +
-                    '{{ Form::label('quantity', __('Quantity'), ['class' => 'form-label']) }}' +
-                    '{{ Form::number('quantity', '', ['class' => 'form-control', 'min' => '1', 'required' => 'required', 'id' => 'quantity']) }}' +
-                    '<span style="color:red;" id="max_text"></span>' +
-                    '</div>' +
-                    '<div class="form-group col-md-6">' +
-                    '{{ Form::label('total_amount', __('Total Amount'), ['class' => 'form-label']) }}' +
-                    '{{ Form::number('total_amount', 0.0, ['class' => 'form-control', 'required' => 'required', 'readonly' => true, 'placeholder' => 'Total Amount', 'id' => 'total_amount']) }}' +
-                    '</div>' +
-                    '<div class="form-group col-md-6">' +
-                    '<button class="btn btn-danger mt-4 delete">Delete</button>' +
-                    '</div>').remove();
+            $('#row_div').on('click', '.delete', function() {
+                $(this).closest('.append_div').remove();
             });
             $('#add_more').on('click', function() {
-                $('#row_div').append('<div class="col-md-6">' +
+                $('#row_div').append('<div class="row pd_right_0 append_div"><div class="col-md-6">' +
                     '<div class="form-group">' +
                     '{{ Form::label('loan_category_id', __('Allotment Category'), ['class' => 'form-label']) }}' +
                     '<select class="form-control select loan_category_id" name="loan_category_id[]" required' +
@@ -172,10 +143,10 @@
                     '</select>' +
                     '</div>' +
                     '</div>' +
-                    '<div class="col-md-6">' +
+                    '<div class="col-md-6 pd_right_0">' +
                     '<div class="form-group">' +
                     '{{ Form::label('loan_type_id', __('Item'), ['class' => 'form-label']) }}' +
-                    '<select class="form-control select loan_type_id" name="loan_type_id"' +
+                    '<select class="form-control select loan_type_id" name="loan_type_id[]"' +
                     'placeholder="Select Loan Type" required>' +
                     '<option value="">{{ __('Select Item') }}</option>' +
                     '</select>' +
@@ -183,20 +154,20 @@
                     '</div>' +
                     '<div class="form-group col-md-6">' +
                     '{{ Form::label('price_kg', __('Price Kg'), ['class' => 'form-label']) }}' +
-                    '{{ Form::text('price_kg', '', ['class' => 'form-control', 'id' => 'price_kg', 'required' => 'required', 'readonly' => true, 'placeholder' => 'Price Kg']) }}' +
+                    '{{ Form::text('price_kg[]', '', ['class' => 'form-control price_kg', 'required' => 'required', 'readonly' => true, 'placeholder' => 'Price Kg']) }}' +
                     '</div>' +
-                    '<div class="form-group col-md-6">' +
+                    '<div class="form-group col-md-6 pd_right_0">' +
                     '{{ Form::label('quantity', __('Quantity'), ['class' => 'form-label']) }}' +
-                    '{{ Form::number('quantity', '', ['class' => 'form-control', 'min' => '1', 'required' => 'required', 'id' => 'quantity']) }}' +
-                    '<span style="color:red;" id="max_text"></span>' +
+                    '{{ Form::number('quantity[]', '', ['class' => 'form-control quantity', 'min' => '1', 'required' => 'required']) }}' +
+                    '<span style="color:red;" class="max_text"></span>' +
                     '</div>' +
                     '<div class="form-group col-md-6">' +
                     '{{ Form::label('total_amount', __('Total Amount'), ['class' => 'form-label']) }}' +
-                    '{{ Form::number('total_amount', 0.0, ['class' => 'form-control', 'required' => 'required', 'readonly' => true, 'placeholder' => 'Total Amount', 'id' => 'total_amount']) }}' +
+                    '{{ Form::number('total_amount[]', 0.0, ['class' => 'form-control total_amount', 'required' => 'required', 'readonly' => true, 'placeholder' => 'Total Amount']) }}' +
                     '</div>' +
                     '<div class="form-group col-md-6">' +
                     '<button class="btn btn-danger mt-4 delete">Delete</button>' +
-                    '</div>');
+                    '</div></div>');
             })
         });
     </script>
@@ -258,7 +229,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 {{ Form::label('loan_type_id', __('Item'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="loan_type_id" id="loan_type_id"
+                                <select class="form-control select" name="loan_type_id[]" id="loan_type_id"
                                     placeholder="Select Loan Type" required>
                                     <option value="">{{ __('Select Item') }}</option>
                                 </select>
@@ -266,20 +237,21 @@
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('price_kg', __('Price Kg'), ['class' => 'form-label']) }}
-                            {{ Form::text('price_kg', '', ['class' => 'form-control', 'id' => 'price_kg', 'required' => 'required', 'readonly' => true, 'placeholder' => 'Price Kg']) }}
+                            {{ Form::text('price_kg[]', '', ['class' => 'form-control', 'id' => 'price_kg', 'required' => 'required', 'readonly' => true, 'placeholder' => 'Price Kg']) }}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('quantity', __('Quantity'), ['class' => 'form-label']) }}
-                            {{ Form::number('quantity', '', ['class' => 'form-control', 'min' => '1', 'required' => 'required', 'id' => 'quantity']) }}
+                            {{ Form::number('quantity[]', '', ['class' => 'form-control', 'min' => '1', 'required' => 'required', 'id' => 'quantity']) }}
                             <span style="color:red;" id="max_text"></span>
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('total_amount', __('Total Amount'), ['class' => 'form-label']) }}
-                            {{ Form::number('total_amount', 0.0, ['class' => 'form-control', 'required' => 'required', 'readonly' => true, 'placeholder' => 'Total Amount', 'id' => 'total_amount']) }}
+                            {{ Form::number('total_amount[]', 0.0, ['class' => 'form-control', 'required' => 'required', 'readonly' => true, 'placeholder' => 'Total Amount', 'id' => 'total_amount']) }}
                         </div>
                         <div class="form-group col-md-6">
                             <button type="button" class="btn btn-primary mt-4" id="add_more">Add More</button>
                         </div>
+                        {{-- <div class="row pd_right_0 append_div"></div> --}}
                     </div>
                 </div>
             </div>

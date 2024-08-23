@@ -55,17 +55,31 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $loan_category_id = json_decode($data->loan_category_id);
+                        $loan_type_id = json_decode($data->loan_type_id);
+                        $price_kg = json_decode($data->price_kg);
+                        $quantity = json_decode($data->quantity);
+                        $total_amount = json_decode($data->total_amount);
+                        $count = count($loan_category_id);
+                    @endphp
+                    @for($i=0; $i < $count; $i++)
+                    @php
+                        $product = App\Models\ProductService::where('id',$loan_type_id[$i])->first();
+                        $grandtotal =+ $total_amount[$i];
+                    @endphp
                     <tr>
-                        <td>1</td>
-                        <td>{{ $data->type->name }}</td>
-                        <td>{{ $data['quantity'] }}</td>
-                        <td>{{ $data['price_kg'] }}</td>
-                        <td>{{ $data['total_amount'] }}</td>
+                        <td>{{ $i + 1 }}</td>
+                        <td>{{ $product->name }}</td>
+                        <td>{{ $quantity[$i] }}</td>
+                        <td>{{ $price_kg[$i] }}</td>
+                        <td>{{ $total_amount[$i] }}</td>
                     </tr>
+                    @endfor
                     <tr>
                         <td colspan="3"></td>
                         <td><b>Grand Total Amount</b></td>
-                        <td><b>{{ $data['total_amount'] }}/-</b></td>
+                        <td><b>{{ $grandtotal }}/-</b></td>
                     </tr>
                 </tbody>
             </table>

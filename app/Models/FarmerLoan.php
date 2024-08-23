@@ -13,13 +13,21 @@ class FarmerLoan extends Model
         'farming_id',
         'registration_number',
         'agreement_number',
-        'loan_category_id',
-        'loan_type_id',
-        'price_kg',
-        'quantity',
-        'total_amount',
+        // 'loan_category_id',
+        // 'loan_type_id',
+        // 'price_kg',
+        // 'quantity',
+        // 'total_amount',
         'date',
         'created_by'
+    ];
+
+    protected $casts = [
+        'loan_category_id' => 'array',
+        'loan_type_id' => 'array',
+        'price_kg' => 'array',
+        'quantity' => 'array',
+        'total_amount' => 'array',
     ];
 
     public function category()
