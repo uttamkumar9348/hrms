@@ -77,6 +77,8 @@
                 let price = $('#price_kg').val();
                 $('#total_amount').val(quantity * price);
             });
+            
+            //add more field jquery
             $('#row_div').on('change', '.loan_category_id', function() {
                 let loan_category_id = $(this).val();
                 let $this = $(this).closest('.append_div');
@@ -251,7 +253,6 @@
                         <div class="form-group col-md-6">
                             <button type="button" class="btn btn-primary mt-4" id="add_more">Add More</button>
                         </div>
-                        {{-- <div class="row pd_right_0 append_div"></div> --}}
                     </div>
                 </div>
             </div>

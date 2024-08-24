@@ -12,9 +12,9 @@
         </ol>
         <div class="float-end">
             {{-- @can('create farmer loan') --}}
-                <a href="{{ route('admin.farmer.loan.create') }}" class="btn btn-primary">
-                    Add
-                </a>
+            <a href="{{ route('admin.farmer.loan.create') }}" class="btn btn-primary">
+                Add
+            </a>
             {{-- @endcan --}}
         </div>
     </nav>
@@ -40,40 +40,61 @@
                             </thead>
                             <tbody>
                                 @foreach ($loans as $loan)
-                                    <tr class="font-style">
-                                        <td>{{ $loan->farming->name }}</td>
-                                        <td>{{ $loan->registration_number }}</td>
-                                        <td>{{ $loan->agreement_number }}</td>
-                                        <td>{{ $loan->date }}</td>
-                                        <td>{{ $loan->category->name }}</td>
-                                        <td>{{ $loan->type->name }}</td>
-                                        <td>{{ $loan->price_kg }}</td>
-                                        <td>{{ $loan->quantity }}</td>
-                                        <td>{{ $loan->total_amount }}</td>
+                                @php
+                                    $loan_category_id = json_decode($loan->loan_category_id);
+                                    $loan_type_id = json_decode($loan->loan_type_id);
+                                    $price_kg = json_decode($loan->price_kg);
+                                    $quantity = json_decode($loan->quantity);
+                                    $total_amount = json_decode($loan->total_amount);
+                                    $count = count($loan_category_id);
+                                @endphp
+                                @for ($i = 0; $i < $count; $i++)
+                                    @php
+                                        $productcategory = App\Models\ProductServiceCategory::where('id',$loan_category_id[$i])->first();
+                                        $product = App\Models\ProductService::where('id', $loan_type_id[$i])->first();
+                                    @endphp
+                                    
+                                        <tr class="font-style">
+                                            <td>{{ $loan->farming->name }}</td>
+                                            <td>{{ $loan->registration_number }}</td>
+                                            <td>{{ $loan->agreement_number }}</td>
+                                            <td>{{ $loan->date }}</td>
+                                            <td>{{ $productcategory->name }}</td>
+                                            <td>{{ $product->name }}</td>
+                                            <td>{{ $price_kg[$i] }}</td>
+                                            <td>{{ $quantity[$i] }}</td>
+                                            <td>{{ $total_amount[$i] }}</td>
 
-                                        <td class="Action">
-                                            <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                            {{-- @can('edit farmer loan') --}}
-                                                <li class="me-2">
-                                                    <a href="{{ route('admin.farmer.loan.edit', $loan->id) }}">
-                                                        <i class="link-icon" data-feather="edit"></i>
-                                                    </a>
-                                                </li>
-                                            {{-- @endcan --}}
-                                            {{-- @can('delete farmer loan') --}}
-                                                <li>
-                                                    <a class="deleteBtn"
-                                                        data-href="{{ route('admin.farmer.loan.destroy', $loan->id) }}"
-                                                        data-bs-toggle="tooltip" title="{{ __('Delete') }}">
-                                                        <i class="link-icon" data-feather="delete"></i>
-                                                    </a>
-                                                </li>
-                                            {{-- @endcan --}}
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                @endforeach
-
+                                            <td class="Action">
+                                                <ul class="d-flex list-unstyled mb-0 justify-content-center">
+                                                    {{-- @can('edit farmer loan') --}}
+                                                    @if($loan->invoice_generate_status == 0)
+                                                    <li class="me-2">
+                                                        <a href="{{ route('admin.farmer.loan.edit', $loan->id) }}">
+                                                            <i class="link-icon" data-feather="edit"></i>
+                                                        </a>
+                                                    </li>
+                                                    @endif
+                                                    <li class="me-2">
+                                                        <a href="{{ route('admin.farmer.loan.invoice_generate', $loan->id) }}" target="_blank">
+                                                            <i class="link-icon" data-feather="file-text"></i>
+                                                        </a>
+                                                    </li>
+                                                    {{-- @endcan --}}
+                                                    {{-- @can('delete farmer loan') --}}
+                                                    <li>
+                                                        <a href="" class="deleteBtn"
+                                                            data-href="{{ route('admin.farmer.loan.destroy', $loan->id) }}"
+                                                            data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                                                            <i class="link-icon" data-feather="delete"></i>
+                                                        </a>
+                                                    </li>
+                                                    {{-- @endcan --}}
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                        @endfor
+                                    @endforeach
                             </tbody>
                         </table>
                     </div>

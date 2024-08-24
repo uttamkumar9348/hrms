@@ -44,7 +44,6 @@ class FarmerLoanController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all(),Auth::user()->id);
         try {
             $this->validate($request, [
                 'farming_id' => 'required',
@@ -55,8 +54,7 @@ class FarmerLoanController extends Controller
             $encoded_price_kg = json_encode($request->price_kg);
             $encoded_quantity = json_encode($request->quantity);
             $encoded_total_amount = json_encode($request->total_amount);
-            
-            // $farmerLoan = FarmerLoan::create($request->all(),$encoded);
+
             $farmerLoan = new FarmerLoan;
             $farmerLoan->farming_id = $request->farming_id;
             $farmerLoan->registration_number = $request->registration_number;
@@ -69,23 +67,9 @@ class FarmerLoanController extends Controller
             $farmerLoan->total_amount = $encoded_total_amount;
             $farmerLoan->created_by = $request->created_by;
             $farmerLoan->save();
-            
-            $data = $farmerLoan;
-            
-            $farming = Farming::findorfail($data['farming_id']);
-            
-            $pdf = Pdf::loadView('admin.farmer.loan.invoice', compact('data','farming'));
-
-            $path = public_path('/farmer/allotment/');
-            if (!File::exists($path)) {
-                File::makeDirectory($path, 0755, true);
-            }
-            $pdf->save($path  . 'invoice.pdf');
-            $pdf->download('invoice.pdf');
 
             return redirect()->to(route('admin.farmer.loan.index'))->with('success', 'Loan Added Successfully.');
         } catch (Exception $e) {
-            dd($e);
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -110,7 +94,8 @@ class FarmerLoanController extends Controller
             ->get();
         $loan = FarmerLoan::find($id);
         $categories = ProductServiceCategory::all();
-        $types = ProductService::where('category_id', $loan->loan_type_id)->get();
+        $types = ProductService::all();
+
         return view('admin.farmer.loan.edit', compact(
             'farmings',
             'loan',
@@ -124,9 +109,29 @@ class FarmerLoanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $loan = FarmerLoan::find($id);
-        $loan->update($request->all());
-        return redirect()->back()->with('success', 'Farming Loan Updated Successfully.');
+        try {
+            $encoded_loan_category_id = json_encode($request->loan_category_id);
+            $encoded_loan_type_id = json_encode($request->loan_type_id);
+            $encoded_price_kg = json_encode($request->price_kg);
+            $encoded_quantity = json_encode($request->quantity);
+            $encoded_total_amount = json_encode($request->total_amount);
+
+            $farmerLoan = FarmerLoan::find($id);
+            $farmerLoan->farming_id = $request->farming_id;
+            $farmerLoan->registration_number = $request->registration_number;
+            $farmerLoan->agreement_number = $request->agreement_number;
+            $farmerLoan->date = $request->date;
+            $farmerLoan->loan_category_id = $encoded_loan_category_id;
+            $farmerLoan->loan_type_id = $encoded_loan_type_id;
+            $farmerLoan->price_kg = $encoded_price_kg;
+            $farmerLoan->quantity = $encoded_quantity;
+            $farmerLoan->total_amount = $encoded_total_amount;
+            $farmerLoan->update();
+
+            return redirect()->back()->with('success', 'Farming Loan Updated Successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -149,7 +154,7 @@ class FarmerLoanController extends Controller
     {
         $product_service = ProductService::find($request->loan_type_id);
         $quantity = $product_service->getTotalProductQuantity()
-        && $product_service->getTotalProductQuantity() > 0 ? $product_service->getTotalProductQuantity() : 0;
+            && $product_service->getTotalProductQuantity() > 0 ? $product_service->getTotalProductQuantity() : 0;
 
         return response()->json([
             'quantity' => $quantity,
@@ -162,5 +167,31 @@ class FarmerLoanController extends Controller
         return response()->json([
             'farming' => $farming
         ]);
+    }
+
+    public function invoice_generate($id)
+    {
+        $farmingloan = FarmerLoan::findorfail($id);
+        $data = $farmingloan;
+        if ($farmingloan->invoice_generate_status == 0) {
+        $farming = Farming::findorfail($farmingloan->farming_id);
+
+        $pdf = Pdf::loadView('admin.farmer.loan.invoice', compact('data', 'farming'));
+
+        $path = public_path('/farmer/allotment/');
+
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0755, true);
+        }
+
+            $file_name = time() . 'invoice.pdf';
+            $pdf->save($path  . $file_name);
+            $pdf->download($file_name);
+
+            $farmingloan->invoice = $file_name;
+            $farmingloan->invoice_generate_status = 1;
+            $farmingloan->save();
+        }
+        return redirect('/farmer/allotment/' . $farmingloan->invoice);
     }
 }

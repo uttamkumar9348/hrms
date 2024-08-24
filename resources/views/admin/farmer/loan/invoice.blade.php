@@ -62,11 +62,12 @@
                         $quantity = json_decode($data->quantity);
                         $total_amount = json_decode($data->total_amount);
                         $count = count($loan_category_id);
+                        $grandtotal = 0;
                     @endphp
-                    @for($i=0; $i < $count; $i++)
+                    @for($i = 0; $i < $count; $i++)
                     @php
                         $product = App\Models\ProductService::where('id',$loan_type_id[$i])->first();
-                        $grandtotal =+ $total_amount[$i];
+                        $grandtotal += $total_amount[$i];
                     @endphp
                     <tr>
                         <td>{{ $i + 1 }}</td>

@@ -457,6 +457,7 @@ Route::group([
                 Route::post('get_product_service_detail', [FarmerLoanController::class, 'getProductServiceDetail'])->name('loan.get_product_service_detail');
                 Route::post('get_farming_detail', [FarmerLoanController::class, 'getFarmingDetail'])->name('loan.get_farming_detail');
                 Route::resource('loan', FarmerLoanController::class);
+                Route::get('loan/{id}/invoice', [FarmerLoanController::class, 'invoice_generate'])->name('loan.invoice_generate');
                 Route::get('loan/{id}/destroy', [FarmerLoanController::class, 'destroy'])->name('loan.destroy');
 
                 Route::get('reimbursement/create', [FarmingPaymentController::class, 'reimbursementCreate'])->name('reimbursement.create');
