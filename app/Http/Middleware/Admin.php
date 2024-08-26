@@ -20,7 +20,7 @@ class Admin
     public function handle(Request $request, Closure $next)
     {
         if (!Auth()->check() ||
-            !in_array($request->user()->role->slug,AppHelper::getBackendLoginAuthorizedRole())
+            !in_array($request->user()->role->name,AppHelper::getBackendLoginAuthorizedRole())
         ){
            $request->session()->invalidate();
            return redirect()->route('admin.login');

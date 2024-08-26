@@ -21,7 +21,8 @@
         "milantarami/number-to-words": "^1.0",
         "milon/barcode": "^11.0",
         "psr/simple-cache": "2.0",
-        "simplesoftwareio/simple-qrcode": "~4"
+        "simplesoftwareio/simple-qrcode": "~4",
+        "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.8",

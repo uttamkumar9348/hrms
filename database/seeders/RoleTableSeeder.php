@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class RoleTableSeeder extends Seeder
 {
@@ -22,9 +21,7 @@ class RoleTableSeeder extends Seeder
         ],
             [
             'name' => 'admin',
-            'slug' => 'admin',
-            'is_active' => '1',
-            'backend_login_authorize' => '1',
+            'guard_name' => 'web',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);

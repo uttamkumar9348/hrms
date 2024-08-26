@@ -21,7 +21,7 @@ class RoleRepository
 
     public function getAllRolesExceptAdmin($select=['*'])
     {
-        return Role::select($select)->where('slug','!=','admin')->get();
+        return Role::select($select)->where('name','!=','admin')->get();
     }
 
     public function getAllActiveRoles($select=['*'])
@@ -73,10 +73,9 @@ class RoleRepository
             ->get();
     }
 
-    public function getPermissionGroupTypeDetails($select=['*'],$with=[])
+    public function getPermissionGroupTypeDetails($select=['*'])
     {
         return PermissionGroupType::select($select)
-            ->with($with)
             ->get();
     }
 

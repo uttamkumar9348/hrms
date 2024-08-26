@@ -399,9 +399,9 @@ class AppHelper
             return Cache::get('role');
         } else {
             $roles = [];
-            $backendAuthorizedLoginRole = Role::select('slug')->where('backend_login_authorize', 1)->get();
+            $backendAuthorizedLoginRole = Role::select('name')->get();
             foreach ($backendAuthorizedLoginRole as $key => $value) {
-                $roles[] = $value->slug;
+                $roles[] = $value->name;
             }
             Cache::forever('role', $roles);
         }

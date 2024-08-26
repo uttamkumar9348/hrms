@@ -154,16 +154,15 @@ class  RoleController extends Controller
         $this->authorize('list_permission');
         try {
             $selectPermissionGroup = ['*'];
-            $selectRole = ['id', 'name', 'slug'];
-            $withPermissionType = ['permissionGroups','permissionGroups.getPermission'];
+            $selectRole = ['id', 'name'];
             $withRole = ['permission'];
-            $permissionGroupTypeList = $this->roleRepo->getPermissionGroupTypeDetails($selectPermissionGroup, $withPermissionType);
+            $permissionGroupTypeList = $this->roleRepo->getPermissionGroupTypeDetails($selectPermissionGroup);
             $role = $this->roleRepo->getRoleById($roleId, $selectRole, $withRole);
             $allRoles = $this->roleRepo->getAllRolesExceptAdmin();
             if (!$role) {
                 throw new Exception('Role Detail Not Found', 404);
             }
-            if($role->slug == 'admin'){
+            if($role->name == 'admin'){
                 throw new Exception('Admin Role Is Always Assigned With All Permission', 404);
             }
             $isEdit = false;

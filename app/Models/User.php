@@ -16,10 +16,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles;
 
     const AVATAR_UPLOAD_PATH = 'uploads/user/avatar/';
     const RECORDS_PER_PAGE = 20;
@@ -147,7 +148,7 @@ class User extends Authenticatable
 
     public function role(): BelongsTo
     {
-        return $this->belongsTo(Role::class, 'role_id', 'id')->select('name', 'id', 'slug');
+        return $this->belongsTo(Role::class, 'role_id', 'id')->select('name', 'id');
     }
 
     public function officeTime(): BelongsTo
