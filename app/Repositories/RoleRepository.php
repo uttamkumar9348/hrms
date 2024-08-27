@@ -12,8 +12,6 @@ use Illuminate\Support\Str;
 
 class RoleRepository
 {
-    const IS_ACTIVE = 1;
-
     public function getAllUserRoles($select=['*'])
     {
         return Role::select($select)->latest()->get();
@@ -26,7 +24,7 @@ class RoleRepository
 
     public function getAllActiveRoles($select=['*'])
     {
-        return Role::select($select)->where('is_active',1)->get();
+        return Role::select($select)->get();
     }
 
     public function store($validatedData)
@@ -36,7 +34,7 @@ class RoleRepository
         return Role::create($validatedData)->fresh();
     }
 
-    public function  getRoleById($id,$select=['*'],$with=[])
+    public function getRoleById($id,$select=['*'],$with=[])
     {
         return Role::select($select)
             ->with($with)
@@ -58,31 +56,12 @@ class RoleRepository
     public function toggleStatus($id)
     {
         $roleDetail = Role::where('id',$id)->first();
-        if ($roleDetail->slug == 'admin') {
+        if ($roleDetail->name == 'admin') {
             throw new Exception('Sorry, admin role status cannot be changed.', 403);
         }
         return $roleDetail->update([
             'is_active' => !$roleDetail->is_active,
         ]);
     }
-
-    public function getPermissionGroupDetail($select=['*'],$with=[])
-    {
-        return  PermissionGroup::select($select)
-            ->with($with)
-            ->get();
-    }
-
-    public function getPermissionGroupTypeDetails($select=['*'])
-    {
-        return PermissionGroupType::select($select)
-            ->get();
-    }
-
-    public function syncPermissionToRole($roleDetail,$permissions)
-    {
-        return $roleDetail->permission()->sync($permissions);
-    }
-
 
 }

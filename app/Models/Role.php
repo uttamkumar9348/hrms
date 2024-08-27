@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Traits\HasPermissions;
 
 class Role extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPermissions;
 
     const RECORDS_PER_PAGE = 10;
 
@@ -32,15 +33,11 @@ class Role extends Model
         parent::boot();
 
         static::creating(function ($model) {
-//            $model->created_by = Auth::user()->id;
+            //            $model->created_by = Auth::user()->id;
         });
 
         static::updating(function ($model) {
             $model->updated_by = Auth::user()?->id ?? AppHelper::findAdminUserAuthId();
-        });
-
-        static::deleting(function ($roleDetail) {
-            $roleDetail->getRolePermission()->delete();
         });
     }
 
@@ -54,13 +51,16 @@ class Role extends Model
         return $this->belongsTo(User::class, 'updated_by', 'id');
     }
 
-    public function getRolePermission(): HasMany
+    /**
+     * A role may be given various permissions.
+     */
+    public function permissions(): BelongsToMany
     {
-        return $this->hasMany(PermissionRole::class, 'role_id', 'id');
-    }
-
-    public function permission(): BelongsToMany
-    {
-        return $this->belongsToMany(Permission::class, 'permission_roles', 'role_id', 'permission_id');
+        return $this->belongsToMany(
+            config('permission.models.permission'),
+            config('permission.table_names.role_has_permissions'),
+            'role_id',
+            'permission_id'
+        );
     }
 }

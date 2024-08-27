@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Module;
+use App\Models\Permission;
 use App\Models\PermissionGroup;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
@@ -16,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class  RoleController extends Controller
 {
@@ -104,7 +107,6 @@ class  RoleController extends Controller
             return redirect()->back()->with('danger', $exception->getMessage())
                 ->withInput();
         }
-
     }
 
     public function toggleStatus($id)
@@ -112,7 +114,7 @@ class  RoleController extends Controller
         $this->authorize('edit_role');
         try {
             DB::beginTransaction();
-                $this->roleRepo->toggleStatus($id);
+            $this->roleRepo->toggleStatus($id);
             DB::commit();
             return redirect()->back()->with('success', 'Status changed  Successfully');
         } catch (Exception $exception) {
@@ -132,8 +134,7 @@ class  RoleController extends Controller
             if ($roleDetail->slug == 'admin') {
                 throw new Exception('Cannot Delete Admin Role', 402);
             }
-            $user = $this->userRepo->findUserDetailByRole($id);
-            {
+            $user = $this->userRepo->findUserDetailByRole($id); {
                 if ($user) {
                     throw new Exception('Cannot Delete Assigned Role', 402);
                 }
@@ -151,32 +152,48 @@ class  RoleController extends Controller
 
     public function createPermission($roleId): Factory|View|RedirectResponse|Application
     {
-        $this->authorize('list_permission');
-        try {
-            $selectPermissionGroup = ['*'];
-            $selectRole = ['id', 'name'];
-            $withRole = ['permission'];
-            $permissionGroupTypeList = $this->roleRepo->getPermissionGroupTypeDetails($selectPermissionGroup);
-            $role = $this->roleRepo->getRoleById($roleId, $selectRole, $withRole);
-            $allRoles = $this->roleRepo->getAllRolesExceptAdmin();
-            if (!$role) {
-                throw new Exception('Role Detail Not Found', 404);
+        // $this->authorize('list_permission');
+        if (\Auth::user()->can('show-role')) {
+            try {
+                // $selectPermissionGroup = ['*'];
+                // $selectRole = ['id', 'name'];
+                // $withRole = ['permission'];
+                // $permissionGroupTypeList = $this->roleRepo->getPermissionGroupTypeDetails($selectPermissionGroup);
+                // $role = $this->roleRepo->getRoleById($roleId, $selectRole, $withRole);
+                // $allRoles = $this->roleRepo->getAllRolesExceptAdmin();
+                // if (!$role) {
+                //     throw new Exception('Role Detail Not Found', 404);
+                // }
+                // if ($role->name == 'admin') {
+                //     throw new Exception('Admin Role Is Always Assigned With All Permission', 404);
+                // }
+                // $isEdit = false;
+                // $role_permission = [];
+                // if ($role->getRolePermission->count() > 0) {
+                //     $role_permission = $role->getRolePermission->pluck('permission_id')->toArray();
+                //     $isEdit = true;
+                // }
+                // return view($this->view . 'permission', compact(
+                //     'permissionGroupTypeList',
+                //     'role',
+                //     'role_permission',
+                //     'isEdit',
+                //     'allRoles'
+                // ));
+                $role = Role::find($roleId);
+                $permissions = $role->permissions->pluck('name', 'id')->toArray();
+                $allpermissions = Permission::all()->pluck('name', 'id')->toArray();
+                $allmodules = Module::all()->pluck('name', 'id')->toArray();
+                return view($this->view . 'permission')
+                    ->with('role', $role)
+                    ->with('permissions', $permissions)
+                    ->with('allpermissions', $allpermissions)
+                    ->with('moduals', $allmodules);
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
             }
-            if($role->name == 'admin'){
-                throw new Exception('Admin Role Is Always Assigned With All Permission', 404);
-            }
-            $isEdit = false;
-            $role_permission = [];
-            if ($role->getRolePermission->count() > 0) {
-                $role_permission = $role->getRolePermission->pluck('permission_id')->toArray();
-                $isEdit = true;
-            }
-            return view($this->view . 'permission', compact('permissionGroupTypeList',
-                'role',
-                'role_permission', 'isEdit','allRoles'
-            ));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -184,17 +201,27 @@ class  RoleController extends Controller
     {
         $this->authorize('assign_permission');
         try {
-            $data = $request->all();
-            $role = $this->roleRepo->getRoleById($roleId);
-            $validatedPermissionData = $data['permission_value'] ?? [];
+            // $data = $request->all();
+            // $role = $this->roleRepo->getRoleById($roleId);
+            // $validatedPermissionData = $data['permission_value'] ?? [];
+            // DB::beginTransaction();
+            // $this->roleRepo->syncPermissionToRole($role, $validatedPermissionData);
+            // DB::commit();
+
+            app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+            $role = Role::find($roleId);
+            $permissions = $role->permissions()->get();
             DB::beginTransaction();
-            $this->roleRepo->syncPermissionToRole($role, $validatedPermissionData);
+            $role->revokePermissionTo($permissions);
+            $role->givePermissionTo($request->permissions);
+            dd($role, $permissions, $request->permissions);
             DB::commit();
+
             return redirect()->back()->with('success', 'Permission Updated To Role Successfully');
         } catch (Exception $exception) {
+            dd($exception);
             DB::rollBack();
             return redirect()->back()->with('danger', $exception->getMessage());
         }
     }
-
 }

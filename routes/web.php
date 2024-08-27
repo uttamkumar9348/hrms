@@ -9,6 +9,8 @@ use App\Http\Controllers\Farming\FarmingDetailController;
 use App\Http\Controllers\Farming\FarmingPaymentController;
 use App\Http\Controllers\Farming\GuarantorController;
 use App\Http\Controllers\Farming\SeedCategoryController;
+use App\Http\Controllers\ModulesController;
+use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SystemController;
@@ -138,7 +140,7 @@ Route::group([
         Route::get('roles/toggle-status/{id}', [RoleController::class, 'toggleStatus'])->name('roles.toggle-status');
         Route::get('roles/delete/{id}', [RoleController::class, 'delete'])->name('roles.delete');
         Route::get('roles/permissions/{roleId}', [RoleController::class, 'createPermission'])->name('roles.permission');
-        Route::put('roles/assign-permissions/{roleId}', [RoleController::class, 'assignPermissionToRole'])->name('role.assign-permissions');
+        Route::post('roles/assign-permissions/{roleId}', [RoleController::class, 'assignPermissionToRole'])->name('role.assign-permissions');
 
         /** office_time route */
         Route::resource('office-times', OfficeTimeController::class);
@@ -562,6 +564,11 @@ Route::group([
         //Product Stock
         Route::resource('productstock', ProductStockController::class);
         Route::get('sample/download', [ProductStockController::class, 'sample_download'])->name('sample.download');
+    
+        //permission modules
+        Route::resource('modules', ModulesController::class);
+        Route::get('modules/{id}/destroy', [ModulesController::class, 'destroy'])->name('modules.destroy');
+        Route::resource('permissions', PermissionsController::class);
     });
 });
 

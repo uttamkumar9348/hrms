@@ -16,13 +16,5 @@ class Permission extends Model
 
     protected $fillable = [
         'name',
-        'permission_key',
-        'permission_groups_id'
     ];
-
-    public function permissionGroup(): BelongsTo
-    {
-        return $this->belongsTo(PermissionGroup::class, 'permission_groups_id', 'id');
-    }
-
 }
