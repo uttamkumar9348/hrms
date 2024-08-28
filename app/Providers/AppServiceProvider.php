@@ -39,6 +39,11 @@ class AppServiceProvider extends ServiceProvider
             'comment' => 'App\Models\TaskComment',
             'reply' => 'App\Models\CommentReply',
         ]);
+        Relation::morphMap([
+            'user' => 'App\Models\User',
+            'post' => 'App\Models\Post',
+            // Add other models as needed
+        ]);
 
         Task::observe(TaskObserver::class);
 

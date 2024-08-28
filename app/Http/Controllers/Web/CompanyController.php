@@ -22,12 +22,15 @@ class CompanyController extends Controller
 
     public function index()
     {
-        $this->authorize('view_company');
-        try {
-            $companyDetail = $this->companyRepo->getCompanyDetail();
-            return view($this->view . 'index', compact('companyDetail'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('manage-company')) {
+            try {
+                $companyDetail = $this->companyRepo->getCompanyDetail();
+                return view($this->view . 'index', compact('companyDetail'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -55,8 +58,8 @@ class CompanyController extends Controller
 
         $this->authorize('edit_company');
         try {
-            if (env('APP_ENV') == 'test'){
-                throw new Exception('This is a demo version. Please buy the application to use the full feature',400);
+            if (env('APP_ENV') == 'test') {
+                throw new Exception('This is a demo version. Please buy the application to use the full feature', 400);
             }
             $validatedData = $request->validated();
             $validatedData['weekend'] = $validatedData['weekend'] ?? [];
@@ -69,14 +72,12 @@ class CompanyController extends Controller
             DB::commit();
             return redirect()->route('admin.company.index')
                 ->with('success', 'Company Detail Updated Successfully');
-
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()
                 ->route('admin.company.index')
                 ->with('danger', $e->getMessage())
                 ->withInput();
-
         }
     }
 }

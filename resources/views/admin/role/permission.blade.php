@@ -29,7 +29,7 @@
                     {!! Form::model($role, ['method' => 'POST', 'route' => ['admin.role.assign-permissions', $role->id]]) !!}
 
                     @csrf
-                    <div class="card-body">
+                    <div>
                         <table class="table table-flush permission-table">
                             <thead class="thead-light">
                                 <tr>
@@ -48,7 +48,7 @@
                                                     @if (in_array($permission . '-' . $row, $allpermissions))
                                                         @php($key = array_search($permission . '-' . $row, $allpermissions))
                                                         <div class="col-3 custom-control custom-checkbox">
-                                                            {{ Form::checkbox('permissions[]', $key, in_array($permission . '-' . $row, $permissions), ['class' => 'custom-control-input', 'id' => 'permission_' . $key]) }}
+                                                            {{ Form::checkbox('permissions[]', $permission . '-' . $row, in_array($permission . '-' . $row, $permissions), ['class' => 'custom-control-input', 'id' => 'permission_' . $key]) }}
                                                             {{ Form::label('permission_' . $key, ucfirst($permission), ['class' => 'custom-control-label']) }}
                                                         </div>
                                                     @endif

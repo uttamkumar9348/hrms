@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Module;
-use App\Models\Permission;
-use App\Models\PermissionGroup;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Requests\Role\RoleRequest;
@@ -18,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class  RoleController extends Controller
@@ -38,6 +37,7 @@ class  RoleController extends Controller
         $this->authorize('list_role');
         try {
             $roles = $this->roleRepo->getAllUserRoles();
+
             return view($this->view . 'index', compact('roles'));
         } catch (Exception $exception) {
             return redirect()->back()->with('danger', $exception->getMessage());
@@ -181,6 +181,12 @@ class  RoleController extends Controller
                 //     'allRoles'
                 // ));
                 $role = Role::find($roleId);
+                if (!$role) {
+                    throw new Exception('Role Detail Not Found', 404);
+                }
+                if ($role->name == 'admin') {
+                    throw new Exception('Admin Role Is Always Assigned With All Permission', 404);
+                }
                 $permissions = $role->permissions->pluck('name', 'id')->toArray();
                 $allpermissions = Permission::all()->pluck('name', 'id')->toArray();
                 $allmodules = Module::all()->pluck('name', 'id')->toArray();
@@ -214,12 +220,10 @@ class  RoleController extends Controller
             DB::beginTransaction();
             $role->revokePermissionTo($permissions);
             $role->givePermissionTo($request->permissions);
-            dd($role, $permissions, $request->permissions);
             DB::commit();
 
             return redirect()->back()->with('success', 'Permission Updated To Role Successfully');
         } catch (Exception $exception) {
-            dd($exception);
             DB::rollBack();
             return redirect()->back()->with('danger', $exception->getMessage());
         }

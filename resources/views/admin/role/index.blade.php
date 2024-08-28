@@ -31,8 +31,7 @@
                         <tr>
                             <th>#</th>
                             <th>Role</th>
-                            <th>Status</th>
-                            <th class="text-center">Can Login</th>
+                            <th>Created At</th>
                             @canany(['edit_role','delete_role','assign_permission'])
                                 <th>Action</th>
                             @endcanany
@@ -46,18 +45,7 @@
                             <tr>
                                 <td>{{++$key}}</td>
                                 <td>{{ucfirst($value->name)}}</td>
-                                <td>
-                                    <label class="switch">
-                                        <input class="toggleStatus" href="{{route('admin.roles.toggle-status',$value->id)}}"
-                                               type="checkbox" {{($value->is_active) == 1 ?'checked':''}}>
-                                        <span class="slider round"></span>
-                                    </label>
-                                </td>
-
-                                <td class="text-center">
-                                    <span >{{$value->backend_login_authorize ? 'Yes':'No'}}</span>
-                                </td>
-
+                                <td>{{ date('d-M-Y',strtotime($value->created_at)) }}</td>
                                 @canany(['edit_role','delete_role','assign_permission'])
                                     @if($value->slug !=='admin')
                                         <td>
