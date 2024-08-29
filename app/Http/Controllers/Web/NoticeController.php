@@ -121,7 +121,6 @@ class NoticeController extends Controller
     {
         if (\Auth::user()->can('show-notice')) {
             try {
-                $this->authorize('show_notice');
                 $select = ['description', 'title'];
                 $notice = $this->noticeService->findOrFailNoticeDetailById($id, $select);
                 $notice->description = removeHtmlTags($notice->description);

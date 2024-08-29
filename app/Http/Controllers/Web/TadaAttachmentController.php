@@ -21,7 +21,6 @@ class TadaAttachmentController extends Controller
 
     public function create($tadaId)
     {
-        $this->authorize('create_attachment');
         try {
             return view($this->view . 'upload_attachments', compact('tadaId'));
         } catch (Exception $exception) {
@@ -31,7 +30,6 @@ class TadaAttachmentController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorize('create_attachment');
         try {
             $validatedData = $request->validate([
                 'tada_id' => ['required', Rule::exists('tadas', 'id')],
@@ -53,7 +51,6 @@ class TadaAttachmentController extends Controller
 
     public function delete($id)
     {
-        $this->authorize('delete_attachment');
         try {
             DB::beginTransaction();
             $attachmentDetail = $this->tadaAttachementService->findTadaAttachmentById($id);

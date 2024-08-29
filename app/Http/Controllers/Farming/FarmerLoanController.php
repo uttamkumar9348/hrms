@@ -21,8 +21,12 @@ class FarmerLoanController extends Controller
      */
     public function index()
     {
-        $loans = FarmerLoan::where('created_by', Auth::user()->id)->get();
-        return view('admin.farmer.loan.index', compact('loans'));
+        if (\Auth::user()->can('manage-allotment')) {
+            $loans = FarmerLoan::where('created_by', Auth::user()->id)->get();
+            return view('admin.farmer.loan.index', compact('loans'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -30,13 +34,17 @@ class FarmerLoanController extends Controller
      */
     public function create()
     {
-        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
-            ->where('farmings.is_validate', 1)
-            ->where('farmings.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->get();
-        $categories = ProductServiceCategory::all();
-        return view('admin.farmer.loan.create', compact('categories', 'farmings'));
+        if (\Auth::user()->can('create-allotment')) {
+            $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+                ->where('farmings.is_validate', 1)
+                ->where('farmings.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)
+                ->get();
+            $categories = ProductServiceCategory::all();
+            return view('admin.farmer.loan.create', compact('categories', 'farmings'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -44,33 +52,37 @@ class FarmerLoanController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $this->validate($request, [
-                'farming_id' => 'required',
-                'created_by' => 'required',
-            ]);
-            $encoded_loan_category_id = json_encode($request->loan_category_id);
-            $encoded_loan_type_id = json_encode($request->loan_type_id);
-            $encoded_price_kg = json_encode($request->price_kg);
-            $encoded_quantity = json_encode($request->quantity);
-            $encoded_total_amount = json_encode($request->total_amount);
+        if (\Auth::user()->can('create-allotment')) {
+            try {
+                $this->validate($request, [
+                    'farming_id' => 'required',
+                    'created_by' => 'required',
+                ]);
+                $encoded_loan_category_id = json_encode($request->loan_category_id);
+                $encoded_loan_type_id = json_encode($request->loan_type_id);
+                $encoded_price_kg = json_encode($request->price_kg);
+                $encoded_quantity = json_encode($request->quantity);
+                $encoded_total_amount = json_encode($request->total_amount);
 
-            $farmerLoan = new FarmerLoan;
-            $farmerLoan->farming_id = $request->farming_id;
-            $farmerLoan->registration_number = $request->registration_number;
-            $farmerLoan->agreement_number = $request->agreement_number;
-            $farmerLoan->date = $request->date;
-            $farmerLoan->loan_category_id = $encoded_loan_category_id;
-            $farmerLoan->loan_type_id = $encoded_loan_type_id;
-            $farmerLoan->price_kg = $encoded_price_kg;
-            $farmerLoan->quantity = $encoded_quantity;
-            $farmerLoan->total_amount = $encoded_total_amount;
-            $farmerLoan->created_by = $request->created_by;
-            $farmerLoan->save();
+                $farmerLoan = new FarmerLoan;
+                $farmerLoan->farming_id = $request->farming_id;
+                $farmerLoan->registration_number = $request->registration_number;
+                $farmerLoan->agreement_number = $request->agreement_number;
+                $farmerLoan->date = $request->date;
+                $farmerLoan->loan_category_id = $encoded_loan_category_id;
+                $farmerLoan->loan_type_id = $encoded_loan_type_id;
+                $farmerLoan->price_kg = $encoded_price_kg;
+                $farmerLoan->quantity = $encoded_quantity;
+                $farmerLoan->total_amount = $encoded_total_amount;
+                $farmerLoan->created_by = $request->created_by;
+                $farmerLoan->save();
 
-            return redirect()->to(route('admin.farmer.loan.index'))->with('success', 'Loan Added Successfully.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+                return redirect()->to(route('admin.farmer.loan.index'))->with('success', 'Loan Added Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -87,21 +99,25 @@ class FarmerLoanController extends Controller
      */
     public function edit($id)
     {
-        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
-            ->where('farmings.is_validate', 1)
-            ->where('farmings.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->get();
-        $loan = FarmerLoan::find($id);
-        $categories = ProductServiceCategory::all();
-        $types = ProductService::all();
+        if (\Auth::user()->can('edit-allotment')) {
+            $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+                ->where('farmings.is_validate', 1)
+                ->where('farmings.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)
+                ->get();
+            $loan = FarmerLoan::find($id);
+            $categories = ProductServiceCategory::all();
+            $types = ProductService::all();
 
-        return view('admin.farmer.loan.edit', compact(
-            'farmings',
-            'loan',
-            'categories',
-            'types',
-        ));
+            return view('admin.farmer.loan.edit', compact(
+                'farmings',
+                'loan',
+                'categories',
+                'types',
+            ));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -109,28 +125,32 @@ class FarmerLoanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $encoded_loan_category_id = json_encode($request->loan_category_id);
-            $encoded_loan_type_id = json_encode($request->loan_type_id);
-            $encoded_price_kg = json_encode($request->price_kg);
-            $encoded_quantity = json_encode($request->quantity);
-            $encoded_total_amount = json_encode($request->total_amount);
+        if (\Auth::user()->can('edit-allotment')) {
+            try {
+                $encoded_loan_category_id = json_encode($request->loan_category_id);
+                $encoded_loan_type_id = json_encode($request->loan_type_id);
+                $encoded_price_kg = json_encode($request->price_kg);
+                $encoded_quantity = json_encode($request->quantity);
+                $encoded_total_amount = json_encode($request->total_amount);
 
-            $farmerLoan = FarmerLoan::find($id);
-            $farmerLoan->farming_id = $request->farming_id;
-            $farmerLoan->registration_number = $request->registration_number;
-            $farmerLoan->agreement_number = $request->agreement_number;
-            $farmerLoan->date = $request->date;
-            $farmerLoan->loan_category_id = $encoded_loan_category_id;
-            $farmerLoan->loan_type_id = $encoded_loan_type_id;
-            $farmerLoan->price_kg = $encoded_price_kg;
-            $farmerLoan->quantity = $encoded_quantity;
-            $farmerLoan->total_amount = $encoded_total_amount;
-            $farmerLoan->update();
+                $farmerLoan = FarmerLoan::find($id);
+                $farmerLoan->farming_id = $request->farming_id;
+                $farmerLoan->registration_number = $request->registration_number;
+                $farmerLoan->agreement_number = $request->agreement_number;
+                $farmerLoan->date = $request->date;
+                $farmerLoan->loan_category_id = $encoded_loan_category_id;
+                $farmerLoan->loan_type_id = $encoded_loan_type_id;
+                $farmerLoan->price_kg = $encoded_price_kg;
+                $farmerLoan->quantity = $encoded_quantity;
+                $farmerLoan->total_amount = $encoded_total_amount;
+                $farmerLoan->update();
 
-            return redirect()->back()->with('success', 'Farming Loan Updated Successfully.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+                return redirect()->back()->with('success', 'Farming Loan Updated Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -139,9 +159,13 @@ class FarmerLoanController extends Controller
      */
     public function destroy($id)
     {
-        $loan = FarmerLoan::find($id);
-        $loan->delete();
-        return redirect()->back()->with('success', 'Farming Loan Deleted Successfully.');
+        if (\Auth::user()->can('delete-allotment')) {
+            $loan = FarmerLoan::find($id);
+            $loan->delete();
+            return redirect()->back()->with('success', 'Farming Loan Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
     public function getProductServiceByCategory(Request $request)
     {
@@ -174,15 +198,15 @@ class FarmerLoanController extends Controller
         $farmingloan = FarmerLoan::findorfail($id);
         $data = $farmingloan;
         if ($farmingloan->invoice_generate_status == 0) {
-        $farming = Farming::findorfail($farmingloan->farming_id);
+            $farming = Farming::findorfail($farmingloan->farming_id);
 
-        $pdf = Pdf::loadView('admin.farmer.loan.invoice', compact('data', 'farming'));
+            $pdf = Pdf::loadView('admin.farmer.loan.invoice', compact('data', 'farming'));
 
-        $path = public_path('/farmer/allotment/');
+            $path = public_path('/farmer/allotment/');
 
-        if (!File::exists($path)) {
-            File::makeDirectory($path, 0755, true);
-        }
+            if (!File::exists($path)) {
+                File::makeDirectory($path, 0755, true);
+            }
 
             $file_name = time() . 'invoice.pdf';
             $pdf->save($path  . $file_name);

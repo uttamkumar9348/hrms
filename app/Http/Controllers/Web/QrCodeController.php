@@ -16,8 +16,7 @@ class QrCodeController extends Controller
 {
     private $view = 'admin.qr.';
 
-    public function __construct(Public QrCodeService $qrCodeService)
-    {}
+    public function __construct(public QrCodeService $qrCodeService) {}
     /**
      * Display a listing of the resource.
      *
@@ -25,12 +24,15 @@ class QrCodeController extends Controller
      */
     public function index(): View|Factory|RedirectResponse|Application
     {
-        try {
-            $this->authorize('list_qr');
-            $qrData = $this->qrCodeService->getAllQr();
-            return view($this->view . 'index', compact('qrData'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('manage-qr')) {
+            try {
+                $qrData = $this->qrCodeService->getAllQr();
+                return view($this->view . 'index', compact('qrData'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -41,11 +43,14 @@ class QrCodeController extends Controller
      */
     public function create(): View|Factory|Response|RedirectResponse|Application
     {
-        try {
-            $this->authorize('create_qr');
-            return view($this->view . 'create');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('create-qr')) {
+            try {
+                return view($this->view . 'create');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -57,15 +62,17 @@ class QrCodeController extends Controller
      */
     public function store(Request $request): Response|RedirectResponse
     {
-        try {
-            $this->authorize('create_qr');
+        if (\Auth::user()->can('create-qr')) {
+            try {
+                $validatedData = $request->all();
 
-            $validatedData = $request->all();
-
-           $this->qrCodeService->saveQrDetail($validatedData);
-           return redirect()->route('admin.qr.index')->with('success','QR created successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+                $this->qrCodeService->saveQrDetail($validatedData);
+                return redirect()->route('admin.qr.index')->with('success', 'QR created successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -77,13 +84,16 @@ class QrCodeController extends Controller
      */
     public function edit(int $id): View|Factory|Response|RedirectResponse|Application
     {
-        try {
-            $this->authorize('edit_qr');
+        if (\Auth::user()->can('edit-qr')) {
+            try {
 
-            $qrData = $this->qrCodeService->findQrDetailById($id);
-            return view($this->view . 'edit', compact('qrData'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+                $qrData = $this->qrCodeService->findQrDetailById($id);
+                return view($this->view . 'edit', compact('qrData'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -96,13 +106,15 @@ class QrCodeController extends Controller
      */
     public function update(Request $request, int $id): Response|RedirectResponse
     {
-        try {
-            $this->authorize('edit_qr');
-
-            $this->qrCodeService->updateQrDetail($request->all(), $id);
-            return redirect()->route('admin.qr.index')->with('success','QR updated successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('edit-qr')) {
+            try {
+                $this->qrCodeService->updateQrDetail($request->all(), $id);
+                return redirect()->route('admin.qr.index')->with('success', 'QR updated successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -114,13 +126,15 @@ class QrCodeController extends Controller
      */
     public function destroy(int $id): Response|RedirectResponse
     {
-        try {
-            $this->authorize('delete_qr');
-
-            $this->qrCodeService->deleteQrDetail($id);
-            return redirect()->route('admin.qr.index')->with('success','QR deleted successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('delete-qr')) {
+            try {
+                $this->qrCodeService->deleteQrDetail($id);
+                return redirect()->route('admin.qr.index')->with('success', 'QR deleted successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 

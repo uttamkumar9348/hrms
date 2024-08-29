@@ -35,7 +35,6 @@ class NotificationController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorize('list_notification');
         try {
             $filterParameters = [
                 'type' =>$request->type ?? null,
@@ -51,7 +50,6 @@ class NotificationController extends Controller
 
     public function create(): Factory|View|RedirectResponse|Application
     {
-        $this->authorize('create_notification');
         try {
             $select = ['id', 'name'];
             $companyDetail = $this->companyRepo->getCompanyDetail($select);
@@ -65,7 +63,6 @@ class NotificationController extends Controller
 
     public function store(NotificationRequest $request): RedirectResponse
     {
-        $this->authorize('create_notification');
         try {
             $validatedData = $request->validated();
             DB::beginTransaction();
@@ -90,7 +87,6 @@ class NotificationController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            $this->authorize('show_notification');
             $select = ['*'];
             $with = ['notifiedUsers.userDetail:id,name'];
             $notifiedUser = [];
@@ -112,7 +108,6 @@ class NotificationController extends Controller
 
     public function edit($id): Factory|View|RedirectResponse|Application
     {
-        $this->authorize('edit_notification');
         try {
             $notificationDetail = $this->notificationRepo->findNotificationDetailById($id);
             $notificationDetail->description = removeHtmlTags($notificationDetail->description);
@@ -126,7 +121,6 @@ class NotificationController extends Controller
 
     public function update(NotificationRequest $request, $id): RedirectResponse
     {
-        $this->authorize('edit_notification');
         try {
             $validatedData = $request->validated();
             $notificationDetail = $this->notificationRepo->findNotificationDetailById($id);
@@ -150,7 +144,6 @@ class NotificationController extends Controller
 
     public function toggleStatus($id): RedirectResponse
     {
-        $this->authorize('edit_notification');
         try {
             DB::beginTransaction();
             $this->notificationRepo->toggleStatus($id);
@@ -164,7 +157,6 @@ class NotificationController extends Controller
 
     public function delete($id): RedirectResponse
     {
-        $this->authorize('delete_notification');
         try {
             $notificationDetail = $this->notificationRepo->findNotificationDetailById($id);
             if (!$notificationDetail) {
@@ -182,7 +174,6 @@ class NotificationController extends Controller
 
     public function sendNotificationToAllCompanyUser($notificationId): RedirectResponse
     {
-        $this->authorize('send_notification');
         try {
             $notificationDetail = $this->notificationRepo->findNotificationDetailById($notificationId);
             if (!$notificationDetail) {
@@ -204,7 +195,6 @@ class NotificationController extends Controller
     public function getNotificationForNavBar(): JsonResponse|RedirectResponse
     {
         try {
-            $this->authorize('list_notification');
             $select = ['notification_publish_date', 'title'];
             $notification = $this->notificationRepo->getNotificationForNavBar($select);
             $navNotifications = [];

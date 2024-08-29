@@ -27,10 +27,14 @@ class FarmingController extends Controller
      */
     public function index()
     {
-        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
-            ->where('farmings.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)->get();
-        return view('admin.farmer.registration.index', compact('farmings'));
+        if (\Auth::user()->can('manage-farmer_registration')) {
+            $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+                ->where('farmings.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)->get();
+            return view('admin.farmer.registration.index', compact('farmings'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -38,9 +42,13 @@ class FarmingController extends Controller
      */
     public function create()
     {
-        $countries = Country::all();
-        $zones = Zone::all();
-        return view('admin.farmer.registration.create', compact('countries', 'zones'));
+        if (\Auth::user()->can('create-farmer_registration')) {
+            $countries = Country::all();
+            $zones = Zone::all();
+            return view('admin.farmer.registration.create', compact('countries', 'zones'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -48,45 +56,43 @@ class FarmingController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $this->validate($request, [
-                'name' => 'required',
-                'father_name' => 'required',
-                'mobile' => 'required',
-                'country_id' => 'required',
-                'state_id' => 'required',
-                'district_id' => 'required',
-                'block_id' => 'required',
-                'gram_panchyat_id' => 'required',
-                'village_id' => 'required',
-                'age' => 'required',
-                'gender' => 'required',
-                'qualification' => 'required',
-                'offered_area' => 'required',
-                'adhaarno' => 'required',
-                'language' => 'required',
-                'sms_mode' => 'required',
-                'created_by' => 'required',
-                'zone_id' => 'required',
-                'center_id' => 'required',
-                // 'farmer_id_2' => 'required',
-                'farmer_category' => 'required',
-            ]);
-            // $zone = Zone::find($request->zone_id);
-            // $center = Center::find($request->center_id);
-            // $count = Farming::all()->count() + 1;
-            // $existingFarmingProfiles = str_pad($count, 5, '0', STR_PAD_LEFT);
-            // $request->merge([
-            //     'g_code' => @$zone->zone_number . @$center->center_number . '/' . $existingFarmingProfiles
-            // ]);
-            $request->merge([
-                'registration_no' => "ACSI" . '-' . rand(0, 9999)
-            ]);
+        if (\Auth::user()->can('create-farmer_registration')) {
+            try {
+                $this->validate($request, [
+                    'name' => 'required',
+                    'father_name' => 'required',
+                    'mobile' => 'required',
+                    'country_id' => 'required',
+                    'state_id' => 'required',
+                    'district_id' => 'required',
+                    'block_id' => 'required',
+                    'gram_panchyat_id' => 'required',
+                    'village_id' => 'required',
+                    'age' => 'required',
+                    'gender' => 'required',
+                    'qualification' => 'required',
+                    'offered_area' => 'required',
+                    'adhaarno' => 'required',
+                    'language' => 'required',
+                    'sms_mode' => 'required',
+                    'created_by' => 'required',
+                    'zone_id' => 'required',
+                    'center_id' => 'required',
+                    // 'farmer_id_2' => 'required',
+                    'farmer_category' => 'required',
+                ]);
 
-            Farming::create($request->all());
-            return redirect()->to(route('admin.farmer.farming_registration.index'))->with('success', 'Farming Added Successfully.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+                $request->merge([
+                    'registration_no' => "ACSI" . '-' . rand(0, 9999)
+                ]);
+
+                Farming::create($request->all());
+                return redirect()->to(route('admin.farmer.farming_registration.index'))->with('success', 'Farming Added Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -95,14 +101,18 @@ class FarmingController extends Controller
      */
     public function show($id)
     {
-        $farming = Farming::find($id);
-        $guarantors = Guarantor::where('farming_id', $farming->id)->get();
-        $security_deposits = FarmingPayment::where('farming_id', $farming->id)
-            ->whereIn('type', [FarmingPayment::SECURITY_DEPOSIT, FarmingPayment::REIMBURSEMENT])->get();
-        $bank_guarantees = FarmingPayment::where('farming_id', $farming->id)
-            ->where('type', FarmingPayment::BANK_GUARANTEE)->get();
-        $loans = FarmerLoan::where('farming_id', $farming->id)->get();
-        return view('admin.farmer.registration.show', compact('farming', 'guarantors', 'security_deposits', 'bank_guarantees', 'loans'));
+        if (\Auth::user()->can('show-farmer_registration')) {
+            $farming = Farming::find($id);
+            $guarantors = Guarantor::where('farming_id', $farming->id)->get();
+            $security_deposits = FarmingPayment::where('farming_id', $farming->id)
+                ->whereIn('type', [FarmingPayment::SECURITY_DEPOSIT, FarmingPayment::REIMBURSEMENT])->get();
+            $bank_guarantees = FarmingPayment::where('farming_id', $farming->id)
+                ->where('type', FarmingPayment::BANK_GUARANTEE)->get();
+            $loans = FarmerLoan::where('farming_id', $farming->id)->get();
+            return view('admin.farmer.registration.show', compact('farming', 'guarantors', 'security_deposits', 'bank_guarantees', 'loans'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -110,26 +120,30 @@ class FarmingController extends Controller
      */
     public function edit($id)
     {
-        $farming = Farming::find($id);
-        $countries = Country::all();
-        $states = State::where('country_id', $farming->country_id)->get();
-        $districts = District::where('state_id', $farming->state_id)->get();
-        $blocks = Block::where('district_id', $farming->district_id)->get();
-        $gram_panchyats = GramPanchyat::where('block_id', $farming->block_id)->get();
-        $villages = Village::where('gram_panchyat_id', $farming->gram_panchyat_id)->get();
-        $zones = Zone::all();
-        $centers = Center::where('zone_id', $farming->zone_id)->get();
-        return view('admin.farmer.registration.edit', compact(
-            'farming',
-            'countries',
-            'states',
-            'districts',
-            'blocks',
-            'gram_panchyats',
-            'villages',
-            'zones',
-            'centers',
-        ));
+        if (\Auth::user()->can('edit-farmer_registration')) {
+            $farming = Farming::find($id);
+            $countries = Country::all();
+            $states = State::where('country_id', $farming->country_id)->get();
+            $districts = District::where('state_id', $farming->state_id)->get();
+            $blocks = Block::where('district_id', $farming->district_id)->get();
+            $gram_panchyats = GramPanchyat::where('block_id', $farming->block_id)->get();
+            $villages = Village::where('gram_panchyat_id', $farming->gram_panchyat_id)->get();
+            $zones = Zone::all();
+            $centers = Center::where('zone_id', $farming->zone_id)->get();
+            return view('admin.farmer.registration.edit', compact(
+                'farming',
+                'countries',
+                'states',
+                'districts',
+                'blocks',
+                'gram_panchyats',
+                'villages',
+                'zones',
+                'centers',
+            ));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -137,27 +151,14 @@ class FarmingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $farming = Farming::find($id);
-        // $explode = explode('/',$farming->g_code);
+        if (\Auth::user()->can('edit-farmer_registration')) {
+            $farming = Farming::find($id);
 
-        // if ($request->zone_id != $farming->zone_id) {
-        //     $zone = Zone::find($request->zone_id);
-        //     $center = Center::find($request->center_id);
-
-        //     $request->merge([
-        //         'g_code' => $zone->zone_number . $center->center_number . '/' . $explode[1]
-        //     ]);
-        // }
-        // if ($request->center_id != $farming->center_id) {
-        //     $zone = Zone::find($request->zone_id);
-        //     $center = Center::find($request->center_id);
-        //     $request->merge([
-        //         'g_code' => $zone->zone_number . $center->center_number . '/' . $explode[1]
-        //     ]);
-        // }
-
-        $farming->update($request->all());
-        return redirect()->back()->with('success', 'Farming Updated Successfully.');
+            $farming->update($request->all());
+            return redirect()->back()->with('success', 'Farming Updated Successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -165,9 +166,13 @@ class FarmingController extends Controller
      */
     public function destroy($id)
     {
-        $farming = Farming::find($id);
-        $farming->delete();
-        return redirect()->back()->with('success', 'Farming Deleted Successfully.');
+        if (\Auth::user()->can('delete-farmer_registration')) {
+            $farming = Farming::find($id);
+            $farming->delete();
+            return redirect()->back()->with('success', 'Farming Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
     public function getStates(Request $request)
     {
@@ -261,7 +266,7 @@ class FarmingController extends Controller
             ->where('farmings.created_by', Auth::user()->id)
             ->where('farmings.is_validate', $request->filter)
             ->orWhere('users.supervisor_id', Auth::user()->id)->get();
-            
+
         return view('admin.farmer.registration.index', compact('farmings'));
     }
 }

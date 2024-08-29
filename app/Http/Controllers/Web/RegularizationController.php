@@ -164,7 +164,6 @@ class RegularizationController extends Controller
 
     public function createRegularization(Request $request)
     {
-        $this->authorize('attendance_create');
         $date = $request->date;
         $reason = $request->reason;
         $checkin_at = $request->checkin;

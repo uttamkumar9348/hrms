@@ -93,7 +93,6 @@ class HolidayController extends Controller
     {
         if (\Auth::user()->can('show-holidays')) {
             try {
-                $this->authorize('show_holiday');
                 $holiday = $this->holidayService->findHolidayDetailById($id);
                 $holiday->event_date = AppHelper::formatDateForView($holiday->event_date);
                 return response()->json([

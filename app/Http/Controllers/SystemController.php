@@ -1006,7 +1006,6 @@ class SystemController extends Controller
 
     public function testSendMail(Request $request)
     {
-
         $validator = \Validator::make(
             $request->all(), [
                 'email' => 'required|email',
@@ -1067,7 +1066,7 @@ class SystemController extends Controller
 
     public function printIndex()
     {
-        if(\Auth::user()->can('manage print settings'))
+        if(\Auth::user()->can('manage-print_settings'))
         {
             $settings = Utility::settings();
 
@@ -1081,16 +1080,16 @@ class SystemController extends Controller
 
     public function posPrintIndex()
     {
-        // if(\Auth::user()->can('manage print settings'))
-        // {
+        if(\Auth::user()->can('manage-print_settings'))
+        {
             $settings = Utility::settings();
 
             return view('admin.settings.pos', compact('settings'));
-        // }
-        // else
-        // {
-        //     return redirect()->back()->with('error', 'Permission denied.');
-        // }
+        }
+        else
+        {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     public function adminPaymentSettings($request)

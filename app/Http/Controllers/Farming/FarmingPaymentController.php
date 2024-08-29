@@ -16,8 +16,12 @@ class FarmingPaymentController extends Controller
      */
     public function index()
     {
-        $payments = FarmingPayment::where('type', FarmingPayment::SECURITY_DEPOSIT)->where('created_by', Auth::user()->id)->get();
-        return view('admin.farmer.payment.index', compact('payments'));
+        if (\Auth::user()->can('manage-security_deposite')) {
+            $payments = FarmingPayment::where('type', FarmingPayment::SECURITY_DEPOSIT)->where('created_by', Auth::user()->id)->get();
+            return view('admin.farmer.payment.index', compact('payments'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -25,13 +29,17 @@ class FarmingPaymentController extends Controller
      */
     public function create()
     {
-        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
-            ->where('farmings.is_validate', 1)
-            ->where('farmings.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->get();
+        if (\Auth::user()->can('create-security_deposite')) {
+            $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+                ->where('farmings.is_validate', 1)
+                ->where('farmings.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)
+                ->get();
 
-        return view('admin.farmer.payment.create', compact('farmings'));
+            return view('admin.farmer.payment.create', compact('farmings'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -39,39 +47,42 @@ class FarmingPaymentController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-        try {
-            if ($request->amount != null) {
-                $this->validate($request, [
-                    'farming_id' => 'required',
-                    'created_by' => 'required',
-                    'amount' => 'required|integer',
-                ]);
-            } else {
-                $this->validate($request, [
-                    'farming_id' => 'required',
-                    'created_by' => 'required',
-                ]);
+        if (\Auth::user()->can('create-security_deposite')) {
+            try {
+                if ($request->amount != null) {
+                    $this->validate($request, [
+                        'farming_id' => 'required',
+                        'created_by' => 'required',
+                        'amount' => 'required|integer',
+                    ]);
+                } else {
+                    $this->validate($request, [
+                        'farming_id' => 'required',
+                        'created_by' => 'required',
+                    ]);
+                }
+
+                $client = new FarmingPayment;
+                $client->farming_id = $request->farming_id;
+                $client->receipt_no = $request->receipt_no;
+                $client->receipt_type = $request->receipt_type;
+                $client->agreement_number = $request->agreement_number;
+                $client->date = $request->date;
+                $client->amount = $request->amount;
+                $client->type = $request->type;
+                $client->bank = $request->bank;
+                $client->loan_account_number = $request->loan_account_number;
+                $client->ifsc = $request->ifsc;
+                $client->branch = $request->branch;
+                $client->created_by = Auth::user()->id;
+                $client->save();
+
+                return redirect()->to(route('admin.farmer.farming_registration.show', $request->farming_id))->with('success', 'Payment Added Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
             }
-
-            $client = new FarmingPayment;
-            $client->farming_id = $request->farming_id;
-            $client->receipt_no = $request->receipt_no;
-            $client->receipt_type = $request->receipt_type;
-            $client->agreement_number = $request->agreement_number;
-            $client->date = $request->date;
-            $client->amount = $request->amount;
-            $client->type = $request->type;
-            $client->bank = $request->bank;
-            $client->loan_account_number = $request->loan_account_number;
-            $client->ifsc = $request->ifsc;
-            $client->branch = $request->branch;
-            $client->created_by = Auth::user()->id;
-            $client->save();
-
-            return redirect()->to(route('admin.farmer.farming_registration.show', $request->farming_id))->with('success', 'Payment Added Successfully.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -88,16 +99,20 @@ class FarmingPaymentController extends Controller
      */
     public function edit($id)
     {
-        $payment = FarmingPayment::find($id);
-        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
-            ->where('farmings.is_validate', 1)
-            ->where('farmings.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->get();
-        return view('admin.farmer.payment.edit', compact(
-            'payment',
-            'farmings',
-        ));
+        if (\Auth::user()->can('edit-security_deposite')) {
+            $payment = FarmingPayment::find($id);
+            $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+                ->where('farmings.is_validate', 1)
+                ->where('farmings.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)
+                ->get();
+            return view('admin.farmer.payment.edit', compact(
+                'payment',
+                'farmings',
+            ));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -105,20 +120,24 @@ class FarmingPaymentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $farmingPayment = FarmingPayment::find($id);
-        $farmingPayment->farming_id = $request->farming_id;
-        $farmingPayment->receipt_no = $request->receipt_no;
-        $farmingPayment->agreement_number = $request->agreement_number;
-        $farmingPayment->date = $request->date;
-        $farmingPayment->amount = $request->amount;
-        $farmingPayment->bank = $request->bank;
-        $farmingPayment->loan_account_number = $request->loan_account_number;
-        $farmingPayment->ifsc = $request->ifsc;
-        $farmingPayment->branch = $request->branch;
-        $farmingPayment->created_by = Auth::user()->id;
-        $farmingPayment->save();
+        if (\Auth::user()->can('edit-security_deposite')) {
+            $farmingPayment = FarmingPayment::find($id);
+            $farmingPayment->farming_id = $request->farming_id;
+            $farmingPayment->receipt_no = $request->receipt_no;
+            $farmingPayment->agreement_number = $request->agreement_number;
+            $farmingPayment->date = $request->date;
+            $farmingPayment->amount = $request->amount;
+            $farmingPayment->bank = $request->bank;
+            $farmingPayment->loan_account_number = $request->loan_account_number;
+            $farmingPayment->ifsc = $request->ifsc;
+            $farmingPayment->branch = $request->branch;
+            $farmingPayment->created_by = Auth::user()->id;
+            $farmingPayment->save();
 
-        return redirect()->back()->with('success', 'Farming Payment Updated Successfully.');
+            return redirect()->back()->with('success', 'Farming Payment Updated Successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -126,53 +145,77 @@ class FarmingPaymentController extends Controller
      */
     public function destroy($id)
     {
-        $farmingPayment = FarmingPayment::find($id);
-        $farmingPayment->delete();
-        return redirect()->back()->with('success', 'Farming Payment Deleted Successfully.');
+        if (\Auth::user()->can('delete-security_deposite')) {
+            $farmingPayment = FarmingPayment::find($id);
+            $farmingPayment->delete();
+            return redirect()->back()->with('success', 'Farming Payment Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
     public function bankGuarantee()
     {
-        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
-            ->where('farmings.is_validate', 1)
-            ->where('farmings.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->get();
-        return view('admin.farmer.bank_guarantee.create', compact('farmings'));
+        if (\Auth::user()->can('show-bank_guarantee')) {
+            $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+                ->where('farmings.is_validate', 1)
+                ->where('farmings.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)
+                ->get();
+            return view('admin.farmer.bank_guarantee.create', compact('farmings'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
     public function reimbursement()
     {
-        $payments = FarmingPayment::where('type', FarmingPayment::REIMBURSEMENT)
-            ->where('created_by', Auth::user()->id)->get();
+        if (\Auth::user()->can('show-reimbursement')) {
+            $payments = FarmingPayment::where('type', FarmingPayment::REIMBURSEMENT)
+                ->where('created_by', Auth::user()->id)->get();
 
-        return view('admin.farmer.reimbursement.index', compact('payments'));
+            return view('admin.farmer.reimbursement.index', compact('payments'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
     public function reimbursementCreate()
     {
-        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
-            ->where('farmings.is_validate', 1)
-            ->where('farmings.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->get();
-        return view('admin.farmer.reimbursement.create', compact('farmings'));
+        if (\Auth::user()->can('create-reimbursement')) {
+            $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+                ->where('farmings.is_validate', 1)
+                ->where('farmings.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)
+                ->get();
+            return view('admin.farmer.reimbursement.create', compact('farmings'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
     public function reimbursement_delete($id)
     {
-        $farmingPayment = FarmingPayment::find($id);
-        $farmingPayment->delete();
-        return redirect()->back()->with('success', 'Farming Payment Deleted Successfully.');
+        if (\Auth::user()->can('delete-reimbursement')) {
+            $farmingPayment = FarmingPayment::find($id);
+            $farmingPayment->delete();
+            return redirect()->back()->with('success', 'Farming Payment Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
     public function editBankGuarantee($id)
     {
-        $payment = FarmingPayment::find($id);
-        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
-            ->where('farmings.is_validate', 1)
-            ->where('farmings.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->get();
-        return view('admin.farmer.bank_guarantee.edit', compact(
-            'payment',
-            'farmings',
-        ));
+        if (\Auth::user()->can('edit-bank_guarantee')) {
+            $payment = FarmingPayment::find($id);
+            $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+                ->where('farmings.is_validate', 1)
+                ->where('farmings.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)
+                ->get();
+            return view('admin.farmer.bank_guarantee.edit', compact(
+                'payment',
+                'farmings',
+            ));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
     public function pdfBankGuarantee($id)
     {

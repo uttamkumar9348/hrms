@@ -42,7 +42,6 @@ class UserProfileApiController extends Controller
     public function userProfileDetail(): JsonResponse
     {
         try {
-            $this->authorize('view_profile');
             $with = [
                 'branch:id,name',
                 'company:id,name',
@@ -63,7 +62,6 @@ class UserProfileApiController extends Controller
     public function changePassword(UserChangePasswordRequest $request): JsonResponse
     {
         try {
-            $this->authorize('allow_change_password');
             $validatedData = $request->validated();
             $userDetail = $this->userRepo->findUserDetailById(getAuthUserCode());
             if(in_array($userDetail->username, User::DEMO_USERS_USERNAME)){
@@ -88,7 +86,6 @@ class UserProfileApiController extends Controller
     public function updateUserProfile(UserProfileUpdateApiRequest $request): JsonResponse
     {
         try {
-            $this->authorize('update_profile');
             $validatedData = $request->validated();
             $userDetail = $this->userRepo->findUserDetailById(getAuthUserCode());
             if(in_array($userDetail->username, User::DEMO_USERS_USERNAME)){
@@ -110,7 +107,6 @@ class UserProfileApiController extends Controller
     public function findEmployeeDetailById($userId)
     {
         try {
-            $this->authorize('show_profile_detail');
             $with = ['branch:id,name', 'company:id,name', 'post:id,post_name', 'department:id,dept_name'];
             $select = ['users.*', 'branch_id', 'company_id', 'department_id', 'post_id'];
             $employee = $this->userRepo->findUserDetailById($userId, $select, $with);
@@ -124,7 +120,6 @@ class UserProfileApiController extends Controller
     public function getTeamSheetOfCompany()
     {
         try {
-            $this->authorize('list_team_sheet');
             $select = ['id', 'name'];
             $with = ['employee'];
             $updateOnline = $this->updateOnlineStatusBasedOnTodayAttendance();

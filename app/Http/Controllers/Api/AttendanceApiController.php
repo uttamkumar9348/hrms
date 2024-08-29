@@ -243,7 +243,6 @@ class AttendanceApiController extends Controller
     public function employeeCheckIn(AttendanceCheckInRequest $request): JsonResponse
     {
         try {
-            $this->authorize('check_in');
             $permissionKeyForNotification = 'employee_check_in';
             $userDetail = auth()->user();
 
@@ -275,8 +274,6 @@ class AttendanceApiController extends Controller
     {
         try {
             $userDetail = auth()->user();
-
-            $this->authorize('check_out');
             $permissionKeyForNotification = 'employee_check_out';
 
             $validatedData = $request->validated();

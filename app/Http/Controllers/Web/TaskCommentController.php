@@ -30,7 +30,6 @@ class TaskCommentController extends Controller
 
     public function saveCommentDetail(TaskCommentRequest $request): JsonResponse
     {
-        $this->authorize('create_comment');
         try {
             $validatedData = $request->validated();
             $mentionedMember = $validatedData['mentioned'] ?? [];
@@ -87,7 +86,6 @@ class TaskCommentController extends Controller
 
     public function deleteComment($commentId): JsonResponse
     {
-        $this->authorize('delete_comment');
         try {
             DB::beginTransaction();
             $this->commentService->deleteTaskComment($commentId);
@@ -101,7 +99,6 @@ class TaskCommentController extends Controller
 
     public function deleteReply($replyId): JsonResponse
     {
-        $this->authorize('delete_comment');
         try {
             DB::beginTransaction();
             $this->commentService->deleteReply($replyId);

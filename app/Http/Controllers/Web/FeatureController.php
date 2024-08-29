@@ -22,7 +22,6 @@ class FeatureController extends Controller
 
     public function index()
     {
-        $this->authorize('feature_list');
         try{
             $select=['id','group','name','status'];
             $features = $this->featureRepository->getAllFeatures($select);
@@ -34,8 +33,6 @@ class FeatureController extends Controller
 
     public function toggleStatus($id)
     {
-        $this->authorize('update_feature');
-
         try {
             DB::beginTransaction();
                 $this->featureRepository->toggleStatus($id);

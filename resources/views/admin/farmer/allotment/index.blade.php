@@ -23,14 +23,10 @@
                                         <i class="ti ti-cast"></i>
                                     </div>
                                     <div class="ms-3">
-                                        {{-- <small class="text-muted">{{__('Issue')}}</small> --}}
                                         <h6 class="m-0">{{ __('Issue Bank Guarantee') }}</h6>
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="col-auto text-end">
-                            <h4 class="m-0">{{ $home_data['total_project']['total'] }}</h4>
-                        </div> --}}
                         </div>
                     </div>
                 </div>
@@ -47,15 +43,10 @@
                                         <i class="ti ti-activity"></i>
                                     </div>
                                     <div class="ms-3">
-                                        {{-- <small class="text-muted">{{__('Total')}}</small> --}}
                                         <h6 class="m-0">{{ __('Seeds,Fertiliser & Pesticides Allotment') }}</h6>
                                     </div>
                                 </div>
                             </div>
-                            {{-- <div class="col-auto text-end">
-                            <h4 class="m-0">{{ $home_data['total_task']['total'] }}</h4>
-                            <small class="text-muted"><span class="text-success">{{ $home_data['total_task']['percentage'] }}%</span> {{__('completd')}}</small>
-                        </div> --}}
                         </div>
                     </div>
                 </div>

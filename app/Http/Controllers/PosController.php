@@ -29,7 +29,7 @@ class PosController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->can('manage pos')) {
+        if (\Auth::user()->can('manage-print_barcode')) {
             $customers      = Customer::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'name');
             $customers->prepend('Walk-in-customer', '');
             $warehouses = warehouse::select('*', \DB::raw("CONCAT(name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -57,10 +57,10 @@ class PosController extends Controller
      */
     public function create(Request $request)
     {
+        if (\Auth::user()->can('create-print_barcode')) {
 
-        $sess = session()->get('pos');
+            $sess = session()->get('pos');
 
-        if (Auth::user()->can('manage pos') && isset($sess) && !empty($sess) && count($sess) > 0) {
             $user = Auth::user();
 
             $settings = Utility::settings();
@@ -138,12 +138,7 @@ class PosController extends Controller
 
             return view('admin.pos.show', compact('sales', 'details'));
         } else {
-            return response()->json(
-                [
-                    'error' => __('Add some products to cart!'),
-                ],
-                '404'
-            );
+            return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
@@ -155,11 +150,9 @@ class PosController extends Controller
      */
     public function store(Request $request)
     {
-        //        dd($request->all());
-        $discount = $request->discount;
+        if (\Auth::user()->can('create-print_barcode')) {
+            $discount = $request->discount;
 
-        //        dd($request->all());
-        if (Auth::user()->can('manage pos')) {
             $user_id = Auth::user()->creatorId();
             $customer_id      = Customer::customer_id($request->vc_name);
             $warehouse_id      = warehouse::warehouse_id($request->warehouse_name);
@@ -270,8 +263,7 @@ class PosController extends Controller
 
     public function show($ids)
     {
-
-        if (\Auth::user()->can('manage pos')) {
+        if (\Auth::user()->can('show-print_barcode')) {
             try {
                 $id       = Crypt::decrypt($ids);
             } catch (\Throwable $th) {
@@ -298,55 +290,36 @@ class PosController extends Controller
 
     function invoicePosNumber()
     {
-        if (Auth::user()->can('manage pos')) {
-            $latest = Pos::where('created_by', '=', \Auth::user()->creatorId())->latest()->first();
-
-
-            return $latest ? $latest->pos_id + 1 : 1;
-        } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+        $latest = Pos::where('created_by', '=', \Auth::user()->creatorId())->latest()->first();
+        return $latest ? $latest->pos_id + 1 : 1;
     }
 
     function report()
     {
-        if (\Auth::user()->can('manage pos')) {
+        $posPayments = Pos::where('created_by', '=', \Auth::user()->creatorId())->with(['customer', 'warehouse'])->get();
+        return view('admin.pos.report', compact('posPayments'));
+    }
 
-            $posPayments = Pos::where('created_by', '=', \Auth::user()->creatorId())->with(['customer', 'warehouse'])->get();
-            return view('admin.pos.report', compact('posPayments'));
+    function barcode()
+    {
+        if (\Auth::user()->can('manage-print_barcode')) {
+            $productServices = ProductService::where('created_by', '=', \Auth::user()->creatorId())->get();
+            $barcode  = [
+                'barcodeType' => Auth::user()->barcodeType(),
+                'barcodeFormat' => Auth::user()->barcodeFormat(),
+            ];
+
+            return view('admin.pos.barcode', compact('productServices', 'barcode'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
-    function barcode()
-    {
-        // if(\Auth::user()->can('manage pos'))
-        // {
-        $productServices = ProductService::where('created_by', '=', \Auth::user()->creatorId())->get();
-        $barcode  = [
-            'barcodeType' => Auth::user()->barcodeType(),
-            'barcodeFormat' => Auth::user()->barcodeFormat(),
-        ];
-
-        return view('admin.pos.barcode', compact('productServices', 'barcode'));
-        // }
-        // else
-        // {
-        //     return redirect()->back()->with('error', __('Permission Denied.'));
-        // }
-
-    }
-
     public function setting()
     {
-        if (\Auth::user()->can('manage pos')) {
-            $settings                = Utility::settings();
+        $settings = Utility::settings();
 
-            return view('admin.pos.setting', compact('settings'));
-        } else {
-            return redirect()->back()->with('error', 'Permission denied.');
-        }
+        return view('admin.pos.setting', compact('settings'));
     }
 
     public function BarcodesettingStore(Request $request)
@@ -380,22 +353,17 @@ class PosController extends Controller
 
     public function printBarcode()
     {
-        // if(\Auth::user()->can('manage pos'))
-        // {
-        $warehouses = warehouse::select('*', \DB::raw("CONCAT(name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        if (\Auth::user()->can('manage-print_barcode')) {
+            $warehouses = warehouse::select('*', \DB::raw("CONCAT(name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
-        return view('admin.pos.print', compact('warehouses'));
-        // }
-        // else
-        // {
-        //     return redirect()->back()->with('error', __('Permission Denied.'));
-        // }
-
+            return view('admin.pos.print', compact('warehouses'));
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
     }
 
     public function getproduct(Request $request)
     {
-        //        dd($request->all());
         if ($request->warehouse_id == 0) {
             $productServices = WarehouseProduct::where('product_id', '=', $request->warehouse_id)->where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id')->toArray();
         } else {
@@ -424,7 +392,6 @@ class PosController extends Controller
 
     public function cartdiscount(Request $request)
     {
-
         if ($request->discount) {
             $sess = session()->get('pos');
             $subtotal = !empty($sess) ? array_sum(array_column($sess, 'subtotal')) : 0;
@@ -449,8 +416,6 @@ class PosController extends Controller
         $pos  = Pos::where('id', $posId)->first();
 
         $posPayment = PosPayment::where('pos_id', $pos->id)->first();
-
-
 
         $data  = DB::table('settings');
         $data  = $data->where('created_by', '=', $pos->created_by);
@@ -522,7 +487,7 @@ class PosController extends Controller
         if (isset($pos_logo) && !empty($pos_logo)) {
             $img = Utility::get_file('pos_logo/') . $pos_logo;
         } else {
-            $img          = asset($logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png'));
+            $img = asset($logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png'));
         }
 
 
@@ -540,7 +505,7 @@ class PosController extends Controller
     public function previewPos($template, $color)
     {
 
-        $objUser  = \Auth::user();
+        $objUser  = Auth::user();
         $settings = Utility::settings();
 
         $pos     = new Pos();
@@ -620,22 +585,20 @@ class PosController extends Controller
 
         $logo         = asset(Storage::url('uploads/logo/'));
 
-        $company_logo = Utility::getValByName('company_logo_dark'); 
+        $company_logo = Utility::getValByName('company_logo_dark');
         $settings_data = \App\Models\Utility::settingsById($pos->created_by);
         $pos_logo = $settings_data['pos_logo'];
 
         if (isset($pos_logo) && !empty($pos_logo)) {
             $img = Utility::get_file('pos_logo/') . $pos_logo;
         } else {
-            $img = asset(\App\Models\Company::UPLOAD_PATH.\App\Helpers\AppHelper::getCompanyLogo());
+            $img = asset(\App\Models\Company::UPLOAD_PATH . \App\Helpers\AppHelper::getCompanyLogo());
             // $img = asset($logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png'));
         }
 
 
         return view('admin.pos.templates.' . $template, compact('pos', 'preview', 'color', 'img', 'settings', 'customer', 'font_color', 'posPayment'));
     }
-
-
 
     public function savePosTemplateSettings(Request $request)
     {
@@ -661,8 +624,6 @@ class PosController extends Controller
             }
             $post['pos_logo'] = $pos_logo;
         }
-        //        dd($post);
-
 
         foreach ($post as $key => $data) {
             \DB::insert(
@@ -681,8 +642,6 @@ class PosController extends Controller
     //for thermal print
     public function printView(Request $request)
     {
-        // dd($request);
-
         $sess = session()->get('pos');
 
         $user = Auth::user();
@@ -722,7 +681,7 @@ class PosController extends Controller
 
         $details['customer']['details'] = $customerdetails;
         $details['warehouse']['details'] = $warehousedetails;
-        //
+
         $details['customer']['shippdetails'] = $shippdetails;
 
         $details['user']['details'] = $userdetails;

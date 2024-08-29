@@ -1,4 +1,4 @@
-@canany(['list_router'])
+@canany(['manage-routers', 'manage-nfc', 'manage-qr'])
     <li
         class="nav-item  {{ request()->routeIs('admin.routers.*') ||
         request()->routeIs('admin.qr.*') ||
@@ -20,7 +20,7 @@
 
             <ul class="nav sub-menu">
 
-                @can('list_router')
+                @can('manage-routers')
                     <li class="nav-item">
                         <a href="{{ route('admin.routers.index') }}" data-href="{{ route('admin.routers.index') }}"
                             class="nav-link {{ request()->routeIs('admin.routers.*') ? 'active' : '' }}">Routers
@@ -28,28 +28,26 @@
                     </li>
                 @endcan
 
-                @can('list_general_setting')
+                @can('manage-nfc')
                     <li class="nav-item">
                         <a href="{{ route('admin.nfc.index') }}" data-href="{{ route('admin.nfc.index') }}"
                             class="nav-link {{ request()->routeIs('admin.nfc.*') ? 'active' : '' }}">NFC</a>
                     </li>
                 @endcan
 
-
-                <li class="nav-item">
-                    <a href="{{ route('admin.qr.index') }}" data-href="{{ route('admin.qr.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.qr.*') ? 'active' : '' }}">QR</a>
-                </li>
-
-
-
+                @can('manage-qr')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.qr.index') }}" data-href="{{ route('admin.qr.index') }}"
+                            class="nav-link {{ request()->routeIs('admin.qr.*') ? 'active' : '' }}">QR</a>
+                    </li>
+                @endcan
             </ul>
         </div>
     </li>
 @endcanany
 
 
-@canany(['list_role', 'list_router', 'list_general_setting', 'list_app_setting', 'list_notification'])
+@canany(['manage-roles', 'manage-general_settings'])
     <li
         class="nav-item  {{ request()->routeIs('admin.roles.*') ||
         request()->routeIs('admin.notifications.*') ||
@@ -76,14 +74,14 @@
             id="setting">
 
             <ul class="nav sub-menu">
-                @can('list_role')
+                @can('manage-roles')
                     <li class="nav-item">
                         <a href="{{ route('admin.roles.index') }}" data-href="{{ route('admin.roles.index') }}"
                             class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">Roles & Permissions</a>
                     </li>
                 @endcan
 
-                @can('list_general_setting')
+                @can('manage-general_settings')
                     <li class="nav-item">
                         <a href="{{ route('admin.general-settings.index') }}"
                             data-href="{{ route('admin.general-settings.index') }}"
@@ -92,20 +90,16 @@
                     </li>
                 @endcan
 
-                @can('list_app_setting')
-                    <li class="nav-item">
-                        <a href="{{ route('admin.app-settings.index') }}" data-href="{{ route('admin.app-settings.index') }}"
-                            class="nav-link {{ request()->routeIs('admin.app-settings.*') ? 'active' : '' }}">App Settings</a>
-                    </li>
-                @endcan
+                <li class="nav-item">
+                    <a href="{{ route('admin.app-settings.index') }}" data-href="{{ route('admin.app-settings.index') }}"
+                        class="nav-link {{ request()->routeIs('admin.app-settings.*') ? 'active' : '' }}">App Settings</a>
+                </li>
 
-                @can('list_notification')
-                    <li class="nav-item">
-                        <a href="{{ route('admin.notifications.index') }}"
-                            data-href="{{ route('admin.notifications.index') }}"
-                            class="nav-link {{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">Notifications</a>
-                    </li>
-                @endcan
+                <li class="nav-item">
+                    <a href="{{ route('admin.notifications.index') }}"
+                        data-href="{{ route('admin.notifications.index') }}"
+                        class="nav-link {{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">Notifications</a>
+                </li>
 
                 <li class="nav-item {{ request()->routeIs('admin.payment-currency.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.payment-currency.index') }}"
@@ -114,15 +108,11 @@
                         Currency</a>
                 </li>
 
-                @can('feature_list')
-                    <li class="nav-item {{ request()->routeIs('admin.feature.index') ? 'active' : '' }}">
-                        <a href="{{ route('admin.feature.index') }}" data-href="{{ route('admin.feature.index') }}"
-                            class="nav-link {{ request()->routeIs('admin.feature.index') ? 'active' : '' }}"> Feature
-                            Control</a>
-                    </li>
-                @endcan
-
-
+                <li class="nav-item {{ request()->routeIs('admin.feature.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.feature.index') }}" data-href="{{ route('admin.feature.index') }}"
+                        class="nav-link {{ request()->routeIs('admin.feature.index') ? 'active' : '' }}"> Feature
+                        Control</a>
+                </li>
             </ul>
         </div>
     </li>

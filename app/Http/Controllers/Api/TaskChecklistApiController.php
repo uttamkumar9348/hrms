@@ -20,7 +20,6 @@ class TaskChecklistApiController extends Controller
     public function toggleCheckListIsCompletedStatus($checklistId): JsonResponse
     {
         try {
-            $this->authorize('toggle_checklist_status');
             $checkList = $this->taskChecklistService->toggleIsCompletedStatusByAssignedUserOnly($checklistId);
             return AppHelper::sendSuccessResponse('Status updated successfully',$checkList);
         } catch (Exception $exception) {

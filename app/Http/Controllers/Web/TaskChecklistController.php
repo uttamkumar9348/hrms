@@ -26,7 +26,6 @@ class TaskChecklistController extends Controller
 
     public function store(TaskChecklistStoreRequest $request)
     {
-        $this->authorize('create_checklist');
         try {
             $validatedData = $request->validated();
 
@@ -47,7 +46,6 @@ class TaskChecklistController extends Controller
 
     public function edit($checkListId)
     {
-        $this->authorize('edit_checklist');
         try{
             $select = ['*'];
             $with = ['task.assignedMembers.user:id,name'];
@@ -60,7 +58,6 @@ class TaskChecklistController extends Controller
 
     public function update(TaskCheckListUpdateRequest $request, $taskChecklistId)
     {
-        $this->authorize('edit_checklist');
         try {
             $validatedData = $request->validated();
             $this->taskChecklistService->updateTaskChecklistDetail($validatedData, $taskChecklistId);
@@ -74,7 +71,6 @@ class TaskChecklistController extends Controller
 
     public function delete($id)
     {
-        $this->authorize('delete_checklist');
         try {
             DB::beginTransaction();
                 $this->taskChecklistService->deleteTaskChecklistDetail($id);
@@ -88,7 +84,6 @@ class TaskChecklistController extends Controller
 
     public function toggleIsCompletedStatus($checklistId)
     {
-        $this->authorize('edit_checklist');
         try {
             DB::beginTransaction();
                 $this->taskChecklistService->toggleIsCompletedChecklistStatus($checklistId);

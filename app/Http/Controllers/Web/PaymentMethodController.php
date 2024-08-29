@@ -35,7 +35,6 @@ class PaymentMethodController extends Controller
     {
         if (\Auth::user()->can('create-payment_method')) {
             try {
-                $this->authorize('add_payment_method');
                 return view($this->view . 'create');
             } catch (Exception $exception) {
                 return redirect()->back()->with('danger', $exception->getMessage());

@@ -16,8 +16,7 @@ class NFCController extends Controller
 
     private $view = 'admin.nfc.';
 
-    public function __construct(Public NfcService $nfcService)
-    {}
+    public function __construct(public NfcService $nfcService) {}
 
     /**
      * @return Application|Factory|View|RedirectResponse
@@ -25,13 +24,16 @@ class NFCController extends Controller
      */
     public function index(): View|Factory|RedirectResponse|Application
     {
-        $this->authorize('list_nfc');
+        if (\Auth::user()->can('manage-nfc')) {
 
-        try {
-            $nfcData = $this->nfcService->getAllNfc();
-            return view($this->view . 'index', compact('nfcData'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+            try {
+                $nfcData = $this->nfcService->getAllNfc();
+                return view($this->view . 'index', compact('nfcData'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -42,13 +44,15 @@ class NFCController extends Controller
      */
     public function delete($id): RedirectResponse
     {
-        try {
-            $this->authorize('delete_nfc');
-
-            $this->nfcService->deleteNfcDetail($id);
-            return redirect()->route('admin.nfc.index')->with('success','NFC deleted successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('delete-nfc')) {
+            try {
+                $this->nfcService->deleteNfcDetail($id);
+                return redirect()->route('admin.nfc.index')->with('success', 'NFC deleted successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 }

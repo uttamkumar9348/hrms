@@ -23,7 +23,6 @@ class AdvanceSalaryApiController extends Controller
     public function getEmployeesAdvanceSalaryDetailLists(Request $request)
     {
         try {
-            $this->authorize('advance_salary_list');
             $select = ['*'];
             $with = [];
             $advanceSalaryLists = $this->advanceSalaryService->getAllEmployeeAdvanceSalaryListDetail(getAuthUserCode(),$select,$with);
@@ -38,8 +37,6 @@ class AdvanceSalaryApiController extends Controller
     public function getEmployeeAdvanceSalaryDetailById($id)
     {
         try {
-            $this->authorize('advance_salary_list');
-
             $select= ['*'];
             $with = ['attachments'];
             $detail = $this->advanceSalaryService->findEmployeeAdvanceSalaryDetailByIdAndEmployeeId($id,$with,$select);
@@ -53,8 +50,6 @@ class AdvanceSalaryApiController extends Controller
     public function store(AdvanceSalaryRequest $request)
     {
         try {
-            $this->authorize('add_advance_salary');
-
             $permissionKeyForNotification = 'advance_salary_alert';
             $checkEmployeePendingRequests = $this->advanceSalaryService->checkIfEmployeeUnsettledAdvanceSalaryRequestExists(getAuthUserCode());
             if($checkEmployeePendingRequests){
@@ -80,8 +75,6 @@ class AdvanceSalaryApiController extends Controller
     public function updateDetail(AdvanceSalaryRequest $request)
     {
         try {
-            $this->authorize('update_advance_salary_api');
-
             $permissionKeyForNotification = 'advance_salary_alert';
             $detail = $this->advanceSalaryService->findEmployeeAdvanceSalaryDetailByIdAndEmployeeId($request->advance_salary_id);
             $validatedData = $request->validated();

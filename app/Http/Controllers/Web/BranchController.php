@@ -134,7 +134,6 @@ class BranchController extends Controller
 
     public function toggleStatus($id)
     {
-        $this->authorize('edit_branch');
         try {
             DB::beginTransaction();
             $this->branchRepo->toggleStatus($id);

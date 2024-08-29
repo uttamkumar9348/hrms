@@ -245,7 +245,6 @@ class AttendanceController extends Controller
     public function delete($id)
     {
         if (\Auth::user()->can('delete-attendance')) {
-            $this->authorize('attendance_delete');
             $this->attendanceService->delete($id);
             return redirect()->back()->with('success', 'Attendance Deleted Successful');
         } else {
@@ -261,7 +260,6 @@ class AttendanceController extends Controller
                 'lat' => $request->get('lat'),
                 'long' => $request->get('long')
             ];
-            $this->authorize('allow_attendance');
             $userId = getAuthUserCode();
             $companyId = AppHelper::getAuthUserCompanyId();
             $attendance = ($attendanceType == 'checkIn') ?

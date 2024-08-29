@@ -30,7 +30,6 @@ class TaskCommentApiController extends Controller
     public function saveComment(TaskCommentRequest $request): JsonResponse
     {
         try {
-            $this->authorize('submit_comment');
             $validatedData = $request->validated();
             $mentionedMember = $validatedData['mentioned'] ?? [];
             DB::beginTransaction();
@@ -90,7 +89,6 @@ class TaskCommentApiController extends Controller
     public function deleteComment($commentId): JsonResponse
     {
         try {
-            $this->authorize('comment_delete');
             DB::beginTransaction();
                 $this->commentService->deleteTaskComment($commentId);
             DB::commit();
@@ -104,7 +102,6 @@ class TaskCommentApiController extends Controller
     public function deleteReply($replyId): JsonResponse
     {
         try {
-            $this->authorize('reply_delete');
             DB::beginTransaction();
             $this->commentService->deleteReply($replyId);
             DB::commit();

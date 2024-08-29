@@ -32,7 +32,6 @@ class SalaryComponentController extends Controller
     {
         if (\Auth::user()->can('create-payroll_setting')) {
             try {
-                $this->authorize('add_salary_component');
                 return view($this->view . 'create');
             } catch (Exception $exception) {
                 return redirect()->back()->with('danger', $exception->getMessage());
@@ -46,7 +45,6 @@ class SalaryComponentController extends Controller
     {
         if (\Auth::user()->can('create-payroll_setting')) {
             try {
-                $this->authorize('add_salary_component');
                 $validatedData = $request->validated();
                 $this->salaryComponentService->store($validatedData);
                 return redirect()
@@ -66,7 +64,6 @@ class SalaryComponentController extends Controller
     {
         if (\Auth::user()->can('edit-payroll_setting')) {
             try {
-                $this->authorize('edit_salary_component');
                 $select = ['*'];
                 $salaryComponentDetail = $this->salaryComponentService->findSalaryComponentById($id, $select);
                 return view($this->view . 'edit', compact('salaryComponentDetail'));
@@ -84,7 +81,6 @@ class SalaryComponentController extends Controller
     {
         if (\Auth::user()->can('edit-payroll_setting')) {
             try {
-                $this->authorize('edit_salary_component');
                 $select = ['*'];
                 $salaryComponentDetail = $this->salaryComponentService->findSalaryComponentById($id, $select);
                 $validatedData = $request->validated();
@@ -106,7 +102,6 @@ class SalaryComponentController extends Controller
     {
         if (\Auth::user()->can('delete-payroll_setting')) {
             try {
-                $this->authorize('delete_salary_component');
                 $select = ['*'];
                 $salaryComponentDetail = $this->salaryComponentService->findSalaryComponentById($id, $select);
                 $this->salaryComponentService->deleteSalaryComponentDetail($salaryComponentDetail);
@@ -124,7 +119,6 @@ class SalaryComponentController extends Controller
     public function toggleSalaryComponentStatus($id)
     {
         try {
-            $this->authorize('edit_salary_component');
             $select = ['*'];
             $salaryComponentDetail = $this->salaryComponentService->findSalaryComponentById($id, $select);
             $this->salaryComponentService->changeSalaryComponentStatus($salaryComponentDetail);

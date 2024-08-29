@@ -59,7 +59,6 @@ class LeaveApiController extends Controller
     public function saveLeaveRequestDetail(LeaveRequestStoreRequest $request): JsonResponse
     {
         try {
-            $this->authorize('leave_request_create');
             $permissionKeyForNotification = 'employee_leave_request';
 
             $validatedData = $request->validated();
@@ -138,7 +137,6 @@ class LeaveApiController extends Controller
     public function saveTimeLeaveRequest(TimeLeaveStoreRequest $request): JsonResponse
     {
         try {
-//            $this->authorize('leave_request_create');
             $permissionKeyForNotification = 'employee_leave_request';
 
             $validatedData = $request->validated();

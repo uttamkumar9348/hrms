@@ -21,7 +21,6 @@ class EmployeeLogOutRequestController extends Controller
 
     public function getAllCompanyEmployeeLogOutRequest(Request $request)
     {
-        $this->authorize('list_logout_request');
         try{
             $select = ['id','name','logout_status'];
             $logoutRequests = $this->userRepository->getAllCompanyEmployeeLogOutRequest($select);
@@ -33,7 +32,6 @@ class EmployeeLogOutRequestController extends Controller
 
     public function acceptLogoutRequest($employeeId)
     {
-        $this->authorize('accept_logout_request');
         try {
             DB::beginTransaction();
                 $this->userRepository->acceptLogoutRequest($employeeId);

@@ -25,9 +25,6 @@ class EmployeePayrollApiController extends Controller
     public function getPayrollList(PayslipRequest $request): JsonResponse
     {
         try {
-
-            $this->authorize('view_payslip_list');
-
             $validatedData = $request->validated();
             $isBsEnabled = AppHelper::ifDateInBsEnabled();
 
@@ -61,8 +58,6 @@ class EmployeePayrollApiController extends Controller
     public function getEmployeePayslipDetailById($id)
     {
         try {
-            $this->authorize('view_payslip_detail');
-
             $payslipDetail = $this->generatePayrollService->getEmployeePayslipDetail($id);
 
             $components = $this->generatePayrollService->getEmployeePayslipDetailData($id);

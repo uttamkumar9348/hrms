@@ -35,7 +35,6 @@ class  RoleController extends Controller
     public function index()
     {
         if (\Auth::user()->can('manage-role')) {
-            $this->authorize('list_role');
             try {
                 $roles = $this->roleRepo->getAllUserRoles();
 
@@ -127,7 +126,6 @@ class  RoleController extends Controller
 
     public function toggleStatus($id)
     {
-        $this->authorize('edit_role');
         try {
             DB::beginTransaction();
             $this->roleRepo->toggleStatus($id);

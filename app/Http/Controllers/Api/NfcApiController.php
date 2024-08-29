@@ -20,8 +20,6 @@ class NfcApiController extends Controller
     public function save(Request $request): JsonResponse
     {
         try {
-            $this->authorize('create_nfc');
-
             $validator = Validator::make($request->all(), [
                 'title' => ['nullable', 'string'],
                 'identifier' => ['required', 'string'],

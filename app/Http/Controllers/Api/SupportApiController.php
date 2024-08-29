@@ -31,7 +31,6 @@ class SupportApiController extends Controller
     public function store(SupportStoreRequest $request): JsonResponse
     {
         try {
-            $this->authorize('query_create');
             $validatedData = $request->validated();
             $permissionKeyForNotification  = 'employee_support';
 

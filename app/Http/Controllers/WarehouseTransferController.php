@@ -16,63 +16,68 @@ class WarehouseTransferController extends Controller
 
     public function index()
     {
-        $warehouse_transfers = WarehouseTransfer::where('created_by', '=', \Auth::user()->creatorId())->with(['product', 'fromWarehouse'])->get();
-        return view('admin.warehouse-transfer.index', compact('warehouse_transfers'));
+        if (\Auth::user()->can('manage-transfer')) {
+            $warehouse_transfers = WarehouseTransfer::where('created_by', '=', \Auth::user()->creatorId())->with(['product', 'fromWarehouse'])->get();
+            return view('admin.warehouse-transfer.index', compact('warehouse_transfers'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     public function create()
     {
-        $from_warehouses = warehouse::where('created_by', '=', \Auth::user()->creatorId())->get();
-        $to_warehouses = warehouse::where('created_by', \Auth::user()->creatorId())->get();
+        if (\Auth::user()->can('create-transfer')) {
+            $from_warehouses = warehouse::where('created_by', '=', \Auth::user()->creatorId())->get();
+            $to_warehouses = warehouse::where('created_by', \Auth::user()->creatorId())->get();
 
-        $ware_pro = WarehouseProduct::join('product_services', 'warehouse_products.product_id', '=', 'product_services.id')
-            ->pluck('name', 'product_id');
-        $ware_pro->prepend('Select products', '');
+            $ware_pro = WarehouseProduct::join('product_services', 'warehouse_products.product_id', '=', 'product_services.id')
+                ->pluck('name', 'product_id');
+            $ware_pro->prepend('Select products', '');
 
-        return view('admin.warehouse-transfer.create', compact('from_warehouses', 'to_warehouses', 'ware_pro'));
+            return view('admin.warehouse-transfer.create', compact('from_warehouses', 'to_warehouses', 'ware_pro'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     public function store(Request $request)
     {
-        // if(\Auth::user()->can('create warehouse'))
-        // {
-        $validator = \Validator::make(
-            $request->all(),
-            [
-                'from_warehouse' => 'required',
-                'to_warehouse' => 'required',
-                'product_id' => 'required',
-                'quantity' => 'required',
-            ]
-        );
-        if ($validator->fails()) {
-            $messages = $validator->getMessageBag();
-            return redirect()->back()->with('error', $messages->first());
-        }
+        if (\Auth::user()->can('create-transfer')) {
+            $validator = \Validator::make(
+                $request->all(),
+                [
+                    'from_warehouse' => 'required',
+                    'to_warehouse' => 'required',
+                    'product_id' => 'required',
+                    'quantity' => 'required',
+                ]
+            );
+            if ($validator->fails()) {
+                $messages = $validator->getMessageBag();
+                return redirect()->back()->with('error', $messages->first());
+            }
 
-        $fromWarehouse    = WarehouseProduct::where('warehouse_id', $request->from_warehouse)
-            ->where('product_id', $request->product_id)->first();
+            $fromWarehouse    = WarehouseProduct::where('warehouse_id', $request->from_warehouse)
+                ->where('product_id', $request->product_id)->first();
 
-        if ($request->quantity <= $fromWarehouse->quantity) {
-            $warehouse_transfer                  = new WarehouseTransfer();
-            $warehouse_transfer->from_warehouse  = $request->from_warehouse;
-            $warehouse_transfer->to_warehouse    = $request->to_warehouse;
-            $warehouse_transfer->product_id      = $request->product_id;
-            $warehouse_transfer->quantity        = $request->quantity;
-            $warehouse_transfer->date            = $request->date;
-            $warehouse_transfer->created_by      = \Auth::user()->creatorId();
-            $warehouse_transfer->save();
+            if ($request->quantity <= $fromWarehouse->quantity) {
+                $warehouse_transfer                  = new WarehouseTransfer();
+                $warehouse_transfer->from_warehouse  = $request->from_warehouse;
+                $warehouse_transfer->to_warehouse    = $request->to_warehouse;
+                $warehouse_transfer->product_id      = $request->product_id;
+                $warehouse_transfer->quantity        = $request->quantity;
+                $warehouse_transfer->date            = $request->date;
+                $warehouse_transfer->created_by      = \Auth::user()->creatorId();
+                $warehouse_transfer->save();
+            } else {
+                return redirect()->route('admin.warehouse-transfer.index')->with('error', __('Product out of stock!.'));
+            }
+            Utility::warehouse_transfer_qty($request->from_warehouse, $request->to_warehouse, $request->product_id, $request->quantity);
+
+            return redirect()->route('admin.warehouse-transfer.index')->with('success', __('Warehouse Transfer successfully created.'));
         } else {
-            return redirect()->route('admin.warehouse-transfer.index')->with('error', __('Product out of stock!.'));
+            return redirect()->back()->with('error', __('Permission denied.'));
         }
-        Utility::warehouse_transfer_qty($request->from_warehouse, $request->to_warehouse, $request->product_id, $request->quantity);
-
-        return redirect()->route('admin.warehouse-transfer.index')->with('success', __('Warehouse Transfer successfully created.'));
-        // }
-        // else
-        // {
-        //     return redirect()->back()->with('error', __('Permission denied.'));
-        // }
     }
 
     public function show()
@@ -82,7 +87,7 @@ class WarehouseTransferController extends Controller
 
     public function destroy(WarehouseTransfer $warehouseTransfer)
     {
-        if (\Auth::user()->can('delete warehouse')) {
+        if (\Auth::user()->can('delete-transfer')) {
             if ($warehouseTransfer->created_by == \Auth::user()->creatorId()) {
                 Utility::warehouse_transfer_qty($warehouseTransfer->to_warehouse, $warehouseTransfer->from_warehouse, $warehouseTransfer->product_id, $warehouseTransfer->quantity);
 

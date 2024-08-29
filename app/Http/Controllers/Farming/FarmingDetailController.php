@@ -20,12 +20,15 @@ class FarmingDetailController extends Controller
      */
     public function index()
     {
-
-        $farming_details = FarmingDetail::query()->select('farming_details.*')
-            ->join('users', 'users.id', 'farming_details.created_by')
-            ->where('farming_details.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)->get();
-        return view('admin.farmer.farming_detail.index', compact('farming_details'));
+        if (\Auth::user()->can('manage-plot')) {
+            $farming_details = FarmingDetail::query()->select('farming_details.*')
+                ->join('users', 'users.id', 'farming_details.created_by')
+                ->where('farming_details.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)->get();
+            return view('admin.farmer.farming_detail.index', compact('farming_details'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -33,27 +36,30 @@ class FarmingDetailController extends Controller
      */
     public function create()
     {
+        if (\Auth::user()->can('create-plot')) {
+            $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+                ->where('farmings.is_validate', 1)
+                ->where('farmings.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)
+                ->get();
 
-        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
-            ->where('farmings.is_validate', 1)
-            ->where('farmings.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)
-            ->get();
+            $farming_details = FarmingDetail::select('plot_number')
+                ->where('created_by', Auth::user()->id)
+                ->OrderBy('id', 'DESC')
+                ->first();
 
-        $farming_details = FarmingDetail::select('plot_number')
-            ->where('created_by', Auth::user()->id)
-            ->OrderBy('id', 'DESC')
-            ->first();
-        
-        $blocks = Block::all();
+            $blocks = Block::all();
 
-        if (!empty($farming_details)) {
-            $plot_number = "00" . $farming_details->plot_number + 1;
+            if (!empty($farming_details)) {
+                $plot_number = "00" . $farming_details->plot_number + 1;
+            } else {
+                $plot_number = "001";
+            }
+            $seed_categories = SeedCategory::all();
+            return view('admin.farmer.farming_detail.create', compact('farmings', 'seed_categories', 'plot_number', 'blocks'));
         } else {
-            $plot_number = "001";
+            return redirect()->back()->with('error', 'Permission denied.');
         }
-        $seed_categories = SeedCategory::all();
-        return view('admin.farmer.farming_detail.create', compact('farmings', 'seed_categories', 'plot_number', 'blocks'));
     }
 
     /**
@@ -61,23 +67,27 @@ class FarmingDetailController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-        try {
-            $this->validate($request, [
-                'farming_id' => 'required',
-                'plot_number' => 'required',
-                // 'kata_number' => 'required',
-                'area_in_acar' => 'required',
-                'date_of_harvesting' => 'required',
-                // 'quantity' => 'required',
-                'seed_category_id' => 'required',
-                'tentative_harvest_quantity' => 'required',
-                'created_by' => 'required',
-            ]);
-            FarmingDetail::create($request->all());
-            return redirect()->to(route('admin.farmer.farming_detail.index'))->with('success', 'Plot Details Added Successfully.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+        if (\Auth::user()->can('create-plot')) {
+            // dd($request->all());
+            try {
+                $this->validate($request, [
+                    'farming_id' => 'required',
+                    'plot_number' => 'required',
+                    // 'kata_number' => 'required',
+                    'area_in_acar' => 'required',
+                    'date_of_harvesting' => 'required',
+                    // 'quantity' => 'required',
+                    'seed_category_id' => 'required',
+                    'tentative_harvest_quantity' => 'required',
+                    'created_by' => 'required',
+                ]);
+                FarmingDetail::create($request->all());
+                return redirect()->to(route('admin.farmer.farming_detail.index'))->with('success', 'Plot Details Added Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -94,15 +104,19 @@ class FarmingDetailController extends Controller
      */
     public function edit($id)
     {
-        $farming_detail = FarmingDetail::find($id);
-        $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
-            ->where('farmings.created_by', Auth::user()->id)
-            ->orWhere('users.supervisor_id', Auth::user()->id)->get();
-        $seed_categories = SeedCategory::all();
-        $blocks = Block::all();
-        $gp = GramPanchyat::all();
-        $village = Village::all();
-        return view('admin.farmer.farming_detail.edit', compact('farming_detail', 'farmings', 'seed_categories', 'blocks', 'gp', 'village'));
+        if (\Auth::user()->can('edit-plot')) {
+            $farming_detail = FarmingDetail::find($id);
+            $farmings = Farming::query()->select('farmings.*')->join('users', 'users.id', 'farmings.created_by')
+                ->where('farmings.created_by', Auth::user()->id)
+                ->orWhere('users.supervisor_id', Auth::user()->id)->get();
+            $seed_categories = SeedCategory::all();
+            $blocks = Block::all();
+            $gp = GramPanchyat::all();
+            $village = Village::all();
+            return view('admin.farmer.farming_detail.edit', compact('farming_detail', 'farmings', 'seed_categories', 'blocks', 'gp', 'village'));
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     /**
@@ -110,22 +124,26 @@ class FarmingDetailController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $farming_detail = FarmingDetail::find($id);
-        try {
-            $this->validate($request, [
-                'farming_id' => 'required',
-                'plot_number' => 'required',
-                // 'kata_number' => 'required',
-                'area_in_acar' => 'required',
-                'date_of_harvesting' => 'required',
-                // 'quantity' => 'required',
-                'seed_category_id' => 'required',
-                'tentative_harvest_quantity' => 'required',
-            ]);
-            $farming_detail->update($request->all());
-            return redirect()->back()->with('success', 'Plot Details Updated Successfully.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+        if (\Auth::user()->can('edit-plot')) {
+            $farming_detail = FarmingDetail::find($id);
+            try {
+                $this->validate($request, [
+                    'farming_id' => 'required',
+                    'plot_number' => 'required',
+                    // 'kata_number' => 'required',
+                    'area_in_acar' => 'required',
+                    'date_of_harvesting' => 'required',
+                    // 'quantity' => 'required',
+                    'seed_category_id' => 'required',
+                    'tentative_harvest_quantity' => 'required',
+                ]);
+                $farming_detail->update($request->all());
+                return redirect()->back()->with('success', 'Plot Details Updated Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -134,9 +152,13 @@ class FarmingDetailController extends Controller
      */
     public function destroy($id)
     {
-        $farmingDetail = FarmingDetail::find($id);
-        $farmingDetail->delete();
-        return redirect()->back()->with('success', 'Farming Detail Deleted Successfully.');
+        if (\Auth::user()->can('delete-plot')) {
+            $farmingDetail = FarmingDetail::find($id);
+            $farmingDetail->delete();
+            return redirect()->back()->with('success', 'Farming Detail Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
     public function getFarmingDetail(Request $request)
     {

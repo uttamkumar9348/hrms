@@ -25,7 +25,6 @@ class AttachmentController extends Controller
 
     public function createProjectAttachment($projectId)
     {
-        $this->authorize('upload_project_attachment');
         try {
             return view($this->projectView. 'document-upload', compact('projectId'));
         } catch (Exception $exception) {
@@ -35,7 +34,6 @@ class AttachmentController extends Controller
 
     public function createTaskAttachment($taskId)
     {
-        $this->authorize('create_task');
         try {
             return view($this->taskView. 'upload-attachment', compact('taskId'));
         } catch (Exception $exception) {
@@ -45,7 +43,6 @@ class AttachmentController extends Controller
 
     public function storeProjectAttachment(ProjectAttachmentRequest $request)
     {
-        $this->authorize('upload_project_attachment');
         try {
             $validatedData = $request->validated();
             DB::beginTransaction();
@@ -65,7 +62,6 @@ class AttachmentController extends Controller
 
     public function storeTaskAttachment(TaskAttachmentRequest $request)
     {
-        $this->authorize('create_task');
         try {
             $validatedData = $request->validated();
             DB::beginTransaction();
@@ -86,7 +82,6 @@ class AttachmentController extends Controller
 
     public function deleteAttachmentById($attachmentId): RedirectResponse
     {
-        $this->authorize('delete_pm_attachment');
         try {
             DB::beginTransaction();
             $this->attachmentService->deleteProjectAttachment($attachmentId);

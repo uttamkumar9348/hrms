@@ -71,7 +71,6 @@ class TaskApiController extends Controller
     public function changeTaskStatus($taskId): JsonResponse
     {
         try {
-            $this->authorize('edit_task_status');
             $with = ['taskChecklists'];
             $taskDetail = $this->taskService->findAssignedMemberTaskDetailById($taskId,$with);
             if(!$taskDetail){

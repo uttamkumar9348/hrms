@@ -23,7 +23,6 @@ class AppSettingController extends Controller
 
     public function index()
     {
-        $this->authorize('list_app_setting');
         try{
             $select=['id','name','status'];
             $appSettings = $this->appSettingRepo->getAllAppSettings($select);
@@ -35,7 +34,6 @@ class AppSettingController extends Controller
 
     public function toggleStatus($id)
     {
-        $this->authorize('update_app_setting');
         try {
             DB::beginTransaction();
                 $this->appSettingRepo->toggleStatus($id);

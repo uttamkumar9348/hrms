@@ -68,7 +68,6 @@ class ClientController extends Controller
     public function ajaxClientStore(ClientRequest $request): JsonResponse
     {
         try {
-            $this->authorize('create_client');
             $validatedData = $request->validated();
             DB::beginTransaction();
             $client = $this->clientService->saveClientDetail($validatedData);

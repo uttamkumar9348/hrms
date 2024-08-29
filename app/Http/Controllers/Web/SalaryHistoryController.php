@@ -24,7 +24,6 @@ class SalaryHistoryController extends Controller
     public function getEmployeeAllSalaryHistory($employeeId)
     {
         try{
-            $this->authorize('show_salary_history');
             $select = ['*'];
 
             $salaryReviseLists = $this->salaryHistoryService->getEmployeeAllSalaryHistory($employeeId,$select);
@@ -38,7 +37,6 @@ class SalaryHistoryController extends Controller
     public function create($employeeId)
     {
         try{
-            $this->authorize('salary_increment');
             $employeeSalary = $this->employeeSalaryRepository->getEmployeeSalaryByEmployeeId($employeeId,['annual_salary']);
 
             $employeeDetail = $this->userRepo->findUserDetailById($employeeId,['id','name']);
@@ -52,7 +50,6 @@ class SalaryHistoryController extends Controller
     public function store(ReviseSalaryRequest $request)
     {
         try{
-            $this->authorize('salary_increment');
             $validatedData = $request->validated();
 
             $this->salaryHistoryService->store($validatedData);

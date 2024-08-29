@@ -54,7 +54,6 @@ class TadaApiController extends Controller
     public function storeTadaDetail(TadaRequest $request)
     {
         try {
-            $this->authorize('tada_create');
             $permissionKeyForNotification = 'tada_alert';
 
             $validatedData = $request->validated();
@@ -104,7 +103,6 @@ class TadaApiController extends Controller
     public function deleteTadaAttachment($attachmentId)
     {
         try{
-            $this->authorize('delete_tada_attachment');
             $select = ['*'];
             $with = ['tada:id,status,employee_id'];
             $attachmentDetail = $this->attachmentService->findEmployeeTadaAttachmentDetail($attachmentId,$select,$with);
