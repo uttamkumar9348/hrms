@@ -57,11 +57,11 @@
                                                 {{--                                                    </a> --}}
                                                 {{--                                                </div> --}}
                                                 {{--                                            @endcan --}}
-                                                @can('delete warehouse')
+                                                @can('delete-warehouse')
                                                     <div class="action-btn bg-danger ms-2">
                                                         {!! Form::open([
                                                             'method' => 'DELETE',
-                                                            'route' => ['warehouse-transfer.destroy', $warehouse_transfer->id],
+                                                            'route' => ['admin.warehouse-transfer.destroy', $warehouse_transfer->id],
                                                             'id' => 'delete-form-' . $warehouse_transfer->id,
                                                         ]) !!}
                                                         <a href="#"

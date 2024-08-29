@@ -196,7 +196,7 @@ class User extends Authenticatable
     public function scopeNotAdmin($query)
     {
         return $query->whereHas('role', function ($query) {
-            $query->where('slug', '!=', 'admin');
+            $query->where('name', '!=', 'admin');
         });
     }
 

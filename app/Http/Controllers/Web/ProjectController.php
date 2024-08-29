@@ -43,6 +43,7 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
+        
         if (\Auth::user()->can('manage-project_management')) {
             try {
                 $filterParameters = [
@@ -63,6 +64,7 @@ class ProjectController extends Controller
                 $employees = $this->userRepo->getAllVerifiedEmployeesExceptAdminOfCompany($selectEmployeeColumn);
                 $projects = $this->projectService->getAllFilteredProjectsPaginated($filterParameters, $select, $with);
                 $allProjects =  $this->projectService->getAllProjectLists(['id', 'name']);
+
                 return view($this->view . 'index', compact('projects', 'filterParameters', 'employees', 'allProjects'));
             } catch (Exception $exception) {
                 return redirect()->back()->with('danger', $exception->getMessage());
