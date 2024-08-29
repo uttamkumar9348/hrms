@@ -18,7 +18,7 @@ class StaticPageContentController extends Controller
     private CompanyRepository $companyRepo;
 
 
-    public function __construct(ContentManagementRepository $contentMgmtRepo,CompanyRepository $companyRepo)
+    public function __construct(ContentManagementRepository $contentMgmtRepo, CompanyRepository $companyRepo)
     {
         $this->contentMgmtRepo = $contentMgmtRepo;
         $this->companyRepo = $companyRepo;
@@ -26,127 +26,151 @@ class StaticPageContentController extends Controller
 
     public function index()
     {
-        $this->authorize('list_content');
-        try{
-            $staticPageContents = $this->contentMgmtRepo->getAllCompanyContentManagementDetail();
-            return view($this->view.'index', compact('staticPageContents'));
-        }catch(\Exception $exception){
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('manage-content_management')) {
+            try {
+                $staticPageContents = $this->contentMgmtRepo->getAllCompanyContentManagementDetail();
+                return view($this->view . 'index', compact('staticPageContents'));
+            } catch (\Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function create()
     {
-        $this->authorize('create_content');
-        try{
-            $select = ['id','name'];
-            $companyDetail = $this->companyRepo->getCompanyDetail($select);
-            return view($this->view.'create',
-                compact('companyDetail')
-            );
-        }catch(\Exception $exception){
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('create-content_management')) {
+            try {
+                $select = ['id', 'name'];
+                $companyDetail = $this->companyRepo->getCompanyDetail($select);
+                return view(
+                    $this->view . 'create',
+                    compact('companyDetail')
+                );
+            } catch (\Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function show($id)
     {
-        try {
-            $this->authorize('show_content');
-            $select = ['description','title'];
-            $contentDescription = $this->contentMgmtRepo->findCompanyContentById($id,$select);
-            $contentDescription->description = removeHtmlTags($contentDescription->description);
-            return response()->json([
-                'data' => $contentDescription,
-            ]);
-        } catch (\Exception $exception) {
-            return AppHelper::sendErrorResponse($exception->getMessage(),$exception->getCode());
+        if (\Auth::user()->can('show-content_management')) {
+            try {
+                $select = ['description', 'title'];
+                $contentDescription = $this->contentMgmtRepo->findCompanyContentById($id, $select);
+                $contentDescription->description = removeHtmlTags($contentDescription->description);
+                return response()->json([
+                    'data' => $contentDescription,
+                ]);
+            } catch (\Exception $exception) {
+                return AppHelper::sendErrorResponse($exception->getMessage(), $exception->getCode());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function store(ContentManagementRequest $request)
     {
-        $this->authorize('create_content');
-        try {
-            $validatedData = $request->validated();
-            DB::beginTransaction();
-            $validatedData['title_slug'] = Str::slug($validatedData['title']);
-            $this->contentMgmtRepo->store($validatedData);
-            DB::commit();
-            return redirect()->back()->with('success', 'New Company Static Page Content Added Successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()
-                ->with('danger', $e->getMessage())
-                ->withInput();
+        if (\Auth::user()->can('create-content_management')) {
+            try {
+                $validatedData = $request->validated();
+                DB::beginTransaction();
+                $validatedData['title_slug'] = Str::slug($validatedData['title']);
+                $this->contentMgmtRepo->store($validatedData);
+                DB::commit();
+                return redirect()->back()->with('success', 'New Company Static Page Content Added Successfully');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return redirect()->back()
+                    ->with('danger', $e->getMessage())
+                    ->withInput();
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
 
     public function edit($id)
     {
-        $this->authorize('edit_content');
-        try{
-            $companyContentDetail = $this->contentMgmtRepo->findCompanyContentById($id);
-            $select = ['id','name'];
-            $companyDetail = $this->companyRepo->getCompanyDetail($select);
-            return view($this->view.'edit', compact('companyContentDetail','companyDetail'));
-        }catch(\Exception $exception){
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('edit-content_management')) {
+            try {
+                $companyContentDetail = $this->contentMgmtRepo->findCompanyContentById($id);
+                $select = ['id', 'name'];
+                $companyDetail = $this->companyRepo->getCompanyDetail($select);
+                return view($this->view . 'edit', compact('companyContentDetail', 'companyDetail'));
+            } catch (\Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
 
     public function update(ContentManagementRequest $request, $id)
     {
-        $this->authorize('edit_content');
-        try{
-            $validatedData = $request->validated();
-            $companyContentDetail = $this->contentMgmtRepo->findCompanyContentById($id);
-            if(!$companyContentDetail){
-                throw new \Exception('Office Time Detail Not Found',404);
+        if (\Auth::user()->can('edit-content_management')) {
+            try {
+                $validatedData = $request->validated();
+                $companyContentDetail = $this->contentMgmtRepo->findCompanyContentById($id);
+                if (!$companyContentDetail) {
+                    throw new \Exception('Office Time Detail Not Found', 404);
+                }
+                DB::beginTransaction();
+                $validatedData['title_slug'] = Str::slug($validatedData['title']);
+                $this->contentMgmtRepo->update($companyContentDetail, $validatedData);
+                DB::commit();
+                return redirect()->back()->with('success', 'Company Static Page Content Updated Successfully');
+            } catch (\Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage())
+                    ->withInput();
             }
-            DB::beginTransaction();
-            $validatedData['title_slug'] = Str::slug($validatedData['title']);
-            $this->contentMgmtRepo->update($companyContentDetail,$validatedData);
-            DB::commit();
-            return redirect()->back()->with('success', 'Company Static Page Content Updated Successfully');
-        }catch(\Exception $exception){
-            return redirect()->back()->with('danger', $exception->getMessage())
-                ->withInput();
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function toggleStatus($id)
     {
-        $this->authorize('edit_content');
-        try {
-            DB::beginTransaction();
-            $this->contentMgmtRepo->toggleStatus($id);
-            DB::commit();
-            return redirect()->back()->with('success', 'Company Static Page Content Status changed  Successfully');
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('edit-content_management')) {
+            try {
+                DB::beginTransaction();
+                $this->contentMgmtRepo->toggleStatus($id);
+                DB::commit();
+                return redirect()->back()->with('success', 'Company Static Page Content Status changed  Successfully');
+            } catch (\Exception $exception) {
+                DB::rollBack();
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function delete($id)
     {
-        $this->authorize('delete_content');
-        try {
-            $companyContentDetail = $this->contentMgmtRepo->findCompanyContentById($id);
-            if (!$companyContentDetail) {
-                throw new \Exception('Company Static Page Content Detail Not Found', 404);
+        if (\Auth::user()->can('delete-content_management')) {
+            try {
+                $companyContentDetail = $this->contentMgmtRepo->findCompanyContentById($id);
+                if (!$companyContentDetail) {
+                    throw new \Exception('Company Static Page Content Detail Not Found', 404);
+                }
+                DB::beginTransaction();
+                $this->contentMgmtRepo->delete($companyContentDetail);
+                DB::commit();
+                return redirect()->back()->with('success', 'Company Static Page Content Deleted  Successfully');
+            } catch (\Exception $exception) {
+                DB::rollBack();
+                return redirect()->back()->with('danger', $exception->getMessage());
             }
-            DB::beginTransaction();
-            $this->contentMgmtRepo->delete($companyContentDetail);
-            DB::commit();
-            return redirect()->back()->with('success', 'Company Static Page Content Deleted  Successfully');
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            return redirect()->back()->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
-
 }

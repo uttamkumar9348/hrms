@@ -21,21 +21,23 @@ class OverTimeSettingController extends Controller
 {
     private $view = 'admin.payrollSetting.overtime.';
 
-    public function __construct(protected OverTimeSettingService $otService, protected UserRepository $userRepository)
-    {}
+    public function __construct(protected OverTimeSettingService $otService, protected UserRepository $userRepository) {}
 
 
     public function index(): Factory|View|RedirectResponse|Application
     {
-        try {
+        if (\Auth::user()->can('manage-overtime')) {
+            try {
+                $select = ['*'];
+                $overTimeData = $this->otService->getAllOTList($select);
 
-            $select = ['*'];
-            $overTimeData = $this->otService->getAllOTList($select);
-
-            $currency = AppHelper::getCompanyPaymentCurrencySymbol();
-            return view($this->view . 'index', compact('overTimeData','currency'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+                $currency = AppHelper::getCompanyPaymentCurrencySymbol();
+                return view($this->view . 'index', compact('overTimeData', 'currency'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
     /**
@@ -45,12 +47,15 @@ class OverTimeSettingController extends Controller
      */
     public function create(): View|Factory|RedirectResponse|Application
     {
-        try {
-            $this->authorize('');
-            $employees = $this->userRepository->pluckIdAndNameOfAllVerifiedEmployee();
-            return view($this->view . 'create', compact('employees'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('create-overtime')) {
+            try {
+                $employees = $this->userRepository->pluckIdAndNameOfAllVerifiedEmployee();
+                return view($this->view . 'create', compact('employees'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -61,76 +66,89 @@ class OverTimeSettingController extends Controller
      */
     public function store(OverTimeRequest $request): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Contracts\Foundation\Application
     {
-        try {
-            $this->authorize('add_overtime');
-            $validatedData = $request->all();
-            $this->otService->store($validatedData);
+        if (\Auth::user()->can('create-overtime')) {
+            try {
+                $validatedData = $request->all();
+                $this->otService->store($validatedData);
 
-            return redirect()->route('admin.overtime.index')->with('success', 'OverTime Added Successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+                return redirect()->route('admin.overtime.index')->with('success', 'OverTime Added Successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function edit($id): View|Factory|RedirectResponse|Application
     {
-        try {
-            $this->authorize('edit_overtime');
-            $with = ['otEmployees:over_time_setting_id,employee_id'];
-            $overtime = $this->otService->findOTById($id, $with);
-            $employees = $this->userRepository->pluckIdAndNameOfAllVerifiedEmployee();
+        if (\Auth::user()->can('edit-overtime')) {
+            try {
+                $with = ['otEmployees:over_time_setting_id,employee_id'];
+                $overtime = $this->otService->findOTById($id, $with);
+                $employees = $this->userRepository->pluckIdAndNameOfAllVerifiedEmployee();
 
-            $overTimeEmployeeId = $overtime?->otEmployees?->pluck('employee_id')->toArray() ?? [];
+                $overTimeEmployeeId = $overtime?->otEmployees?->pluck('employee_id')->toArray() ?? [];
 
-            return view($this->view . 'edit', compact('overtime','employees','overTimeEmployeeId'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+                return view($this->view . 'edit', compact('overtime', 'employees', 'overTimeEmployeeId'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
 
     public function update(OverTimeRequest $request, $id): RedirectResponse
     {
-        try {
-            $this->authorize('edit_overtime');
-            $validatedData = $request->all();
+        if (\Auth::user()->can('edit-overtime')) {
+            try {
+                $validatedData = $request->all();
 
-            $this->otService->updateOverTime($id, $validatedData);
+                $this->otService->updateOverTime($id, $validatedData);
 
-            return redirect()->route('admin.overtime.index')->with('success', 'OverTime updated Successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+                return redirect()->route('admin.overtime.index')->with('success', 'OverTime updated Successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function delete($id): RedirectResponse
     {
-        try {
-            $this->authorize('delete_overtime');
-            DB::beginTransaction();
-            $this->otService->deleteOTSetting($id);
-            DB::commit();
-            return redirect()->back()->with('success', 'OverTime Deleted Successfully');
-        } catch (Exception $exception) {
-            DB::rollBack();
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('delete-overtime')) {
+            try {
+                DB::beginTransaction();
+                $this->otService->deleteOTSetting($id);
+                DB::commit();
+                return redirect()->back()->with('success', 'OverTime Deleted Successfully');
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function toggleOTStatus($id): RedirectResponse
     {
-        try {
-            $this->authorize('edit_overtime');
-            $this->otService->changeOTStatus($id);
-            return redirect()
-                ->back()
-                ->with('success', 'Status changed Successfully');
-        } catch (Exception $exception) {
-            return redirect()
-                ->back()
-                ->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('edit-overtime')) {
+            try {
+                $this->otService->changeOTStatus($id);
+                return redirect()
+                    ->back()
+                    ->with('success', 'Status changed Successfully');
+            } catch (Exception $exception) {
+                return redirect()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
-
-
 }

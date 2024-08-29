@@ -1,4 +1,4 @@
-@can('view_tada_list')
+@can('manage-tada')
     <li class="nav-item">
         <a
             href="{{ route('admin.tadas.index') }}"

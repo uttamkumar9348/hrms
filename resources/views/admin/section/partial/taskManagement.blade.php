@@ -1,4 +1,4 @@
-@can('view_task_list')
+@can('manage-task_management')
     <li class="nav-item {{ request()->routeIs('admin.tasks.*')  ? 'active' : '' }}">
         <a
             href="{{ route('admin.tasks.index') }}"

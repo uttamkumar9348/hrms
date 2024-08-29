@@ -1,4 +1,4 @@
-@can('view_project_list')
+@can('manage-project_management')
     <li class="nav-item {{ request()->routeIs('admin.projects.*')  ? 'active' : '' }}">
         <a
             href="{{ route('admin.projects.index') }}"

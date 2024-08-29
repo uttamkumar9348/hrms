@@ -1,4 +1,4 @@
-@canany(['view_company', 'list_branch', 'list_department', 'list_department'])
+@canany(['manage-company', 'manage-branch', 'manage-department', 'manage-post'])
     <li
         class="nav-item  {{ request()->routeIs('admin.company.*') ||
         request()->routeIs('admin.branch.*') ||
@@ -20,28 +20,28 @@
             : 'collapse' }} "
             id="company_management">
             <ul class="nav sub-menu">
-                @can('view_company')
+                @can('manage-company')
                     <li class="nav-item">
                         <a href="{{ route('admin.company.index') }}" data-href="{{ route('admin.company.index') }}"
                             class="nav-link {{ request()->routeIs('admin.company.*') ? 'active' : '' }}">Company</a>
                     </li>
                 @endcan
 
-                @can('list_branch')
+                @can('manage-branch')
                     <li class="nav-item">
                         <a href="{{ route('admin.branch.index') }}" data-href="{{ route('admin.branch.index') }}"
                             class="nav-link {{ request()->routeIs('admin.branch.*') ? 'active' : '' }}">Branch</a>
                     </li>
                 @endcan
 
-                @can('list_department')
+                @can('manage-department')
                     <li class="nav-item">
                         <a href="{{ route('admin.departments.index') }}" data-href="{{ route('admin.departments.index') }}"
                             class="nav-link {{ request()->routeIs('admin.departments.*') ? 'active' : '' }}">Department</a>
                     </li>
                 @endcan
 
-                @can('list_post')
+                @can('manage-post')
                     <li class="nav-item">
                         <a href="{{ route('admin.posts.index') }}" data-href="{{ route('admin.posts.index') }}"
                             class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">Post</a>

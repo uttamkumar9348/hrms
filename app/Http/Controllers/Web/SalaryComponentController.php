@@ -11,91 +11,113 @@ class SalaryComponentController extends Controller
 {
     private $view = 'admin.payrollSetting.salaryComponent.';
 
-    public function __construct(public SalaryComponentService $salaryComponentService)
-    {
-    }
+    public function __construct(public SalaryComponentService $salaryComponentService) {}
 
     public function index()
     {
-        try {
-            $select = ['*'];
-            $salaryComponentLists = $this->salaryComponentService->getAllSalaryComponentList($select);
-            return view($this->view . 'index', compact('salaryComponentLists'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('manage-payroll_setting')) {
+            try {
+                $select = ['*'];
+                $salaryComponentLists = $this->salaryComponentService->getAllSalaryComponentList($select);
+                return view($this->view . 'index', compact('salaryComponentLists'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function create()
     {
-        try {
-            $this->authorize('add_salary_component');
-            return view($this->view . 'create');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('create-payroll_setting')) {
+            try {
+                $this->authorize('add_salary_component');
+                return view($this->view . 'create');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function store(SalaryComponentRequest $request)
     {
-        try {
-            $this->authorize('add_salary_component');
-            $validatedData = $request->validated();
-            $this->salaryComponentService->store($validatedData);
-            return redirect()
-                ->route('admin.salary-components.index')
-                ->with('success', 'Salary Component Added Successfully');
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->with('danger', $e->getMessage())
-                ->withInput();
+        if (\Auth::user()->can('create-payroll_setting')) {
+            try {
+                $this->authorize('add_salary_component');
+                $validatedData = $request->validated();
+                $this->salaryComponentService->store($validatedData);
+                return redirect()
+                    ->route('admin.salary-components.index')
+                    ->with('success', 'Salary Component Added Successfully');
+            } catch (Exception $e) {
+                return redirect()->back()
+                    ->with('danger', $e->getMessage())
+                    ->withInput();
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function edit($id)
     {
-        try {
-            $this->authorize('edit_salary_component');
-            $select = ['*'];
-            $salaryComponentDetail = $this->salaryComponentService->findSalaryComponentById($id, $select);
-            return view($this->view . 'edit', compact('salaryComponentDetail'));
-        } catch (Exception $exception) {
-            return redirect()
-                ->back()
-                ->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('edit-payroll_setting')) {
+            try {
+                $this->authorize('edit_salary_component');
+                $select = ['*'];
+                $salaryComponentDetail = $this->salaryComponentService->findSalaryComponentById($id, $select);
+                return view($this->view . 'edit', compact('salaryComponentDetail'));
+            } catch (Exception $exception) {
+                return redirect()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function update(SalaryComponentRequest $request, $id)
     {
-        try {
-            $this->authorize('edit_salary_component');
-            $select = ['*'];
-            $salaryComponentDetail = $this->salaryComponentService->findSalaryComponentById($id, $select);
-            $validatedData = $request->validated();
-            $this->salaryComponentService->updateDetail($salaryComponentDetail, $validatedData);
-            return redirect()
-                ->route('admin.salary-components.index')
-                ->with('success', 'Salary Component Detail Updated Successfully');
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->with('danger', $e->getMessage())
-                ->withInput();
+        if (\Auth::user()->can('edit-payroll_setting')) {
+            try {
+                $this->authorize('edit_salary_component');
+                $select = ['*'];
+                $salaryComponentDetail = $this->salaryComponentService->findSalaryComponentById($id, $select);
+                $validatedData = $request->validated();
+                $this->salaryComponentService->updateDetail($salaryComponentDetail, $validatedData);
+                return redirect()
+                    ->route('admin.salary-components.index')
+                    ->with('success', 'Salary Component Detail Updated Successfully');
+            } catch (Exception $e) {
+                return redirect()->back()
+                    ->with('danger', $e->getMessage())
+                    ->withInput();
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function delete($id)
     {
-        try {
-            $this->authorize('delete_salary_component');
-            $select = ['*'];
-            $salaryComponentDetail = $this->salaryComponentService->findSalaryComponentById($id, $select);
-            $this->salaryComponentService->deleteSalaryComponentDetail($salaryComponentDetail);
-            return redirect()
-                ->back()
-                ->with('success', 'Salary Component Detail Deleted Successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('delete-payroll_setting')) {
+            try {
+                $this->authorize('delete_salary_component');
+                $select = ['*'];
+                $salaryComponentDetail = $this->salaryComponentService->findSalaryComponentById($id, $select);
+                $this->salaryComponentService->deleteSalaryComponentDetail($salaryComponentDetail);
+                return redirect()
+                    ->back()
+                    ->with('success', 'Salary Component Detail Deleted Successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -113,6 +135,4 @@ class SalaryComponentController extends Controller
             return redirect()->back()->with('danger', $exception->getMessage());
         }
     }
-
-
 }

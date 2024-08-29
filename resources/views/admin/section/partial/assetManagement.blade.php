@@ -1,4 +1,4 @@
-@canany(['list_type','list_assets'])
+@canany(['manage-asset_types', 'manage-assets', 'manage-asset_management'])
     <li class="nav-item {{ 
     request()->routeIs('admin.asset-types.*') || 
     request()->routeIs('admin.assets.*') || 
@@ -13,7 +13,7 @@
                    ?'' : 'collapse'  }}" id="assets">
             <ul class="nav sub-menu">
 
-                @can('list_type')
+                @can('manage-asset_types')
                     <li class="nav-item">
                         <a
                             href="{{route('admin.asset-types.index')}}"
@@ -22,7 +22,7 @@
                     </li>
                 @endcan
 
-                @can('list_assets')
+                @can('manage-assets')
                     <li class="nav-item">
                         <a href="{{route('admin.assets.index')}}"
                            data-href="{{route('admin.assets.index')}}"
@@ -30,7 +30,7 @@
                     </li>
                 @endcan
 
-                @can('list_assets')
+                @can('manage-asset_management')
                     <li class="nav-item">
                         <a href="{{route('admin.asset_assignment.index')}}"
                            data-href="{{route('admin.asset_assignment.index')}}"

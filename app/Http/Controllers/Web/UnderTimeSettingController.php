@@ -20,19 +20,22 @@ class UnderTimeSettingController extends Controller
 {
     private $view = 'admin.payrollSetting.under_time.';
 
-    public function __construct(protected UnderTimeSettingService $utSettingService, protected UserRepository $userRepository)
-    {}
+    public function __construct(protected UnderTimeSettingService $utSettingService, protected UserRepository $userRepository) {}
 
 
     public function index(): Factory|View|RedirectResponse|Application
     {
-        try {
-            $underTimeData = $this->utSettingService->getAllUTList();
-            $currency = AppHelper::getCompanyPaymentCurrencySymbol();
+        if (\Auth::user()->can('manage-undertime')) {
+            try {
+                $underTimeData = $this->utSettingService->getAllUTList();
+                $currency = AppHelper::getCompanyPaymentCurrencySymbol();
 
-            return view($this->view . 'index', compact('underTimeData','currency'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+                return view($this->view . 'index', compact('underTimeData', 'currency'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -42,18 +45,20 @@ class UnderTimeSettingController extends Controller
      */
     public function create(): View|Factory|RedirectResponse|Application
     {
-        try {
-            $this->authorize('add_undertime');
-            $underTime = $this->utSettingService->getAllUTList(['*'],1);
+        if (\Auth::user()->can('create-undertime')) {
+            try {
+                $underTime = $this->utSettingService->getAllUTList(['*'], 1);
 
-
-            if(isset($underTime)){
-                return redirect()->route('admin.under-time.edit',$underTime->id);
-            }else{
-                return view($this->view . 'create');
+                if (isset($underTime)) {
+                    return redirect()->route('admin.under-time.edit', $underTime->id);
+                } else {
+                    return view($this->view . 'create');
+                }
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
             }
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -64,31 +69,35 @@ class UnderTimeSettingController extends Controller
      */
     public function store(UnderTimeRequest $request): View|Factory|Response|RedirectResponse|Application
     {
-        try {
-            $this->authorize('add_undertime');
-            $validatedData = $request->all();
+        if (\Auth::user()->can('create-undertime')) {
+            try {
+                $validatedData = $request->all();
 
-            $underTime = $this->utSettingService->store($validatedData);
+                $underTime = $this->utSettingService->store($validatedData);
 
-            return redirect()->route('admin.under-time.edit',$underTime->id)->with('success', 'UnderTime created Successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+                return redirect()->route('admin.under-time.edit', $underTime->id)->with('success', 'UnderTime created Successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function edit($id): View|Factory|RedirectResponse|Application
     {
-        try {
-            $this->authorize('edit_undertime');
-            $with = ['utEmployees:under_time_setting_id,employee_id'];
+        if (\Auth::user()->can('edit-undertime')) {
+            try {
+                $with = ['utEmployees:under_time_setting_id,employee_id'];
 
-            $underTime = $this->utSettingService->findUTById($id, $with);
-//            $employees = $this->userRepository->pluckIdAndNameOfAllVerifiedEmployee();
-//            $underTimeEmployeeId = $underTime?->utEmployees?->pluck('employee_id')->toArray() ?? [];
+                $underTime = $this->utSettingService->findUTById($id, $with);
 
-            return view($this->view . 'edit', compact('underTime'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+                return view($this->view . 'edit', compact('underTime'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -100,43 +109,53 @@ class UnderTimeSettingController extends Controller
      */
     public function update(UnderTimeRequest $request, $utId): RedirectResponse
     {
-        try {
-            $this->authorize('edit_undertime');
-            $validatedData = $request->all();
+        if (\Auth::user()->can('edit-undertime')) {
+            try {
+                $validatedData = $request->all();
 
-            $underTime = $this->utSettingService->updateUnderTime($utId, $validatedData);
+                $underTime = $this->utSettingService->updateUnderTime($utId, $validatedData);
 
-            return redirect()->route('admin.under-time.edit',$underTime->id)->with('success', 'UnderTime Updated Successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+                return redirect()->route('admin.under-time.edit', $underTime->id)->with('success', 'UnderTime Updated Successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function delete($id): RedirectResponse
     {
-        try {
-            DB::beginTransaction();
-            $this->utSettingService->deleteUTSetting($id);
-            DB::commit();
-            return redirect()->back()->with('success', 'OverTime Deleted Successfully');
-        } catch (Exception $exception) {
-            DB::rollBack();
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('delete-undertime')) {
+            try {
+                DB::beginTransaction();
+                $this->utSettingService->deleteUTSetting($id);
+                DB::commit();
+                return redirect()->back()->with('success', 'OverTime Deleted Successfully');
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function toggleUTStatus($id): RedirectResponse
     {
-        try {
-            $this->utSettingService->changeUTStatus($id);
-            return redirect()
-                ->back()
-                ->with('success', 'Status changed Successfully');
-        } catch (Exception $exception) {
-            return redirect()
-                ->back()
-                ->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('edit-undertime')) {
+            try {
+                $this->utSettingService->changeUTStatus($id);
+                return redirect()
+                    ->back()
+                    ->with('success', 'Status changed Successfully');
+            } catch (Exception $exception) {
+                return redirect()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
-
 }

@@ -31,125 +31,150 @@ class HolidayController extends Controller
 
     public function index(Request $request)
     {
-        $this->authorize('list_holiday');
-        try {
-            $filterParameters['event_year'] = $request->event_year ?? Carbon::now()->format('Y');
-            $filterParameters['event'] = $request->event ?? null;
-            $filterParameters['month'] = $request->month ?? null;
-            if (AppHelper::ifDateInBsEnabled()) {
-                $nepaliDate = AppHelper::getCurrentNepaliYearMonth();
-                $filterParameters['event_year'] = $request->event_year ?? $nepaliDate['year'];
+        if (\Auth::user()->can('manage-holidays')) {
+            try {
+                $filterParameters['event_year'] = $request->event_year ?? Carbon::now()->format('Y');
+                $filterParameters['event'] = $request->event ?? null;
+                $filterParameters['month'] = $request->month ?? null;
+                if (AppHelper::ifDateInBsEnabled()) {
+                    $nepaliDate = AppHelper::getCurrentNepaliYearMonth();
+                    $filterParameters['event_year'] = $request->event_year ?? $nepaliDate['year'];
+                }
+                $months = AppHelper::MONTHS;
+                $select = ['id', 'event', 'event_date', 'is_active'];
+                $holidays = $this->holidayService->getAllHolidayLists($filterParameters, $select);
+                return view($this->view . 'index', compact(
+                    'holidays',
+                    'filterParameters',
+                    'months'
+                ));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
             }
-            $months = AppHelper::MONTHS;
-            $select = ['id', 'event', 'event_date', 'is_active'];
-            $holidays = $this->holidayService->getAllHolidayLists($filterParameters, $select);
-            return view($this->view . 'index', compact('holidays',
-                'filterParameters',
-                'months'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function create(): Factory|View|RedirectResponse|Application
     {
-        $this->authorize('create_holiday');
-        try {
-            return view($this->view . 'create');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('create-holidays')) {
+            try {
+                return view($this->view . 'create');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function store(HolidayRequest $request): RedirectResponse
     {
-        $this->authorize('create_holiday');
-        try {
-            $validatedData = $request->validated();
-            DB::beginTransaction();
-            $this->holidayService->store($validatedData);
-            DB::commit();
-            return redirect()->route('admin.holidays.index')->with('success', 'New Holiday Detail Added Successfully');
-        } catch (Exception $e) {
-            DB::rollBack();
-            return redirect()->back()
-                ->with('danger', $e->getMessage())
-                ->withInput();
+        if (\Auth::user()->can('create-holidays')) {
+            try {
+                $validatedData = $request->validated();
+                DB::beginTransaction();
+                $this->holidayService->store($validatedData);
+                DB::commit();
+                return redirect()->route('admin.holidays.index')->with('success', 'New Holiday Detail Added Successfully');
+            } catch (Exception $e) {
+                DB::rollBack();
+                return redirect()->back()
+                    ->with('danger', $e->getMessage())
+                    ->withInput();
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function show($id): JsonResponse
     {
-        try {
-            $this->authorize('show_holiday');
-            $holiday = $this->holidayService->findHolidayDetailById($id);
-            $holiday->event_date = AppHelper::formatDateForView($holiday->event_date);
-            return response()->json([
-                'data' => $holiday,
-            ]);
-        } catch (Exception $exception) {
-            return AppHelper::sendErrorResponse($exception->getMessage(), $exception->getCode());
+        if (\Auth::user()->can('show-holidays')) {
+            try {
+                $this->authorize('show_holiday');
+                $holiday = $this->holidayService->findHolidayDetailById($id);
+                $holiday->event_date = AppHelper::formatDateForView($holiday->event_date);
+                return response()->json([
+                    'data' => $holiday,
+                ]);
+            } catch (Exception $exception) {
+                return AppHelper::sendErrorResponse($exception->getMessage(), $exception->getCode());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function edit($id): Factory|View|RedirectResponse|Application
     {
-        $this->authorize('edit_holiday');
-        try {
-            $holidayDetail = $this->holidayService->findHolidayDetailById($id);
-            if (AppHelper::ifDateInBsEnabled()) {
-                $holidayDetail['event_date'] = AppHelper::dateInYmdFormatEngToNep($holidayDetail['event_date']);
+        if (\Auth::user()->can('edit-holidays')) {
+            try {
+                $holidayDetail = $this->holidayService->findHolidayDetailById($id);
+                if (AppHelper::ifDateInBsEnabled()) {
+                    $holidayDetail['event_date'] = AppHelper::dateInYmdFormatEngToNep($holidayDetail['event_date']);
+                }
+                return view($this->view . 'edit', compact('holidayDetail'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
             }
-            return view($this->view . 'edit', compact('holidayDetail'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function update(HolidayRequest $request, $id): RedirectResponse
     {
-        $this->authorize('edit_holiday');
-        try {
-            $validatedData = $request->validated();
-            $this->holidayService->update($validatedData, $id);
-            return redirect()->route('admin.holidays.index')->with('success', 'Holiday Detail Updated Successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage())
-                ->withInput();
+        if (\Auth::user()->can('edit-holidays')) {
+            try {
+                $validatedData = $request->validated();
+                $this->holidayService->update($validatedData, $id);
+                return redirect()->route('admin.holidays.index')->with('success', 'Holiday Detail Updated Successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage())
+                    ->withInput();
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function toggleStatus($id): RedirectResponse
     {
-        $this->authorize('edit_holiday');
-        try {
-            $this->holidayService->toggleHolidayStatus($id);
-            return redirect()->back()->with('success', 'Holiday Status Changed  Successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('edit-holidays')) {
+            try {
+                $this->holidayService->toggleHolidayStatus($id);
+                return redirect()->back()->with('success', 'Holiday Status Changed  Successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function delete($id): RedirectResponse
     {
-        $this->authorize('delete_holiday');
-        try {
-            $this->holidayService->delete($id);
-            return redirect()->back()->with('success', 'Holiday Removed Successfully');
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        if (\Auth::user()->can('delete-holidays')) {
+            try {
+                $this->holidayService->delete($id);
+                return redirect()->back()->with('success', 'Holiday Removed Successfully');
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function holidayImport(): Factory|View|Application
     {
-        $this->authorize('import_holiday');
         return view($this->view . 'importHolidays');
     }
 
     public function importHolidays(Request $request)
     {
-        $this->authorize('import_holiday');
         try {
             $validate = $request->validate([
                 'file' => 'required|file|mimes:csv,txt'
@@ -168,5 +193,4 @@ class HolidayController extends Controller
             return redirect()->back()->with('danger', $exception->getMessage());
         }
     }
-
 }

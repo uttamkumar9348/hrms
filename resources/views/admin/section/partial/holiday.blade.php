@@ -1,6 +1,4 @@
-
-
-@can('list_holiday')
+@can('manage-holidays')
     <li class="nav-item {{ request()->routeIs('admin.holidays.*')  ? 'active' : '' }}">
         <a
             href="{{ route('admin.holidays.index') }}"

@@ -61,259 +61,256 @@ class EmployeeSalaryController extends Controller
         public AdvanceSalaryService $advanceSalaryService,
         public BranchRepository $branchRepo,
         public UnderTimeSettingService $utSettingService,
-    ){}
+    ) {}
 
     public function index(Request $request): Factory|View|RedirectResponse|Application
     {
-        try{
-            $this->authorize('view_salary_list');
+        if (\Auth::user()->can('manage-payroll')) {
+            try {
 
-            $filterParameters = [
-                'employee_name' => $request->employee_name ?? null,
-                'department_id' => $request->department_id ?? null
-            ];
-            $employeeLists = $this->userRepository->getAllVerifiedActiveEmployeeWithSalaryGroup($filterParameters);
+                $filterParameters = [
+                    'employee_name' => $request->employee_name ?? null,
+                    'department_id' => $request->department_id ?? null
+                ];
+                $employeeLists = $this->userRepository->getAllVerifiedActiveEmployeeWithSalaryGroup($filterParameters);
 
-            $departments = $this->departmentRepository->getAllActiveDepartments([],['id','dept_name']);
-            return view($this->view.'index',compact('employeeLists','filterParameters','departments'));
-        }catch(Exception $exception){
-            return redirect()
-                ->back()
-                ->with('danger', $exception->getMessage());
+                $departments = $this->departmentRepository->getAllActiveDepartments([], ['id', 'dept_name']);
+                return view($this->view . 'index', compact('employeeLists', 'filterParameters', 'departments'));
+            } catch (Exception $exception) {
+                return redirect()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
-    public function changeSalaryCycle($employeeId,$salaryCycle)
+    public function changeSalaryCycle($employeeId, $salaryCycle)
     {
-        try{
-            $this->authorize('change_salary_cycle');
+        try {
 
             $employeeAccountDetail = $this->userAccountRepo->findAccountDetailByEmployeeId($employeeId);
-            if(!$employeeAccountDetail){
-                throw new Exception('Employee Account Detail Not Found',404);
+            if (!$employeeAccountDetail) {
+                throw new Exception('Employee Account Detail Not Found', 404);
             }
-            if(!in_array($salaryCycle,EmployeeAccount::SALARY_CYCLE)){
-                throw new Exception('Invalid Cycle Data',400);
+            if (!in_array($salaryCycle, EmployeeAccount::SALARY_CYCLE)) {
+                throw new Exception('Invalid Cycle Data', 400);
             }
-            $updateCycle = $this->userAccountRepo->updateEmployeeSalaryCycle($employeeAccountDetail,$salaryCycle);
-            return redirect()->back()->with('success', 'Salary Cycle Updated to ' .ucfirst($updateCycle->salary_cycle). ' Successfully');
-
-        }catch(Exception $exception){
+            $updateCycle = $this->userAccountRepo->updateEmployeeSalaryCycle($employeeAccountDetail, $salaryCycle);
+            return redirect()->back()->with('success', 'Salary Cycle Updated to ' . ucfirst($updateCycle->salary_cycle) . ' Successfully');
+        } catch (Exception $exception) {
             return redirect()
                 ->back()
                 ->with('danger', $exception->getMessage());
         }
     }
-
-//    public function updateGeneratePayrollStatus($employeeId)
-//    {
-//        try{
-//            $employeeAccountDetail = $this->userAccountRepo->findAccountDetailByEmployeeId($employeeId);
-//            if(!$employeeAccountDetail){
-//                throw new Exception('Employee Account Detail Not Found',404);
-//            }
-//            $this->userAccountRepo->toggleAllowGeneratePayrollStatus($employeeAccountDetail);
-//            return redirect()->back()->with('success', 'Generate Payroll Status Updated Successfully');
-//        }catch(Exception $exception){
-//            return redirect()
-//                ->back()
-//                ->with('danger', $exception->getMessage());
-//        }
-//    }
 
     public function payrollCreate(Request $request)
     {
-        try{
+        if (\Auth::user()->can('create-payroll')) {
+            try {
+                $payrollData = $this->generatePayrollService->getEmployeeSalariesToCreatePayslip();
 
-            $payrollData = $this->generatePayrollService->getEmployeeSalariesToCreatePayslip();
-
-            return view($this->view.'generate_payslip',compact('payrollData'));
-        }catch(Exception $exception){
-            return response()
-                ->back()
-                ->with('danger', $exception->getMessage());
+                return view($this->view . 'generate_payslip', compact('payrollData'));
+            } catch (Exception $exception) {
+                return response()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function payroll(Request $request): Factory|View|RedirectResponse|Application
     {
-        try{
-            $this->authorize('view_payroll_list');
+        if (\Auth::user()->can('show-payroll')) {
+            try {
+                $filterData = [];
 
+                if ($request->all()) {
+                    $validator = Validator::make($request->all(), [
+                        'salary_cycle' => ['required'],
+                        'year' => ['required'],
+                        'month' => ['nullable'],
+                        'week' => ['nullable'],
+                        'include_tada' => ['nullable'],
+                        'include_advance_salary' => ['nullable'],
+                        'attendance' => ['required'],
+                        'absent_paid' => ['nullable'],
+                        'department_id' => ['nullable'],
+                        'branch_id' => ['nullable'],
+                        'approved_paid_leaves' => ['nullable'],
 
-            $filterData = [];
+                    ]);
+                    if ($validator->fails()) {
+                        return redirect()->back()->withErrors($validator);
+                    }
 
-            if($request->all()){
-                $validator = Validator::make($request->all(), [
-                    'salary_cycle' => ['required'],
-                    'year' => ['required'],
-                    'month' => ['nullable'],
-                    'week' => ['nullable'],
-                    'include_tada' => ['nullable'],
-                    'include_advance_salary'=> ['nullable'],
-                    'attendance'=>['required'],
-                    'absent_paid'=>['nullable'],
-                    'department_id'=>['nullable'],
-                    'branch_id'=>['nullable'],
-                    'approved_paid_leaves'=>['nullable'],
+                    $filterData = $validator->validated();
 
-                ]);
-                if ($validator->fails()) {
-                    return redirect()->back() ->withErrors($validator);
+                    $filterData['include_tada'] =  $filterData['include_tada'] ?? 0;
+                    $filterData['include_advance_salary'] =  $filterData['include_advance_salary'] ?? 0;
+
+                    $payrolls = $this->generatePayrollService->getEmployeeSalariesToCreatePayslip($filterData);
+                } else {
+                    $payrolls = $this->generatePayrollService->getCurrentEmployeeSalaries();
                 }
 
-                $filterData = $validator->validated();
+                $employees = $this->userRepository->getAllEmployeesForPayroll();
+                $paymentMethods = $this->paymentMethodService->pluckAllActivePaymentMethod(['id', 'name']);
+                $currency = AppHelper::getCompanyPaymentCurrencySymbol();
 
-                $filterData['include_tada'] =  $filterData['include_tada'] ?? 0;
-                $filterData['include_advance_salary'] =  $filterData['include_advance_salary'] ?? 0;
+                $companyId = AppHelper::getAuthUserCompanyId();
 
-                $payrolls = $this->generatePayrollService->getEmployeeSalariesToCreatePayslip($filterData);
-            }else {
-                $payrolls = $this->generatePayrollService->getCurrentEmployeeSalaries();
+                $payslipStatus = EmployeePayslipDetail::PAYSLIP_STATUS;
+                $salaryCycles = EmployeeAccount::SALARY_CYCLE;
+                $branches = $this->branchRepo->getLoggedInUserCompanyBranches($companyId, ['id', 'name']);
+
+                $isBSDate = AppHelper::ifDateInBsEnabled();
+                $months = AppHelper::getMonthsList();
+                $currentNepaliYearMonth = AppHelper::getCurrentYearMonth();
+
+                return view($this->view . 'payroll', compact('payslipStatus', 'salaryCycles', 'payrolls', 'filterData', 'paymentMethods', 'currency', 'employees', 'branches', 'months', 'isBSDate', 'currentNepaliYearMonth'));
+            } catch (Exception $exception) {
+                return redirect()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
             }
-
-            $employees = $this->userRepository->getAllEmployeesForPayroll();
-            $paymentMethods = $this->paymentMethodService->pluckAllActivePaymentMethod(['id','name']);
-            $currency = AppHelper::getCompanyPaymentCurrencySymbol();
-
-            $companyId = AppHelper::getAuthUserCompanyId();
-
-            $payslipStatus = EmployeePayslipDetail::PAYSLIP_STATUS;
-            $salaryCycles = EmployeeAccount::SALARY_CYCLE;
-            $branches = $this->branchRepo->getLoggedInUserCompanyBranches($companyId,['id','name']);
-
-            $isBSDate = AppHelper::ifDateInBsEnabled();
-            $months = AppHelper::getMonthsList();
-            $currentNepaliYearMonth = AppHelper::getCurrentYearMonth();
-
-            return view($this->view.'payroll', compact('payslipStatus', 'salaryCycles','payrolls', 'filterData','paymentMethods','currency','employees','branches','months','isBSDate','currentNepaliYearMonth'));
-        }catch(Exception $exception){
-            return redirect()
-                ->back()
-                ->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function viewPayroll($employeePayslipId): Factory|View|RedirectResponse|Application
     {
-        try{
-            $this->authorize('show_payroll_detail');
-            $imagePath = User::AVATAR_UPLOAD_PATH;
-            $payrollData = $this->generatePayrollService->getEmployeeAccountDetailToCreatePayslip($employeePayslipId);
-            $currency = AppHelper::getCompanyPaymentCurrencySymbol();
-            $underTimeSetting = $this->utSettingService->getAllUTList(['is_active'],1);
+        if (\Auth::user()->can('show-payroll')) {
+            try {
+                $imagePath = User::AVATAR_UPLOAD_PATH;
+                $payrollData = $this->generatePayrollService->getEmployeeAccountDetailToCreatePayslip($employeePayslipId);
+                $currency = AppHelper::getCompanyPaymentCurrencySymbol();
+                $underTimeSetting = $this->utSettingService->getAllUTList(['is_active'], 1);
 
-            return view($this->view.'payslip', compact('payrollData','imagePath','currency','underTimeSetting'));
-        }catch(Exception $exception){
-            return redirect()->back()
-                ->with('danger', $exception->getMessage());
+                return view($this->view . 'payslip', compact('payrollData', 'imagePath', 'currency', 'underTimeSetting'));
+            } catch (Exception $exception) {
+                return redirect()->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function editPayroll($employeePayslipId): Factory|View|RedirectResponse|Application
     {
-        try{
-            $this->authorize('edit_payroll');
-            $payrollData = $this->generatePayrollService->getEmployeeAccountDetailToCreatePayslip($employeePayslipId);
-            $currency = AppHelper::getCompanyPaymentCurrencySymbol();
-            $underTimeSetting = $this->utSettingService->getAllUTList(['is_active'],1);
+        if (\Auth::user()->can('edit-payroll')) {
+            try {
+                $payrollData = $this->generatePayrollService->getEmployeeAccountDetailToCreatePayslip($employeePayslipId);
+                $currency = AppHelper::getCompanyPaymentCurrencySymbol();
+                $underTimeSetting = $this->utSettingService->getAllUTList(['is_active'], 1);
 
-            $paymentMethods = $this->paymentMethodService->pluckAllActivePaymentMethod(['id','name']);
-            $paidStatus = PayslipStatusEnum::paid->value;
+                $paymentMethods = $this->paymentMethodService->pluckAllActivePaymentMethod(['id', 'name']);
+                $paidStatus = PayslipStatusEnum::paid->value;
 
-            return view($this->view.'edit_payslip', compact('payrollData','currency','underTimeSetting','paidStatus','paymentMethods'));
-        }catch(Exception $exception){
-            return redirect()->back()
-                ->with('danger', $exception->getMessage());
+                return view($this->view . 'edit_payslip', compact('payrollData', 'currency', 'underTimeSetting', 'paidStatus', 'paymentMethods'));
+            } catch (Exception $exception) {
+                return redirect()->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function updatePayroll(Request $request, $employeePayslipId): Factory|View|RedirectResponse|Application
     {
-        try{
-            $this->authorize('edit_payroll');
-            $validatedData = $request->all();
+        if (\Auth::user()->can('edit-payroll')) {
+            try {
+                $validatedData = $request->all();
+
+                $employeePayslipData = [
+                    "paid_on" => ($validatedData['status'] == PayslipStatusEnum::paid->value) ? $validatedData['paid_on'] : null,
+                    "status" => $validatedData['status'],
+                    "monthly_basic_salary" => $validatedData['monthly_basic_salary'],
+                    "monthly_fixed_allowance" => $validatedData['monthly_fixed_allowance'],
+                    "tds" => $validatedData['tds'],
+                    "advance_salary" => $validatedData['advance_salary'] ?? 0,
+                    "tada" => $validatedData['tada'] ?? 0,
+                    "net_salary" => $validatedData['net_salary'],
+                    "absent_deduction" => $validatedData['absent_deduction'],
+                    "overtime" => $validatedData['overtime'] ?? 0,
+                    "undertime" => $validatedData['undertime'] ?? 0,
+                    "payment_method_id" => $validatedData['payment_method_id'] ?? null,
+                ];
 
 
-            $employeePayslipData = [
-                "paid_on" => ($validatedData['status'] == PayslipStatusEnum::paid->value) ? $validatedData['paid_on']: null,
-                "status" => $validatedData['status'],
-                "monthly_basic_salary" => $validatedData['monthly_basic_salary'],
-                "monthly_fixed_allowance" => $validatedData['monthly_fixed_allowance'],
-                "tds" => $validatedData['tds'],
-                "advance_salary" => $validatedData['advance_salary'] ?? 0,
-                "tada" => $validatedData['tada'] ?? 0,
-                "net_salary" => $validatedData['net_salary'],
-                "absent_deduction" => $validatedData['absent_deduction'],
-                "overtime" => $validatedData['overtime'] ?? 0,
-                "undertime" => $validatedData['undertime'] ?? 0,
-                "payment_method_id" => $validatedData['payment_method_id'] ?? null,
-            ];
+                $employeePaySlipDetail = $this->payslipRepository->find($employeePayslipId);
 
+                DB::beginTransaction();
 
-            $employeePaySlipDetail = $this->payslipRepository->find($employeePayslipId);
-
-            DB::beginTransaction();
-
-                if($validatedData['status'] == PayslipStatusEnum::paid->value)
-                {
+                if ($validatedData['status'] == PayslipStatusEnum::paid->value) {
                     $updateData = [
-                        'status'=>'accepted',
-                        'is_settled'=>1,
-                        'remark'=>'included in salary.',
-                        'verified_by'=>auth()->user()?->id,
+                        'status' => 'accepted',
+                        'is_settled' => 1,
+                        'remark' => 'included in salary.',
+                        'verified_by' => auth()->user()?->id,
                     ];
-                   $this->tadaService->makeSettlement($updateData, $employeePaySlipDetail->employee_id);
+                    $this->tadaService->makeSettlement($updateData, $employeePaySlipDetail->employee_id);
 
-                   // make advance salary settlement
+                    // make advance salary settlement
                     $advanceData = [
-                        'is_settled'=>true,
+                        'is_settled' => true,
                         'remark' => 'settled in payroll'
                     ];
                     $this->advanceSalaryService->advanceSalarySettlement($employeePaySlipDetail->employee_id, $advanceData);
-
                 }
                 $this->payslipRepository->update($employeePaySlipDetail, $employeePayslipData);
 
 
-                if(isset($validatedData['amount'])){
+                if (isset($validatedData['amount'])) {
                     foreach ($validatedData['amount'] as $key => $value) {
                         $payslipDetail = $this->payslipDetailRepository->find($employeePayslipId, $key);
 
                         $this->payslipDetailRepository->update($payslipDetail, ['amount' => $value]);
-
                     }
                 }
 
-            DB::commit();
-            return redirect()->route('admin.employee-salary.payroll-detail',$employeePayslipId)->with('success', 'Payroll updated successfully');
-        }catch(Exception $exception){
-            DB::rollBack();
-            return redirect()->back()
-                ->with('danger', $exception->getMessage());
+                DB::commit();
+                return redirect()->route('admin.employee-employee_salary.payroll-detail', $employeePayslipId)->with('success', 'Payroll updated successfully');
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return redirect()->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function deletePayroll(Request $request, $employeePayslipId): RedirectResponse
     {
-        try{
-            $this->authorize('delete_payroll');
-            $employeePaySlipDetail = $this->payslipRepository->find($employeePayslipId);
+        if (\Auth::user()->can('delete-payroll')) {
+            try {
+                $employeePaySlipDetail = $this->payslipRepository->find($employeePayslipId);
 
-            if($employeePaySlipDetail->status == PayslipStatusEnum::paid->value  || $employeePaySlipDetail->status == PayslipStatusEnum::locked->value){
-                return redirect()->back()->with('danger','Payslip cannot be deleted once paid or locked.');
-            }
+                if ($employeePaySlipDetail->status == PayslipStatusEnum::paid->value  || $employeePaySlipDetail->status == PayslipStatusEnum::locked->value) {
+                    return redirect()->back()->with('danger', 'Payslip cannot be deleted once paid or locked.');
+                }
 
-            DB::beginTransaction();
+                DB::beginTransaction();
                 $this->payslipDetailRepository->deleteByPayslipId($employeePayslipId);
                 $this->payslipRepository->delete($employeePaySlipDetail);
-            DB::commit();
+                DB::commit();
 
-            return redirect()->route('admin.employee-salary.payroll')->with('success', 'Payroll deleted successfully');
-        }catch(Exception $exception){
-            DB::rollBack();
-            return redirect()->back()
-                ->with('danger', $exception->getMessage());
+                return redirect()->route('admin.employee-employee_salary.payroll')->with('success', 'Payroll deleted successfully');
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return redirect()->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -329,31 +326,32 @@ class EmployeeSalaryController extends Controller
      */
     public function createSalary($employeeId): Factory|View|RedirectResponse|Application
     {
-        try{
-            $this->authorize('add_salary');
-            $salaryComponents = [];
-            $employee = $this->userRepository->findUserDetailById($employeeId,['id','name']);
-            $percentType = EmployeeBasicSalaryTypeEnum::percent->value;
-            $fixedType = EmployeeBasicSalaryTypeEnum::fixed->value;
+        if (\Auth::user()->can('create-employee_salary')) {
+            try {
+                $salaryComponents = [];
+                $employee = $this->userRepository->findUserDetailById($employeeId, ['id', 'name']);
+                $percentType = EmployeeBasicSalaryTypeEnum::percent->value;
+                $fixedType = EmployeeBasicSalaryTypeEnum::fixed->value;
 
-            $employeeSalaryGroup = $this->salaryGroupEmployeeRepository->getSalaryGroupFromEmployeeId($employeeId);
+                $employeeSalaryGroup = $this->salaryGroupEmployeeRepository->getSalaryGroupFromEmployeeId($employeeId);
 
-            if($employeeSalaryGroup)
-            {
-                $salaryGroup = $this->salaryGroupService->findOrFailSalaryGroupDetailById($employeeSalaryGroup->salary_group_id, ['*'], ['salaryComponents']);
+                if ($employeeSalaryGroup) {
+                    $salaryGroup = $this->salaryGroupService->findOrFailSalaryGroupDetailById($employeeSalaryGroup->salary_group_id, ['*'], ['salaryComponents']);
 
-                if($salaryGroup)
-                {
-                    $salaryComponents = $salaryGroup->salaryComponents->toArray();
+                    if ($salaryGroup) {
+                        $salaryComponents = $salaryGroup->salaryComponents->toArray();
+                    }
                 }
+
+
+                return view($this->view . 'add_salary', compact('employee', 'percentType', 'fixedType', 'employeeSalaryGroup', 'salaryComponents'));
+            } catch (Exception $exception) {
+                return redirect()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
             }
-
-
-            return view($this->view.'add_salary', compact('employee','percentType','fixedType','employeeSalaryGroup','salaryComponents'));
-        }catch(Exception $exception){
-            return redirect()
-                ->back()
-                ->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -364,32 +362,32 @@ class EmployeeSalaryController extends Controller
      */
     public function saveSalary(Request $request, $employeeId): RedirectResponse
     {
-        try{
-            $this->authorize('add_salary');
-            $validatedData = $request->all();
+        if (\Auth::user()->can('create-employee_salary')) {
+            try {
+                $validatedData = $request->all();
 
-            $employeeSalaryGroup = $this->salaryGroupEmployeeRepository->getSalaryGroupFromEmployeeId($employeeId);
+                $employeeSalaryGroup = $this->salaryGroupEmployeeRepository->getSalaryGroupFromEmployeeId($employeeId);
 
-            if($employeeSalaryGroup)
-            {
-                $validatedData['salary_group_id'] = $employeeSalaryGroup->salary_group_id;
-            }
+                if ($employeeSalaryGroup) {
+                    $validatedData['salary_group_id'] = $employeeSalaryGroup->salary_group_id;
+                }
 
-            $validatedData['weekly_basic_salary'] = round(($validatedData['annual_basic_salary']/52),2);
-            $validatedData['weekly_fixed_allowance'] = round(($validatedData['annual_fixed_allowance']/52),2);
+                $validatedData['weekly_basic_salary'] = round(($validatedData['annual_basic_salary'] / 52), 2);
+                $validatedData['weekly_fixed_allowance'] = round(($validatedData['annual_fixed_allowance'] / 52), 2);
 
-            DB::beginTransaction();
+                DB::beginTransaction();
                 $this->employeeSalaryRepository->store($validatedData);
-            DB::commit();
+                DB::commit();
 
-            return redirect()->route('admin.employee-salaries.index')->with('success','Employee Salary added successfully');
-
-
-        }catch(Exception $exception){
-            DB::rollBack();
-            return redirect()
-                ->back()
-                ->with('danger', $exception->getMessage());
+                return redirect()->route('admin.employee-salaries.index')->with('success', 'Employee Salary added successfully');
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return redirect()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -399,32 +397,33 @@ class EmployeeSalaryController extends Controller
      */
     public function editSalary($employeeId): Factory|View|RedirectResponse|Application
     {
-        try{
-            $this->authorize('edit_salary');
-            $salaryComponents = [];
-            $employee = $this->userRepository->findUserDetailById($employeeId,['id','name']);
-            $percentType = EmployeeBasicSalaryTypeEnum::percent->value;
-            $fixedType = EmployeeBasicSalaryTypeEnum::fixed->value;
-            $employeeSalary = $this->employeeSalaryRepository->getEmployeeSalaryByEmployeeId($employeeId);
+        if (\Auth::user()->can('edit-employee_salary')) {
+            try {
+                $salaryComponents = [];
+                $employee = $this->userRepository->findUserDetailById($employeeId, ['id', 'name']);
+                $percentType = EmployeeBasicSalaryTypeEnum::percent->value;
+                $fixedType = EmployeeBasicSalaryTypeEnum::fixed->value;
+                $employeeSalary = $this->employeeSalaryRepository->getEmployeeSalaryByEmployeeId($employeeId);
 
 
-            $employeeSalaryGroup = $this->salaryGroupEmployeeRepository->getSalaryGroupFromEmployeeId($employeeId);
+                $employeeSalaryGroup = $this->salaryGroupEmployeeRepository->getSalaryGroupFromEmployeeId($employeeId);
 
-            if($employeeSalaryGroup)
-            {
-                $salaryGroup = $this->salaryGroupService->findOrFailSalaryGroupDetailById($employeeSalaryGroup->salary_group_id, ['*'], ['salaryComponents']);
+                if ($employeeSalaryGroup) {
+                    $salaryGroup = $this->salaryGroupService->findOrFailSalaryGroupDetailById($employeeSalaryGroup->salary_group_id, ['*'], ['salaryComponents']);
 
-                if($salaryGroup)
-                {
-                    $salaryComponents = $salaryGroup->salaryComponents->toArray();
+                    if ($salaryGroup) {
+                        $salaryComponents = $salaryGroup->salaryComponents->toArray();
+                    }
                 }
-            }
 
-            return view($this->view.'edit_salary', compact('employee','employeeSalary','percentType','fixedType','salaryComponents'));
-        }catch(Exception $exception){
-            return redirect()
-                ->back()
-                ->with('danger', $exception->getMessage());
+                return view($this->view . 'edit_salary', compact('employee', 'employeeSalary', 'percentType', 'fixedType', 'salaryComponents'));
+            } catch (Exception $exception) {
+                return redirect()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
@@ -435,42 +434,42 @@ class EmployeeSalaryController extends Controller
      */
     public function updateSalary(Request $request, $employeeId): RedirectResponse
     {
-        try{
-            $this->authorize('edit_salary');
-            $validatedData = $request->all();
+        if (\Auth::user()->can('edit-employee_salary')) {
+            try {
+                $validatedData = $request->all();
 
-            $employeeSalary = $this->employeeSalaryRepository->getEmployeeSalaryByEmployeeId($employeeId);
+                $employeeSalary = $this->employeeSalaryRepository->getEmployeeSalaryByEmployeeId($employeeId);
 
-            $validatedData['weekly_basic_salary'] = round(($validatedData['annual_basic_salary']/52),2);
-            $validatedData['weekly_fixed_allowance'] = round(($validatedData['annual_fixed_allowance']/52),2);
-            DB::beginTransaction();
-            $this->employeeSalaryRepository->update($employeeSalary, $validatedData);
-            DB::commit();
+                $validatedData['weekly_basic_salary'] = round(($validatedData['annual_basic_salary'] / 52), 2);
+                $validatedData['weekly_fixed_allowance'] = round(($validatedData['annual_fixed_allowance'] / 52), 2);
+                DB::beginTransaction();
+                $this->employeeSalaryRepository->update($employeeSalary, $validatedData);
+                DB::commit();
 
-            return redirect()->route('admin.employee-salaries.index')->with('success','Employee Salary Updated successfully');
-
-
-        }catch(Exception $exception){
-            DB::rollBack();
-            return redirect()
-                ->back()
-                ->with('danger', $exception->getMessage());
+                return redirect()->route('admin.employee-salaries.index')->with('success', 'Employee Salary Updated successfully');
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return redirect()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
 
     public function printPayslip($employeePayslipId): Factory|View|RedirectResponse|Application
     {
-        try{
-            $this->authorize('print_payroll');
+        try {
             $companyLogoPath = Company::UPLOAD_PATH;
             $payrollData = $this->generatePayrollService->getEmployeeAccountDetailToCreatePayslip($employeePayslipId);
             $currency = AppHelper::getCompanyPaymentCurrencySymbol();
-            $underTimeSetting = $this->utSettingService->getAllUTList(['is_active'],1);
+            $underTimeSetting = $this->utSettingService->getAllUTList(['is_active'], 1);
             $numberToWords = new NumberToWords();
 
-            return view($this->view.'print_payslip', compact( 'payrollData','companyLogoPath','currency','underTimeSetting','numberToWords'));
-        }catch(Exception $exception){
+            return view($this->view . 'print_payslip', compact('payrollData', 'companyLogoPath', 'currency', 'underTimeSetting', 'numberToWords'));
+        } catch (Exception $exception) {
             return redirect()->back()
                 ->with('danger', $exception->getMessage());
         }
@@ -478,17 +477,18 @@ class EmployeeSalaryController extends Controller
 
     public function makePayment($payslipId, Request $request)
     {
-        try{
-
-            $this->authorize('payroll_payment');
-            $validator = Validator::make($request->all(), [
-                'paid_on' => ['required'],
-                'payment_method_id' => ['required'],
-            ],
-            [
-                'paid_on.required' => 'Please select the paid on date while making payment.',
-                'payment_method_id.required' => 'Please select a payment method while making payment.',
-            ]);
+        try {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'paid_on' => ['required'],
+                    'payment_method_id' => ['required'],
+                ],
+                [
+                    'paid_on.required' => 'Please select the paid on date while making payment.',
+                    'payment_method_id.required' => 'Please select a payment method while making payment.',
+                ]
+            );
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
@@ -505,16 +505,16 @@ class EmployeeSalaryController extends Controller
             DB::beginTransaction();
 
             $updateData = [
-                'status'=>'accepted',
-                'is_settled'=>1,
-                'remark'=>'included in salary.',
-                'verified_by'=>auth()->user()?->id,
+                'status' => 'accepted',
+                'is_settled' => 1,
+                'remark' => 'included in salary.',
+                'verified_by' => auth()->user()?->id,
             ];
             $this->tadaService->makeSettlement($updateData, $employeePaySlipDetail->employee_id);
 
             // make advance salary settlement
             $advanceData = [
-                'is_settled'=>true,
+                'is_settled' => true,
                 'remark' => 'settled in payroll'
             ];
             $this->advanceSalaryService->advanceSalarySettlement($employeePaySlipDetail->employee_id, $advanceData);
@@ -524,7 +524,7 @@ class EmployeeSalaryController extends Controller
 
             DB::commit();
             return response()->json(['success' => true]);
-        }catch(Exception $exception){
+        } catch (Exception $exception) {
             DB::rollBack();
             return response()->json(['success' => false, 'message' => $exception->getMessage()]);
         }
@@ -537,41 +537,37 @@ class EmployeeSalaryController extends Controller
      */
     public function deleteSalary($employeeId): RedirectResponse
     {
-        try{
-            $this->authorize('add_salary');
+        if (\Auth::user()->can('delete-employee_salary')) {
+            try {
+                $employeeSalary = $this->employeeSalaryRepository->getEmployeeSalaryByEmployeeId($employeeId);
 
-
-            $employeeSalary = $this->employeeSalaryRepository->getEmployeeSalaryByEmployeeId($employeeId);
-
-            DB::beginTransaction();
+                DB::beginTransaction();
                 $this->employeeSalaryRepository->delete($employeeSalary);
-            DB::commit();
+                DB::commit();
 
-            return redirect()->route('admin.employee-salaries.index')->with('success','Employee Salary deleted successfully');
-
-
-        }catch(Exception $exception){
-            DB::rollBack();
-            return redirect()
-                ->back()
-                ->with('danger', $exception->getMessage());
+                return redirect()->route('admin.employee-salaries.index')->with('success', 'Employee Salary deleted successfully');
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return redirect()
+                    ->back()
+                    ->with('danger', $exception->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function getWeeks($year)
     {
-        try{
+        try {
             $weeks = AppHelper::getweeksList($year);
 
-            return response()->json(['success' => true,'data'=>$weeks]);
-
-        }catch(Exception $exception){
+            return response()->json(['success' => true, 'data' => $weeks]);
+        } catch (Exception $exception) {
             DB::rollBack();
             return redirect()
                 ->back()
                 ->with('danger', $exception->getMessage());
         }
     }
-
-
 }

@@ -1,5 +1,5 @@
 
-@can('list_team_meeting')
+@can('manage-team_meeting')
     <li class="nav-item">
         <a
             href="{{ route('admin.team-meetings.index') }}"

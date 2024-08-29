@@ -1,5 +1,5 @@
 
-@canany(['list_office_time'])
+@canany(['manage-office_time'])
     <li class="nav-item  {{ request()->routeIs('admin.office-times.*')  ? 'active' : '' }}    ">
         <a class="nav-link"   data-href="#" data-bs-toggle="collapse" href="#shiftManagement" role="button" aria-expanded="false" aria-controls="shiftManagment">
             <i class="link-icon" data-feather="book"></i>
@@ -9,7 +9,7 @@
         <div class="{{ request()->routeIs('admin.office-times.*') ?'' : 'collapse'  }} " id="shiftManagement">
              <ul class="nav sub-menu">
 
-                 @can('list_office_time')
+                 @can('manage-office_time')
                     <li class="nav-item">
                         <a href="{{route('admin.office-times.index')}}"
                            data-href="{{route('admin.office-times.index')}}"

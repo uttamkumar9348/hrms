@@ -1,5 +1,5 @@
 
-@canany(['view_query_list'])
+@can('manage-support')
     <li class="nav-item">
         <a
             href="{{ route('admin.supports.index') }}"

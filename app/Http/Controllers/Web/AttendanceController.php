@@ -57,55 +57,57 @@ class AttendanceController extends Controller
     {
         Log::info($request->all());
 
-        $this->authorize('list_attendance');
-        try {
+        if (\Auth::user()->can('manage-attendance')) {
+            try {
 
-            $data = $request->all();
-            $start_date = '';
-            $end_date = '';
-            if (isset($data['datetimes'])) {
-                $datetimes = explode(' - ', $request->datetimes);
-                $start_date = date('Y-m-d', strtotime($datetimes[0]));
-                $end_date = date('Y-m-d', strtotime($datetimes[1]));
-            } else {
-                $start_date = AppHelper::getCurrentDateInYmdFormat();
-                $end_date = AppHelper::getCurrentDateInYmdFormat();
-            }
-            $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
-            $isBsEnabled = AppHelper::ifDateInBsEnabled();
-            $selectBranch = ['id', 'name'];
-            $companyId = AppHelper::getAuthUserCompanyId();
-            $filterParameter = [
-                // 'attendance_date' =>  AppHelper::getCurrentDateInYmdFormat(),
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'company_id' => $companyId,
-                'branch_id' => $request->branch_id ?? null,
-                'department_id' => $request->department_id ?? null,
-                'download_excel' => $request->download_excel,
-                'date_in_bs' => false,
-            ];
+                $data = $request->all();
+                $start_date = '';
+                $end_date = '';
+                if (isset($data['datetimes'])) {
+                    $datetimes = explode(' - ', $request->datetimes);
+                    $start_date = date('Y-m-d', strtotime($datetimes[0]));
+                    $end_date = date('Y-m-d', strtotime($datetimes[1]));
+                } else {
+                    $start_date = AppHelper::getCurrentDateInYmdFormat();
+                    $end_date = AppHelper::getCurrentDateInYmdFormat();
+                }
+                $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
+                $isBsEnabled = AppHelper::ifDateInBsEnabled();
+                $selectBranch = ['id', 'name'];
+                $companyId = AppHelper::getAuthUserCompanyId();
+                $filterParameter = [
+                    // 'attendance_date' =>  AppHelper::getCurrentDateInYmdFormat(),
+                    'start_date' => $start_date,
+                    'end_date' => $end_date,
+                    'company_id' => $companyId,
+                    'branch_id' => $request->branch_id ?? null,
+                    'department_id' => $request->department_id ?? null,
+                    'download_excel' => $request->download_excel,
+                    'date_in_bs' => false,
+                ];
 
-            // if  (AppHelper::ifDateInBsEnabled())  {
-            //     $filterParameter['attendance_date'] =  AppHelper::getCurrentDateInBS();
-            //     $filterParameter['date_in_bs'] = true;
-            // }
-            $attendanceDetail = $this->attendanceService->getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter);
-            // dd($attendanceDetail,$filterParameter);
-            Log::info($filterParameter);
-            $branch = $this->branchRepo->getLoggedInUserCompanyBranches($companyId, $selectBranch);
-            if ($filterParameter['download_excel']) {
-                return FacadesExcel::download(new AttendanceDayWiseExport($attendanceDetail, $filterParameter), 'attendance- from' . $filterParameter['start_date'] . 'to' . $filterParameter['end_date'] .  '-report.xlsx');
+                // if  (AppHelper::ifDateInBsEnabled())  {
+                //     $filterParameter['attendance_date'] =  AppHelper::getCurrentDateInBS();
+                //     $filterParameter['date_in_bs'] = true;
+                // }
+                $attendanceDetail = $this->attendanceService->getAllCompanyEmployeeAttendanceDetailOfTheDay($filterParameter);
+                // dd($attendanceDetail,$filterParameter);
+                Log::info($filterParameter);
+                $branch = $this->branchRepo->getLoggedInUserCompanyBranches($companyId, $selectBranch);
+                if ($filterParameter['download_excel']) {
+                    return FacadesExcel::download(new AttendanceDayWiseExport($attendanceDetail, $filterParameter), 'attendance- from' . $filterParameter['start_date'] . 'to' . $filterParameter['end_date'] .  '-report.xlsx');
+                }
+                return view($this->view . 'index', compact('attendanceDetail', 'filterParameter', 'branch', 'isBsEnabled', 'appTimeSetting'));
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
             }
-            return view($this->view . 'index', compact('attendanceDetail', 'filterParameter', 'branch', 'isBsEnabled', 'appTimeSetting'));
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function checkInEmployee($companyId, $userId): RedirectResponse
     {
-        $this->authorize('attendance_create');
         try {
             $this->checkIn($userId, $companyId);
             return redirect()->back()->with('success', 'Employee Check In Successful');
@@ -117,7 +119,6 @@ class AttendanceController extends Controller
 
     public function checkOutEmployee($companyId, $userId): RedirectResponse
     {
-        $this->authorize('attendance_update');
         try {
             $this->checkOut($userId, $companyId);
             return redirect()->back()->with('success', 'Employee Check Out Successful');
@@ -129,7 +130,6 @@ class AttendanceController extends Controller
 
     public function changeAttendanceStatus($id): RedirectResponse
     {
-        $this->authorize('attendance_update');
         try {
             DB::beginTransaction();
             $this->attendanceService->changeAttendanceStatus($id);
@@ -142,105 +142,115 @@ class AttendanceController extends Controller
 
     public function update(AttendanceTimeEditRequest $request, $id)
     {
-        $this->authorize('attendance_update');
-        try {
-            $validatedData = $request->validated();
-            $attendanceDetail = $this->attendanceService->findAttendanceDetailById($id);
-            $validatedData['is_active'] = 1;
-            $with = ['branch:id,branch_location_latitude,branch_location_longitude'];
-            $select = ['routers.*'];
-            $userDetail = $this->userRepository->findUserDetailById($attendanceDetail->user_id);
+        if (\Auth::user()->can('edit-attendance')) {
+            try {
+                $validatedData = $request->validated();
+                $attendanceDetail = $this->attendanceService->findAttendanceDetailById($id);
+                $validatedData['is_active'] = 1;
+                $with = ['branch:id,branch_location_latitude,branch_location_longitude'];
+                $select = ['routers.*'];
+                $userDetail = $this->userRepository->findUserDetailById($attendanceDetail->user_id);
 
-            $routerDetail = $this->routerRepo->findRouterDetailByBranchId($userDetail->branch_id, $with, $select);
+                $routerDetail = $this->routerRepo->findRouterDetailByBranchId($userDetail->branch_id, $with, $select);
 
-            if ($validatedData['check_out_at']) {
+                if ($validatedData['check_out_at']) {
 
-                $validatedData['check_out_latitude'] = $routerDetail->branch->branch_location_latitude;
-                $validatedData['check_out_longitude'] = $routerDetail->branch->branch_location_longitude;
+                    $validatedData['check_out_latitude'] = $routerDetail->branch->branch_location_latitude;
+                    $validatedData['check_out_longitude'] = $routerDetail->branch->branch_location_longitude;
 
-                $workedData = AttendanceHelper::calculateWorkedHour($validatedData['check_out_at'], $validatedData['check_in_at'], $attendanceDetail->user_id);
+                    $workedData = AttendanceHelper::calculateWorkedHour($validatedData['check_out_at'], $validatedData['check_in_at'], $attendanceDetail->user_id);
 
-                $validatedData['worked_hour'] = $workedData['workedHours'];
-                $validatedData['overtime'] = $workedData['overtime'];
-                $validatedData['undertime'] = $workedData['undertime'];
+                    $validatedData['worked_hour'] = $workedData['workedHours'];
+                    $validatedData['overtime'] = $workedData['overtime'];
+                    $validatedData['undertime'] = $workedData['undertime'];
+                }
+                DB::beginTransaction();
+                $this->attendanceService->update($attendanceDetail, $validatedData);
+                $this->userRepository->updateUserOnlineStatus($userDetail, 1);
+
+                DB::commit();
+                return redirect()->back()->with('success', 'Employee Attendance Edited Successfully');
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return redirect()->back()->with('danger', $exception->getMessage());
             }
-            DB::beginTransaction();
-            $this->attendanceService->update($attendanceDetail, $validatedData);
-            $this->userRepository->updateUserOnlineStatus($userDetail, 1);
-
-            DB::commit();
-            return redirect()->back()->with('success', 'Employee Attendance Edited Successfully');
-        } catch (Exception $exception) {
-            DB::rollBack();
-            return redirect()->back()->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function show(Request $request, $employeeId)
     {
 
-        $this->authorize('attendance_show');
-        try {
-            $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
-            $isBsEnabled = AppHelper::ifDateInBsEnabled();
-            $filterParameter = [
-                'year' => $request->year ?? now()->format('Y'),
-                'month' => $request->month ?? now()->month,
-                'user_id' => $employeeId,
-                'download_excel' => $request->get('download_excel') ? true : false,
-                'date_in_bs' => false,
-            ];
-            $engDate = strtotime($filterParameter['year'] . '-' . $filterParameter['month'] . '-01');
-            $monthName  = date("F", $engDate);
+        if (\Auth::user()->can('show-attendance')) {
+            try {
+                $appTimeSetting = AppHelper::check24HoursTimeAppSetting();
+                $isBsEnabled = AppHelper::ifDateInBsEnabled();
+                $filterParameter = [
+                    'year' => $request->year ?? now()->format('Y'),
+                    'month' => $request->month ?? now()->month,
+                    'user_id' => $employeeId,
+                    'download_excel' => $request->get('download_excel') ? true : false,
+                    'date_in_bs' => false,
+                ];
+                $engDate = strtotime($filterParameter['year'] . '-' . $filterParameter['month'] . '-01');
+                $monthName  = date("F", $engDate);
 
-            if ($isBsEnabled) {
-                $nepaliDate = AppHelper::getCurrentNepaliYearMonth();
-                $filterParameter['year'] = $request->year ?? $nepaliDate['year'];
-                $filterParameter['month'] = $request->month ?? $nepaliDate['month'];
-                $filterParameter['date_in_bs'] = true;
-                $monthName = AppHelper::getNepaliMonthName($filterParameter['month']);
-            }
-
-
-            $months = AppHelper::MONTHS;
-            $userDetail = $this->userRepository->findUserDetailById($employeeId, ['id', 'name']);
-            $attendanceDetail = $this->attendanceService->getEmployeeAttendanceDetailOfTheMonth($filterParameter);
-
-            $attendanceSummary = AttendanceHelper::getMonthlyDetail($employeeId, $filterParameter['date_in_bs'], $filterParameter['year'], $filterParameter['month']);
-
-            if ($filterParameter['download_excel']) {
-                if ($filterParameter['date_in_bs']) {
-                    $month = \App\Helpers\AppHelper::MONTHS[date("n", strtotime($attendanceDetail[0]['attendance_date']))]['np'];
-                } else {
-                    $month = date("F", strtotime($attendanceDetail[0]['attendance_date']));
+                if ($isBsEnabled) {
+                    $nepaliDate = AppHelper::getCurrentNepaliYearMonth();
+                    $filterParameter['year'] = $request->year ?? $nepaliDate['year'];
+                    $filterParameter['month'] = $request->month ?? $nepaliDate['month'];
+                    $filterParameter['date_in_bs'] = true;
+                    $monthName = AppHelper::getNepaliMonthName($filterParameter['month']);
                 }
-                return \Maatwebsite\Excel\Facades\Excel::download(new AttendanceExport($attendanceDetail, $userDetail), 'attendance-' . $userDetail->name . '-' . $filterParameter['year'] . '-' . $month . '-report.xlsx');
+
+
+                $months = AppHelper::MONTHS;
+                $userDetail = $this->userRepository->findUserDetailById($employeeId, ['id', 'name']);
+                $attendanceDetail = $this->attendanceService->getEmployeeAttendanceDetailOfTheMonth($filterParameter);
+
+                $attendanceSummary = AttendanceHelper::getMonthlyDetail($employeeId, $filterParameter['date_in_bs'], $filterParameter['year'], $filterParameter['month']);
+
+                if ($filterParameter['download_excel']) {
+                    if ($filterParameter['date_in_bs']) {
+                        $month = \App\Helpers\AppHelper::MONTHS[date("n", strtotime($attendanceDetail[0]['attendance_date']))]['np'];
+                    } else {
+                        $month = date("F", strtotime($attendanceDetail[0]['attendance_date']));
+                    }
+                    return \Maatwebsite\Excel\Facades\Excel::download(new AttendanceExport($attendanceDetail, $userDetail), 'attendance-' . $userDetail->name . '-' . $filterParameter['year'] . '-' . $month . '-report.xlsx');
+                }
+
+
+                return view(
+                    $this->view . 'show',
+                    compact(
+                        'attendanceDetail',
+                        'filterParameter',
+                        'months',
+                        'userDetail',
+                        'attendanceSummary',
+                        'appTimeSetting',
+                        'isBsEnabled',
+                        'monthName'
+                    )
+                );
+            } catch (Exception $exception) {
+                return redirect()->back()->with('danger', $exception->getMessage());
             }
-
-
-            return view(
-                $this->view . 'show',
-                compact(
-                    'attendanceDetail',
-                    'filterParameter',
-                    'months',
-                    'userDetail',
-                    'attendanceSummary',
-                    'appTimeSetting',
-                    'isBsEnabled',
-                    'monthName'
-                )
-            );
-        } catch (Exception $exception) {
-            return redirect()->back()->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
     public function delete($id)
     {
-        $this->authorize('attendance_delete');
-        $this->attendanceService->delete($id);
-        return redirect()->back()->with('success', 'Attendance Deleted Successful');
+        if (\Auth::user()->can('delete-attendance')) {
+            $this->authorize('attendance_delete');
+            $this->attendanceService->delete($id);
+            return redirect()->back()->with('success', 'Attendance Deleted Successful');
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 
     public function dashboardAttendance(Request $request, $attendanceType): JsonResponse
@@ -311,7 +321,7 @@ class AttendanceController extends Controller
             $permissionKeyForNotification = 'employee_check_out';
             $userDetail = $this->userRepository->findUserDetailById($userId);
             $validatedData = $this->prepareDataForAttendance($companyId, $userId,  'checkout');
-            if  ($dashboardAttendance)  {
+            if ($dashboardAttendance) {
                 $validatedData['check_out_latitude'] = $locationData['lat'];
                 $validatedData['check_out_longitude'] = $locationData['long'];
             }
@@ -394,35 +404,38 @@ class AttendanceController extends Controller
 
     public function store(AttendanceTimeAddRequest $request)
     {
-        $this->authorize('attendance_update');
-        try {
+        if (\Auth::user()->can('create-attendance')) {
+            try {
 
-            $validatedData = $request->validated();
+                $validatedData = $request->validated();
 
-            $validatedData['company_id'] = AppHelper::getAuthUserCompanyId();
+                $validatedData['company_id'] = AppHelper::getAuthUserCompanyId();
 
 
-            $with = ['branch:id,branch_location_latitude,branch_location_longitude'];
-            $select = ['routers.*'];
-            $routerDetail = $this->routerRepo->findRouterDetailByBranchId(AppHelper::getAuthUserBranchId(), $with, $select);
-            if ($validatedData['check_out_at']) {
+                $with = ['branch:id,branch_location_latitude,branch_location_longitude'];
+                $select = ['routers.*'];
+                $routerDetail = $this->routerRepo->findRouterDetailByBranchId(AppHelper::getAuthUserBranchId(), $with, $select);
+                if ($validatedData['check_out_at']) {
 
-                $validatedData['check_out_latitude'] = $routerDetail->branch->branch_location_latitude;
-                $validatedData['check_out_longitude'] = $routerDetail->branch->branch_location_longitude;
+                    $validatedData['check_out_latitude'] = $routerDetail->branch->branch_location_latitude;
+                    $validatedData['check_out_longitude'] = $routerDetail->branch->branch_location_longitude;
 
-                $workedData = AttendanceHelper::calculateWorkedHour($validatedData['check_out_at'], $validatedData['check_in_at'], $validatedData['user_id']);
+                    $workedData = AttendanceHelper::calculateWorkedHour($validatedData['check_out_at'], $validatedData['check_in_at'], $validatedData['user_id']);
 
-                $validatedData['worked_hour'] = $workedData['workedHours'];
-                $validatedData['overtime'] = $workedData['overtime'];
-                $validatedData['undertime'] = $workedData['undertime'];
+                    $validatedData['worked_hour'] = $workedData['workedHours'];
+                    $validatedData['overtime'] = $workedData['overtime'];
+                    $validatedData['undertime'] = $workedData['undertime'];
+                }
+                DB::beginTransaction();
+                $this->attendanceService->addAttendance($validatedData);
+                DB::commit();
+                return redirect()->back()->with('success', 'Employee Attendance Added Successfully');
+            } catch (Exception $exception) {
+                DB::rollBack();
+                return redirect()->back()->with('danger', $exception->getMessage());
             }
-            DB::beginTransaction();
-            $this->attendanceService->addAttendance($validatedData);
-            DB::commit();
-            return redirect()->back()->with('success', 'Employee Attendance Added Successfully');
-        } catch (Exception $exception) {
-            DB::rollBack();
-            return redirect()->back()->with('danger', $exception->getMessage());
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 }

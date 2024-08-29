@@ -1,4 +1,4 @@
-@can('list_notice')
+@can('manage-notice')
     <li class="nav-item {{ request()->routeIs('admin.notices.*')  ? 'active' : '' }}">
         <a
             href="{{ route('admin.notices.index') }}"

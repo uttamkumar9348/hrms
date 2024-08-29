@@ -36,48 +36,53 @@ class CompanyController extends Controller
 
     public function store(CompanyRequest $request)
     {
-        $this->authorize('create_company');
-        try {
-            $validatedData = $request->validated();
-            DB::beginTransaction();
-            $this->companyRepo->store($validatedData);
-            DB::commit();
-            return redirect()->route('admin.company.index')->with('success', 'Company Detail Added Successfully');
-        } catch (Exception $e) {
-            DB::rollBack();
-            return redirect()
-                ->route('admin.company.index')
-                ->with('danger', $e->getMessage())
-                ->withInput();
+        if (\Auth::user()->can('create-company')) {
+            try {
+                $validatedData = $request->validated();
+                DB::beginTransaction();
+                $this->companyRepo->store($validatedData);
+                DB::commit();
+                return redirect()->route('admin.company.index')->with('success', 'Company Detail Added Successfully');
+            } catch (Exception $e) {
+                DB::rollBack();
+                return redirect()
+                    ->route('admin.company.index')
+                    ->with('danger', $e->getMessage())
+                    ->withInput();
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 
 
     public function update(CompanyRequest $request, $id)
     {
-
-        $this->authorize('edit_company');
-        try {
-            if (env('APP_ENV') == 'test') {
-                throw new Exception('This is a demo version. Please buy the application to use the full feature', 400);
+        if (\Auth::user()->can('edit-company')) {
+            try {
+                if (env('APP_ENV') == 'test') {
+                    throw new Exception('This is a demo version. Please buy the application to use the full feature', 400);
+                }
+                $validatedData = $request->validated();
+                $validatedData['weekend'] = $validatedData['weekend'] ?? [];
+                $companyDetail = $this->companyRepo->findOrFailCompanyDetailById($id);
+                if (!$companyDetail) {
+                    throw new Exception('Company Detail Not Found', 404);
+                }
+                DB::beginTransaction();
+                $this->companyRepo->update($companyDetail, $validatedData);
+                DB::commit();
+                return redirect()->route('admin.company.index')
+                    ->with('success', 'Company Detail Updated Successfully');
+            } catch (Exception $e) {
+                DB::rollBack();
+                return redirect()
+                    ->route('admin.company.index')
+                    ->with('danger', $e->getMessage())
+                    ->withInput();
             }
-            $validatedData = $request->validated();
-            $validatedData['weekend'] = $validatedData['weekend'] ?? [];
-            $companyDetail = $this->companyRepo->findOrFailCompanyDetailById($id);
-            if (!$companyDetail) {
-                throw new Exception('Company Detail Not Found', 404);
-            }
-            DB::beginTransaction();
-            $this->companyRepo->update($companyDetail, $validatedData);
-            DB::commit();
-            return redirect()->route('admin.company.index')
-                ->with('success', 'Company Detail Updated Successfully');
-        } catch (Exception $e) {
-            DB::rollBack();
-            return redirect()
-                ->route('admin.company.index')
-                ->with('danger', $e->getMessage())
-                ->withInput();
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
         }
     }
 }
