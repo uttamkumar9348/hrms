@@ -13,7 +13,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Posts</li>
             </ol>
 
-            @can('create_post')
+            @can('create-post')
                 <a href="{{ route('admin.posts.create')}}">
                     <button class="btn btn-primary add_department">
                         <i class="link-icon" data-feather="plus"></i>Add Post
@@ -65,7 +65,7 @@
                             <th class="text-center">Total Employee</th>
                             <th class="text-center">Status</th>
 
-                            @canany(['edit_post','delete_post'])
+                            @canany(['edit-post','delete-post'])
                                 <th class="text-center">Action</th>
                             @endcanany
                         </tr>
@@ -92,11 +92,11 @@
                                     </label>
                                 </td>
 
-                                @canany(['edit_post','delete_post'])
+                                @canany(['edit-post','delete-post'])
                                     <td class="text-center">
                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">
 
-                                        @can('edit_post')
+                                        @can('edit-post')
                                             <li class="me-2">
                                                 <a href="{{route('admin.posts.edit',$value->id)}}">
                                                     <i class="link-icon" data-feather="edit"></i>
@@ -104,7 +104,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('delete_post')
+                                        @can('delete-post')
                                             <li>
                                                 <a class="deletePost" href="#"
                                                    data-href="{{route('admin.posts.delete',$value->id)}}">

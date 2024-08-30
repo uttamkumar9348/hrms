@@ -64,12 +64,10 @@
             <li class="breadcrumb-item">{{ __('Purchase') }}</li>
         </ol>
         <div class="float-end">
-            {{-- @can('create purchase') --}}
             <a href="{{ route('admin.purchase.create', 0) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
                 title="{{ __('Create') }}">
                 Add
             </a>
-            {{-- @endcan --}}
         </div>
     </nav>
     <div class="row">
@@ -121,42 +119,36 @@
                                         @if (Gate::check('edit purchase') || Gate::check('delete purchase') || Gate::check('show purchase'))
                                             <td class="Action">
                                                 <span>
-
-                                                    @can('show purchase')
-                                                        <div class="action-btn bg-info">
-                                                            <a href="{{ route('admin.purchase.show', \Crypt::encrypt($purchase->id)) }}"
-                                                                class="mx-3 btn btn-sm align-items-center"
-                                                                data-bs-toggle="tooltip" title="{{ __('Show') }}"
-                                                                data-original-title="{{ __('Detail') }}">
-                                                                <i class="link-icon" data-feather="eye"></i>
-                                                            </a>
-                                                        </div>
-                                                    @endcan
-                                                    @can('edit purchase')
-                                                        <div class="action-btn bg-primary">
-                                                            <a href="{{ route('admin.purchase.edit', \Crypt::encrypt($purchase->id)) }}"
-                                                                class="mx-3 btn btn-sm align-items-center"
-                                                                data-bs-toggle="tooltip" title="Edit"
-                                                                data-original-title="{{ __('Edit') }}">
-                                                                <i class="link-icon" data-feather="edit"></i>
-                                                            </a>
-                                                        </div>
-                                                    @endcan
-                                                    @can('delete purchase')
-                                                        <div class="action-btn bg-danger">
-                                                            {!! Form::open([
-                                                                'method' => 'DELETE',
-                                                                'route' => ['admin.purchase.destroy', $purchase->id],
-                                                                'class' => 'delete-form-btn delete_btn',
-                                                                'id' => 'delete-form-' . $purchase->id,
-                                                            ]) !!}
-                                                            <a class="mx-3 btn btn-sm align-items-center bs-pass-para alertButton"
-                                                                data-bs-toggle="tooltip" title="{{ __('Delete') }}" data-id="{{ $purchase->id }}">
-                                                                <i class="link-icon" data-feather="trash"></i>
-                                                            </a>
-                                                            {!! Form::close() !!}
-                                                        </div>
-                                                    @endcan
+                                                    <div class="action-btn bg-info">
+                                                        <a href="{{ route('admin.purchase.show', \Crypt::encrypt($purchase->id)) }}"
+                                                            class="mx-3 btn btn-sm align-items-center"
+                                                            data-bs-toggle="tooltip" title="{{ __('Show') }}"
+                                                            data-original-title="{{ __('Detail') }}">
+                                                            <i class="link-icon" data-feather="eye"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="action-btn bg-primary">
+                                                        <a href="{{ route('admin.purchase.edit', \Crypt::encrypt($purchase->id)) }}"
+                                                            class="mx-3 btn btn-sm align-items-center"
+                                                            data-bs-toggle="tooltip" title="Edit"
+                                                            data-original-title="{{ __('Edit') }}">
+                                                            <i class="link-icon" data-feather="edit"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="action-btn bg-danger">
+                                                        {!! Form::open([
+                                                            'method' => 'DELETE',
+                                                            'route' => ['admin.purchase.destroy', $purchase->id],
+                                                            'class' => 'delete-form-btn delete_btn',
+                                                            'id' => 'delete-form-' . $purchase->id,
+                                                        ]) !!}
+                                                        <a class="mx-3 btn btn-sm align-items-center bs-pass-para alertButton"
+                                                            data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                                                            data-id="{{ $purchase->id }}">
+                                                            <i class="link-icon" data-feather="trash"></i>
+                                                        </a>
+                                                        {!! Form::close() !!}
+                                                    </div>
                                                 </span>
                                             </td>
                                         @endif

@@ -6,7 +6,7 @@
 @section('action','Client Listing')
 
 @section('button')
-    @can('create_client')
+    @can('create-client')
         <a href="{{ route('admin.clients.create')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Add Client
@@ -35,7 +35,7 @@
                             <th>Client Email</th>
                             <th>Contact</th>
                             <th class="text-center">Status</th>
-                            @canany(['show_client_detail','edit_client','delete_client'])
+                            @canany(['show-client','edit-client','delete-client'])
                                 <th class="text-center">Action</th>
                             @endcanany
                         </tr>
@@ -58,10 +58,10 @@
                                     </label>
                                 </td>
 
-                                @canany(['show_client_detail','edit_client','delete_client'])
+                                @canany(['show-client','edit-client','delete-client'])
                                     <td class="text-center">
                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                        @can('edit_client')
+                                        @can('edit-client')
                                             <li class="me-2">
                                                 <a href="{{route('admin.clients.edit',$value->id)}}" title="Edit Client Detail">
                                                     <i class="link-icon" data-feather="edit"></i>
@@ -69,7 +69,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('show_client_detail')
+                                        @can('show-client')
                                             <li class="me-2">
                                                 <a href="{{route('admin.clients.show',$value->id)}}" title="show Client Detail">
                                                     <i class="link-icon" data-feather="eye"></i>
@@ -77,7 +77,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('delete_client')
+                                        @can('delete-client')
                                             <li>
                                                 <a class="deleteClientDetail"
                                                    data-href="{{route('admin.clients.delete',$value->id)}}" title="Delete Client Detail">

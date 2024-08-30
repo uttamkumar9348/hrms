@@ -642,7 +642,7 @@
                                     0.00
                                 </td>
                                 <td>
-                                    @can('delete proposal product')
+                                    @can('delete-bill')
                                         <a href="#" class="ti ti-trash text-white repeater-action-btn bg-danger ms-2" data-repeater-delete></a>
                                     @endcan
                                 </td>

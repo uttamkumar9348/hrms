@@ -6,7 +6,7 @@
 @section('action','Lists')
 
 @section('button')
-    @can('leave_type_create')
+    @can('create-leave_types')
         <a href="{{ route('admin.leaves.create')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Add Leave Type
@@ -39,7 +39,7 @@
                                     <th>Is Paid</th>
                                     <th class="text-center">Allocated Days</th>
                                     <th class="text-center">Status</th>
-                                    @canany(['leave_type_edit','leave_type_delete'])
+                                    @canany(['edit-leave_types','delete-leave_types'])
                                         <th class="text-center">Action</th>
                                     @endcanany
                                 </tr>
@@ -60,10 +60,10 @@
                                                 <span class="slider round"></span>
                                             </label>
                                         </td>
-                                        @canany(['leave_type_edit','leave_type_delete'])
+                                        @canany(['edit-leave_types','delete-leave_types'])
                                             <td class="text-center">
                                                 <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                                    @can('leave_type_edit')
+                                                    @can('edit-leave_types')
                                                         <li class="me-2">
                                                             <a href="{{route('admin.leaves.edit',$value->id)}}" title="Edit Leave Type Detail">
                                                                 <i class="link-icon" data-feather="edit"></i>
@@ -71,7 +71,7 @@
                                                         </li>
                                                     @endcan
 
-                                                    @can('leave_type_delete')
+                                                    @can('delete-leave_types')
                                                         <li>
                                                             <a class="deleteLeaveType"
                                                                data-href="{{route('admin.leaves.delete',$value->id)}}" title="Delete Leave Type">

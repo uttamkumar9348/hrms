@@ -3,7 +3,7 @@
 @section('action','Tada Listing')
 
 @section('button')
-    @can('create_tada')
+    @can('create-tada')
         <a href="{{ route('admin.tadas.create')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Create Tada
@@ -67,7 +67,7 @@
                             <th class="text-center">Status</th>
                             <th class="text-center">Is Settled?</th>
                             <th>Submitted Date</th>
-                            @canany(['show_tada_detail','edit_tada','delete_tada'])
+                            @canany(['show-tada','edit-tada','delete-tada'])
                                 <th class="text-center">Action</th>
                             @endcanany
                         </tr>
@@ -116,10 +116,10 @@
 
                                     <td>{{ \App\Helpers\AppHelper::formatDateForView($value->created_at)}}</td>
 
-                                    @canany(['show_tada_detail','edit_tada','delete_tada'])
+                                    @canany(['show-tada','edit-tada','delete-tada'])
                                     <td class="text-center">
                                         <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                            @can('edit_tada')
+                                            @can('edit-tada')
                                                 <li class="me-2">
                                                     <a href="{{route('admin.tadas.edit',$value->id)}}" title="Edit">
                                                         <i class="link-icon" data-feather="edit"></i>
@@ -127,7 +127,7 @@
                                                 </li>
                                             @endcan
 
-                                            @can('show_tada_detail')
+                                            @can('show-tada')
                                                 <li class="me-2">
                                                     <a href="{{route('admin.tadas.show',$value->id)}}"
                                                        id="show"
@@ -138,7 +138,7 @@
                                                 </li>
                                             @endcan
 
-                                            @can('delete_tada')
+                                            @can('delete-tada')
                                                 <li>
                                                     <a class="delete"
                                                        data-href="{{route('admin.tadas.delete',$value->id)}}"

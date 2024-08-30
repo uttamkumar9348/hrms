@@ -14,14 +14,14 @@
     <li class="breadcrumb-item">{{__('POS Product Barcode')}}</li>
     </ol>
     <div class="float-end">
-        {{-- @can('create barcode') --}}
+        @can('create-print_barcode')
             <a href="{{ route('admin.pos.print') }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{__('Print Barcode')}}">
                 <i class="link-icon" data-feather="printer"></i>
             </a>
             <a data-url="{{ route('admin.pos.setting') }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-title="{{__('Barcode Setting')}}" title="{{__('Barcode Setting')}}" class="btn btn-sm btn-primary">
                 <i class="link-icon" data-feather="settings"></i>
             </a>
-        {{-- @endcan --}}
+        @endcan
     </div>
 </nav>
     <div class="row mt-3">

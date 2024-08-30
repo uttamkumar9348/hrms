@@ -1973,7 +1973,8 @@ class SystemController extends Controller
         }
         else
         {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -2013,7 +2014,8 @@ class SystemController extends Controller
 
             return redirect()->back()->with('success', __('Webhook successfully Updated.'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -2027,7 +2029,8 @@ class SystemController extends Controller
         }
         else
         {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -2272,7 +2275,8 @@ class SystemController extends Controller
 
             return redirect()->back()->with('success', __('IP successfully created.'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -2304,7 +2308,8 @@ class SystemController extends Controller
 
             return redirect()->back()->with('success', __('IP successfully updated.'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -2316,7 +2321,8 @@ class SystemController extends Controller
 
             return redirect()->back()->with('success', __('IP successfully deleted.'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 

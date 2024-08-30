@@ -11,11 +11,11 @@
             <li class="breadcrumb-item">{{ __('Farmer Guarantor') }}</li>
         </ol>
         <div class="float-end">
-            {{-- @can('create farmer guarantor') --}}
+            @can('create-farmer_guarantor')
             <a href="{{ route('admin.farmer.guarantor.create') }}" class="btn btn-sm btn-primary">
                 Add
             </a>
-            {{-- @endcan --}}
+            @endcan
         </div>
     </nav>
     <div class="row">
@@ -55,7 +55,7 @@
 
                                         <td class="Action">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                                @can('edit farmer guarantor')
+                                                @can('edit-farmer_guarantor')
                                                     <li class="me-2">
                                                         <a href="{{ route('admin.farmer.guarantor.edit', $guarantor->id) }}"
                                                             data-bs-toggle="tooltip" title="{{ __('Edit') }}">
@@ -63,7 +63,7 @@
                                                         </a>
                                                     </li>
                                                 @endcan
-                                                @can('delete farmer guarantor')
+                                                @can('delete-farmer_guarantor')
                                                     <li>
                                                         <a class="deleteBtn"
                                                             data-href="{{ route('admin.farmer.guarantor.destroy', $guarantor->id) }}"

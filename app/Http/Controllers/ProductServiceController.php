@@ -42,7 +42,8 @@ class ProductServiceController extends Controller
 
             return view('admin.productservice.index', compact('productServices', 'category'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -143,7 +144,8 @@ class ProductServiceController extends Controller
 
             return redirect()->route('admin.productservice.index')->with('success', __('Product successfully created.'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -254,10 +256,12 @@ class ProductServiceController extends Controller
 
                 return redirect()->route('admin.productservice.index')->with('success', __('Product successfully updated.'));
             } else {
-                return redirect()->back()->with('error', __('Permission denied.'));
+                            return redirect()->back()->with('danger', __('Permission denied.'));
+
             }
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -271,10 +275,12 @@ class ProductServiceController extends Controller
 
                 return redirect()->route('admin.productservice.index')->with('success', __('Product successfully deleted.'));
             } else {
-                return redirect()->back()->with('error', __('Permission denied.'));
+                            return redirect()->back()->with('danger', __('Permission denied.'));
+
             }
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 

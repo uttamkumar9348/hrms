@@ -31,7 +31,7 @@
                     <strong>Description:</strong> <p class="description"> </p>
                 </div>
 
-                @can('update_query_status')
+                @can('edit-support')
                     <form class="forms-sample" id="statusChange" action=""  method="post" >
                     @method('PUT')
                     @csrf

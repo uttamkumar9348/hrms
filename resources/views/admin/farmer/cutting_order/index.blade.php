@@ -46,7 +46,7 @@
 
 @section('button')
     <div class="float-end">
-        {{-- @can('create farmer detail') --}}
+        @can('create-issue_cutting_order')
         <button type="button" class="btn btn-sm btn-info" id="select-all">
             Select All
         </button>
@@ -56,7 +56,7 @@
         <button type="button" class="btn btn-sm btn-success" id="issue-cutting-order">
             Issue Cutting Order
         </button>
-        {{-- @endcan --}}
+        @endcan
 
     </div>
 @endsection
@@ -71,7 +71,7 @@
         </ol>
 
         <div class="float-end">
-            {{-- @can('create farmer detail') --}}
+            @can('create-issue_cutting_order')
             <button type="button" class="btn btn-sm btn-info" id="select-all">
                 Select All
             </button>
@@ -81,7 +81,7 @@
             <button type="button" class="btn btn-sm btn-success" id="issue-cutting-order">
                 Issue Cutting Order
             </button>
-            {{-- @endcan --}}
+            @endcan
     
         </div>
     </nav>

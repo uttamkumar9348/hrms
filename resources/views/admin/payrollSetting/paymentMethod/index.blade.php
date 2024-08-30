@@ -26,7 +26,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="justify-content-end">
-                            @can('add_payment_method')
+                            @can('add-payroll_setting')
                                 <a class="btn btn-success"
                                    href="{{ route('admin.payment-methods.create')}}">
                                     <i class="link-icon" data-feather="plus"></i> Add Payment Method
@@ -62,7 +62,7 @@
                                         <td class="text-center">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
                                                 <li class="me-2">
-                                                    @can('edit_payment_method')
+                                                    @can('edit-payroll_setting')
                                                         <a class="editPaymentMethod"
                                                            href="{{route('admin.payment-methods.update',$value->id)}}"
                                                            data-name="{{$value->name}}"
@@ -74,7 +74,7 @@
                                                         </a>
                                                 </li>
                                                 @endcan
-                                                @can('delete_payment_method')
+                                                @can('delete-payroll_setting')
                                                     <li>
                                                         <a class="delete" href="#"
                                                            data-href="{{route('admin.payment-methods.delete',$value->id)}}"

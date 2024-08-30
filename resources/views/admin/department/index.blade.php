@@ -16,7 +16,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Departments</li>
             </ol>
 
-            @can('create_department')
+            @can('create-department')
                 <a href="{{ route('admin.departments.create')}}">
                     <button class="btn btn-primary add_department">
                         <i class="link-icon" data-feather="plus"></i>Add Department
@@ -79,7 +79,7 @@
                             <th class="text-center">Branch Name</th>
                             <th class="text-center">Status</th>
 
-                            @canany(['edit_department','delete_department'])
+                            @canany(['edit-department','delete-department'])
                                 <th class="text-center">Action</th>
                             @endcanany
                         </tr>
@@ -104,10 +104,10 @@
                                     </label>
                                 </td>
 
-                                @canany(['edit_department','delete_department'])
+                                @canany(['edit-department','delete-department'])
                                     <td class="text-center">
                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                        @can('edit_department')
+                                        @can('edit-department')
                                             <li class="me-2">
                                                 <a href="{{route('admin.departments.edit',$value->id)}}">
                                                     <i class="link-icon" data-feather="edit"></i>
@@ -115,7 +115,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('delete_department')
+                                        @can('delete-department')
                                             <li>
                                                 <a class="deleteBranch"
                                                    data-href="{{route('admin.departments.delete',$value->id)}}">

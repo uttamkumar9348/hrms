@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="justify-content-end">
-                            @can('add_overtime')
+                            @can('add-overtime')
                                 <a class="btn btn-success"
                                    href="{{ route('admin.overtime.create')}}">
                                     <i class="link-icon" data-feather="plus"></i> Add OverTime
@@ -61,7 +61,7 @@
                                         </td>
                                         <td class="text-center">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                                @can('edit_overtime')
+                                                @can('edit-overtime')
                                                     <li class="me-2">
                                                         <a href="{{route('admin.overtime.edit',$ot->id)}}"
                                                             data-bs-toggle="tooltip" title="{{ __('Edit') }}">
@@ -69,7 +69,7 @@
                                                         </a>
                                                     </li>
                                                 @endcan
-                                                @can('delete_overtime')
+                                                @can('delete-overtime')
                                                     <li>
                                                         <a class="delete" href="#"
                                                            data-href="{{route('admin.overtime.delete',$ot->id)}}"

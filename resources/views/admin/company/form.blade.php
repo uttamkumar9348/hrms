@@ -73,7 +73,7 @@
         @endif
     </div> -->
 
-    @canany(['create_company','edit_company'])
+    @canany(['create-company','edit-company'])
         <div class="col-lg-6 mb-4 text-start">
             <button type="submit" class="btn btn-primary"><i class="link-icon" data-feather="plus"></i> {{$companyDetail? 'Update':'Save'}} Company</button>
         </div>

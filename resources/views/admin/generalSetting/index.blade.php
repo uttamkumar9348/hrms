@@ -22,7 +22,7 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Value</th>
-                            @can('general_setting_update')
+                            @can('edit-general_settings')
                                 <th>Action</th>
                             @endcan
                         </tr>
@@ -44,7 +44,7 @@
                                                        value="{{ $datum->value}}" autocomplete="off">
                                             </td>
 
-                                            @can('general_setting_update')
+                                            @can('edit-general_settings')
                                                 <td>
                                                     <button type="submit" class="btn btn-primary btn-sm">
                                                         <i class="link-icon" data-feather="plus"></i> update

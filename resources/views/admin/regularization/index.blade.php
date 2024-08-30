@@ -55,12 +55,8 @@
 
                 <div class="col-xxl col-lg-5 col-md-6 d-md-flex">
                     <button type="submit" class="btn btn-block btn-success form-control me-md-2 me-0 mb-4">Filter</button>
-
-                    @can('attendance_csv_export')
                     <button type="button" id="download-daywise-attendance-excel" data-href="{{route('admin.attendances.index' )}}" class="btn btn-block btn-secondary form-control me-md-2 me-0 mb-4">Export
                     </button>
-                    @endcan
-
                     <a class="btn btn-block btn-primary form-control me-md-2 me-0 mb-4 " href="{{route('admin.attendances.index')}}">Reset</a>
                 </div>
             </div>
@@ -79,7 +75,7 @@
                             <th class="text-center">Check Out At</th>
                             <th class="text-center">Regularization Status</th>
                             <!-- <th class="text-center">Regularized By</th> -->
-                            @canany(['attendance_create','attendance_update','attendance_delete'])
+                            @canany(['create-attendance','edit-attendance','delete-attendance'])
                             <th class="text-center">Action</th>
                             @endcanany
                         </tr>
@@ -153,12 +149,12 @@
                             </td>
                             @endif -->
 
-                            @canany(['attendance_create','attendance_update','attendance_delete'])
+                            @canany(['create-attendance','edit-attendance','delete-attendance'])
                             <td class="text-center">
                                 <ul class="d-flex list-unstyled mb-0 justify-content-center">
                                     @if($filterParameter['regularization_date'] == $currentDate)
                                     @if(!$value->check_in_at)
-                                    @can('attendance_create')
+                                    @can('create-attendance')
                                     <li class="me-2">
                                         <a href="{{route('admin.employees.check-in',[$value->company_id,$value->user_id,])}}" id="checkIn" data-href="" data-id="">
                                             <button class="btn btn-success btn-xs">Check In</button>
@@ -168,7 +164,7 @@
                                     @endif
 
                                     @if($value->check_in_at && !$value->check_out_at)
-                                    @can('attendance_update')
+                                    @can('edit-attendance')
                                     <li class="me-2">
                                         <a href="{{route('admin.employees.check-out',[ $value->company_id,$value->user_id])}}" id="checkOut" data-href="" data-id="">
                                             <button class="btn btn-danger btn-xs">Check Out</button>

@@ -27,7 +27,7 @@
                             <textarea class="form-control remark" required name="remark" id="reason"  rows="4"></textarea>
                         </div>
 
-                        @can('edit_tada')
+                        @can('edit-tada')
                             <div class="col-lg-12 text-center">
                                 <button type="submit" class="btn btn-primary update">Update</button>
                             </div>

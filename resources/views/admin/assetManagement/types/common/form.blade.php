@@ -10,7 +10,7 @@
         >
     </div>
 
-    @canany(['create_type','edit_type'])
+    @canany(['create-asset_types','edit-asset_types'])
         <div class="col-lg-6 mt-4">
             <button type="submit" class="btn btn-primary"><i class="link-icon" data-feather="{{isset($assetTypeDetail)? 'edit-2':'plus'}}"></i>
                 {{isset($assetTypeDetail)? 'Update':'Create'}}

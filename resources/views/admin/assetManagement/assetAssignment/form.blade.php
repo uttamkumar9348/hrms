@@ -38,7 +38,7 @@
         <input type="date" class="form-control" id="assign_date" name="assign_date" value="{{ ( isset($assetDetail) ? ($assetDetail->purchased_date): old('purchased_date') )}}" required autocomplete="off">
     </div>
 
-    @canany(['edit_assets','create_assets'])
+    @canany(['edit-asset_management','create-asset_management'])
     <div class="text-start">
         <button type="submit" class="btn btn-primary">
             <i class="link-icon" data-feather="plus"></i>

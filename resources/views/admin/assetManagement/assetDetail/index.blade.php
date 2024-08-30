@@ -5,7 +5,7 @@
 @section('action','Lists')
 
 @section('button')
-    @can('create_assets')
+    @can('create-assets')
         <a href="{{ route('admin.assets.create')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Add Asset
@@ -117,7 +117,7 @@
                             <th class="text-center">Purchased Date</th>
                             <th class="text-center">Is Working</th>
                             <th class="text-center">Is Available</th>
-                            @canany(['show_asset','edit_assets','delete_assets'])
+                            @canany(['show-assets','edit-assets','delete-assets'])
                                 <th class="text-center">Action</th>
                             @endcanany
                         </tr>
@@ -145,7 +145,7 @@
 
                                     <td class="text-center">
                                         <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                            @can('edit_assets')
+                                            @can('edit-assets')
                                                 <li class="me-2">
                                                     <a href="{{route('admin.assets.edit',$value->id)}}" title="Edit">
                                                         <i class="link-icon" data-feather="edit"></i>
@@ -153,7 +153,7 @@
                                                 </li>
                                             @endcan
 
-                                            @can('show_asset')
+                                            @can('show-assets')
                                                 <li class="me-2">
                                                     <a href="{{route('admin.assets.show',$value->id)}}" title="Show Detail">
                                                         <i class="link-icon" data-feather="eye"></i>
@@ -161,7 +161,7 @@
                                                 </li>
                                             @endcan
 
-                                            @can('delete_assets')
+                                            @can('delete-assets')
                                                 <li>
                                                     <a class="delete"
                                                        data-title="{{$value->name}} Asset Detail"

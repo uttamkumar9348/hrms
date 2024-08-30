@@ -92,7 +92,7 @@
                             <th class="text-center">Branch</th>
                             <th class="text-center">Concerned Department </th>
                             <th class="text-center">Status</th>
-                            @canany(['show_query_detail','delete_query'])
+                            @canany(['show-support','delete-support'])
                                 <th class="text-center">Action</th>
                             @endcanany
                         </tr>
@@ -127,11 +127,11 @@
                                        {{removeSpecialChars($value->status)}}
                                     </span>
                                 </td>
-                                @canany(['show_query_detail','delete_query'])
+                                @canany(['show-support','delete-support'])
                                     <td class="text-center">
                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">
 
-                                        @can('show_query_detail')
+                                        @can('show-support')
                                             <li class="me-2">
                                                 <a href=""
                                                    data-href="{{route('admin.supports.changeSeenStatus',$value->id)}}"
@@ -151,7 +151,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('delete_query')
+                                        @can('delete-support')
                                             <li>
                                                 <a class="delete"
                                                    data-title="Query"

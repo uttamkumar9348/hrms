@@ -596,11 +596,9 @@
                                     </td>
 
                                     <td>
-                                        @can('delete proposal product')
-                                            <a href="#"
-                                                class="ti ti-trash text-white repeater-action-btn bg-danger ms-2 bs-pass-para"
-                                                data-repeater-delete></a>
-                                        @endcan
+                                        <a href="#"
+                                            class="ti ti-trash text-white repeater-action-btn bg-danger ms-2 bs-pass-para"
+                                            data-repeater-delete></a>
                                     </td>
                                 </tr>
                                 <tr>

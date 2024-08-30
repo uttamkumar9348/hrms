@@ -56,76 +56,65 @@
             <li class="breadcrumb-item">{{ Auth::user()->purchaseNumberFormat($purchase->purchase_id) }}</li>
         </ol>
     </nav>
-    {{-- @can('send purchase') --}}
-        @if ($purchase->status != 4)
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row timeline-wrapper">
-                                <div class="col-md-6 col-lg-4 col-xl-4">
-                                    <div class="timeline-icons"><span class="timeline-dots"></span>
-                                        <i class="ti ti-plus text-primary"></i>
-                                    </div>
-                                    <h6 class="text-primary my-3">{{ __('Create Purchase') }}</h6>
-                                    <p class="text-muted text-sm mb-3"><i
-                                            class="ti ti-clock mr-2"></i>{{ __('Created on ') }}{{ \Auth::user()->dateFormat($purchase->purchase_date) }}
-                                    </p>
-                                    
-                                    {{-- @can('edit purchase') --}}
-                                        <a href="{{ route('admin.purchase.edit', \Crypt::encrypt($purchase->id)) }}"
-                                            class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
-                                            data-original-title="{{ __('Edit') }}"><i
-                                                class="ti ti-pencil mr-2"></i>{{ __('Edit') }}</a>
-                                    {{-- @endcan --}}
+    @if ($purchase->status != 4)
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row timeline-wrapper">
+                            <div class="col-md-6 col-lg-4 col-xl-4">
+                                <div class="timeline-icons"><span class="timeline-dots"></span>
+                                    <i class="ti ti-plus text-primary"></i>
                                 </div>
-                                <div class="col-md-6 col-lg-4 col-xl-4">
-                                    <div class="timeline-icons"><span class="timeline-dots"></span>
-                                        <i class="ti ti-mail text-warning"></i>
-                                    </div>
-                                    <h6 class="text-warning my-3">{{ __('Send Purchase') }}</h6>
-                                    <p class="text-muted text-sm mb-3">
-                                        @if ($purchase->status != 0)
-                                            <i class="ti ti-clock mr-2"></i>{{ __('Sent on') }}
-                                            {{ \Auth::user()->dateFormat($purchase->send_date) }}
-                                        @else
-                                            {{-- @can('send purchase') --}}
-                                                <small>{{ __('Status') }} : {{ __('Not Sent') }}</small>
-                                            {{-- @endcan --}}
-                                        @endif
-                                    </p>
-
-                                    @if ($purchase->status == 0)
-                                        {{-- @can('send purchase') --}}
-                                            <a href="{{ route('admin.purchase.sent', $purchase->id) }}"
-                                                class="btn btn-sm btn-warning" data-bs-toggle="tooltip"
-                                                data-original-title="{{ __('Mark Sent') }}"><i
-                                                    class="ti ti-send mr-2"></i>{{ __('Send') }}</a>
-                                        {{-- @endcan --}}
-                                    @endif
+                                <h6 class="text-primary my-3">{{ __('Create Purchase') }}</h6>
+                                <p class="text-muted text-sm mb-3"><i
+                                        class="ti ti-clock mr-2"></i>{{ __('Created on ') }}{{ \Auth::user()->dateFormat($purchase->purchase_date) }}
+                                </p>
+                                <a href="{{ route('admin.purchase.edit', \Crypt::encrypt($purchase->id)) }}"
+                                    class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
+                                    data-original-title="{{ __('Edit') }}"><i
+                                        class="ti ti-pencil mr-2"></i>{{ __('Edit') }}</a>
+                            </div>
+                            <div class="col-md-6 col-lg-4 col-xl-4">
+                                <div class="timeline-icons"><span class="timeline-dots"></span>
+                                    <i class="ti ti-mail text-warning"></i>
                                 </div>
-                                <div class="col-md-6 col-lg-4 col-xl-4">
-                                    <div class="timeline-icons"><span class="timeline-dots"></span>
-                                        <i class="ti ti-report-money text-info"></i>
-                                    </div>
-                                    <h6 class="text-info my-3">{{ __('Get Paid') }}</h6>
-                                    <p class="text-muted text-sm mb-3">{{ __('Status') }} : {{ __('Awaiting payment') }} </p>
+                                <h6 class="text-warning my-3">{{ __('Send Purchase') }}</h6>
+                                <p class="text-muted text-sm mb-3">
                                     @if ($purchase->status != 0)
-                                        {{-- @can('create payment purchase') --}}
-                                            <a href="{{ route('admin.purchase.payment', $purchase->id) }}" data-ajax-popup="true"
-                                                data-title="{{ __('Add Payment') }}" class="btn btn-sm btn-info"
-                                                data-original-title="{{ __('Add Payment') }}"><i
-                                                    class="ti ti-report-money mr-2"></i>{{ __('Add Payment') }}</a> <br>
-                                        {{-- @endcan --}}
+                                        <i class="ti ti-clock mr-2"></i>{{ __('Sent on') }}
+                                        {{ \Auth::user()->dateFormat($purchase->send_date) }}
+                                    @else
+                                        <small>{{ __('Status') }} : {{ __('Not Sent') }}</small>
                                     @endif
+                                </p>
+
+                                @if ($purchase->status == 0)
+                                    <a href="{{ route('admin.purchase.sent', $purchase->id) }}"
+                                        class="btn btn-sm btn-warning" data-bs-toggle="tooltip"
+                                        data-original-title="{{ __('Mark Sent') }}"><i
+                                            class="ti ti-send mr-2"></i>{{ __('Send') }}</a>
+                                @endif
+                            </div>
+                            <div class="col-md-6 col-lg-4 col-xl-4">
+                                <div class="timeline-icons"><span class="timeline-dots"></span>
+                                    <i class="ti ti-report-money text-info"></i>
                                 </div>
+                                <h6 class="text-info my-3">{{ __('Get Paid') }}</h6>
+                                <p class="text-muted text-sm mb-3">{{ __('Status') }} : {{ __('Awaiting payment') }} </p>
+                                @if ($purchase->status != 0)
+                                    <a href="{{ route('admin.purchase.payment', $purchase->id) }}" data-ajax-popup="true"
+                                        data-title="{{ __('Add Payment') }}" class="btn btn-sm btn-info"
+                                        data-original-title="{{ __('Add Payment') }}"><i
+                                            class="ti ti-report-money mr-2"></i>{{ __('Add Payment') }}</a> <br>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        @endif
-    {{-- @endcan --}}
+        </div>
+    @endif
 
     @if (\Auth::user()->role->name == 'company')
         @if ($purchase->status != 0)
@@ -446,9 +435,7 @@
                                     <th class="text-dark">{{ __('Account') }}</th>
                                     <th class="text-dark">{{ __('Reference') }}</th>
                                     <th class="text-dark">{{ __('Description') }}</th>
-                                    @can('delete payment purchase')
-                                        <th class="text-dark">{{ __('Action') }}</th>
-                                    @endcan
+                                    <th class="text-dark">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             @forelse($purchase->payments as $key =>$payment)
@@ -469,25 +456,23 @@
                                     </td>
                                     <td>{{ $payment->reference }}</td>
                                     <td>{{ $payment->description }}</td>
-                                    @can('delete payment purchase')
-                                        <td class="text-dark">
-                                            <div class="action-btn bg-danger ms-2">
-                                                {!! Form::open([
-                                                    'method' => 'post',
-                                                    'route' => ['admin.purchase.payment.destroy', $purchase->id, $payment->id],
-                                                    'id' => 'delete-form-' . $payment->id,
-                                                ]) !!}
-                                                <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
-                                                    data-bs-toggle="tooltip" title="{{ __('Delete') }}"
-                                                    data-original-title="{{ __('Delete') }}"
-                                                    data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
-                                                    data-confirm-yes="document.getElementById('delete-form-{{ $payment->id }}').submit();">
-                                                    <i class="link-icon" data-feather="trash"></i>
-                                                </a>
-                                                {!! Form::close() !!}
-                                            </div>
-                                        </td>
-                                    @endcan
+                                    <td class="text-dark">
+                                        <div class="action-btn bg-danger ms-2">
+                                            {!! Form::open([
+                                                'method' => 'post',
+                                                'route' => ['admin.purchase.payment.destroy', $purchase->id, $payment->id],
+                                                'id' => 'delete-form-' . $payment->id,
+                                            ]) !!}
+                                            <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
+                                                data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                                                data-original-title="{{ __('Delete') }}"
+                                                data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
+                                                data-confirm-yes="document.getElementById('delete-form-{{ $payment->id }}').submit();">
+                                                <i class="link-icon" data-feather="trash"></i>
+                                            </a>
+                                            {!! Form::close() !!}
+                                        </div>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>

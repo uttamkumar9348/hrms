@@ -10,7 +10,7 @@
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item">{{ __('Farmer Registration') }}</li>
         </ol>
-        <div class="col-md-4">
+        <div class="col-md-5">
             <form action="{{ route('admin.farmer.farming_registration.search_filter') }}" method="post">
                 @csrf
                 <div class="row">
@@ -34,11 +34,11 @@
             </form>
         </div>
         <div class="float-end">
-            {{-- @can('create farmer registration') --}}
-            <a href="{{ route('admin.farmer.farming_registration.create') }}" class="btn btn-primary">
-                Add
-            </a>
-            {{-- @endcan --}}
+            @can('create-farmer_registration')
+                <a href="{{ route('admin.farmer.farming_registration.create') }}" class="btn btn-primary">
+                    Add
+                </a>
+            @endcan
         </div>
     </nav>
     <div class="row">
@@ -95,7 +95,7 @@
                                         <td class="Action">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
                                                 @if ($farming->is_validate)
-                                                    @can('show farmer registration')
+                                                    @can('show-farmer_registration')
                                                         <li class="me-2">
                                                             <a
                                                                 href="{{ route('admin.farmer.farming_registration.show', $farming->id) }}">
@@ -104,17 +104,15 @@
                                                         </li>
                                                     @endcan
                                                 @else
-                                                    @can('validate farmer registration')
-                                                        @if ($farming->created_by != Auth::user()->id)
-                                                            <li class="me-2">
-                                                                <a href="{{ route('admin.farmer.farming_registration.validate', $farming->id) }}"
-                                                                    data-bs-toggle="tooltip" title="{{ __('Validate') }}">
-                                                                    <i class="link-icon" data-feather="check-square"></i>
-                                                                </a>
-                                                            </li>
-                                                        @endif
-                                                    @endcan
-                                                    @can('edit farmer registration')
+                                                    @if ($farming->created_by != Auth::user()->id)
+                                                        <li class="me-2">
+                                                            <a href="{{ route('admin.farmer.farming_registration.validate', $farming->id) }}"
+                                                                data-bs-toggle="tooltip" title="{{ __('Validate') }}">
+                                                                <i class="link-icon" data-feather="check-square"></i>
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                    @can('edit-farmer_registration')
                                                         <li class="me-2">
                                                             <a
                                                                 href="{{ route('admin.farmer.farming_registration.edit', $farming->id) }}">
@@ -122,14 +120,13 @@
                                                             </a>
                                                         </li>
                                                     @endcan
-                                                    @can('delete farmer registration')
+                                                    @can('delete-farmer_registration')
                                                         <li>
                                                             <a class="deleteBtn"
                                                                 data-href="{{ route('admin.farmer.farming_registration.destroy', $farming->id) }}"
                                                                 data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                                                                 <i class="link-icon" data-feather="delete"></i>
                                                             </a>
-                                                            {!! Form::close() !!}
                                                         </li>
                                                     @endcan
                                                 @endif

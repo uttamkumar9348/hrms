@@ -122,14 +122,14 @@
                                                     </a>
                                                 </li>
 
-                                                {{-- @can('edit product & service') --}}
+                                                @can('edit-product_service')
                                                 <li class="me-2">
                                                     <a href="{{ route('admin.productservice.edit', $productService->id) }}" title="{{ __('Edit') }}">
                                                         <i class="link-icon" data-feather="edit"></i>
                                                     </a>
                                                 </li>
-                                                {{-- @endcan --}}
-                                                {{-- @can('delete product & service') --}}
+                                                @endcan
+                                                @can('delete-product_service')
                                                 <li>
                                                     <a href="#" class="deleteBtn"
                                                         data-href="{{ route('admin.productservice.destroy', $productService->id) }}"
@@ -137,7 +137,7 @@
                                                         <i class="link-icon" data-feather="delete"></i>
                                                     </a>
                                                 </li>
-                                                {{-- @endcan --}}
+                                                @endcan
                                             </ul>
                                         </td>
                                         {{-- @endif --}}

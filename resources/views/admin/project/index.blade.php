@@ -5,7 +5,7 @@
 @section('action','Lists')
 
 @section('button')
-    @can('create_project')
+    @can('create-project_management')
         <a href="{{ route('admin.projects.create')}}">
             <button class="btn btn-primary mt-0 mb-4">
                 <i class="link-icon" data-feather="plus"></i>Create Project
@@ -115,31 +115,30 @@
 
                             </div>
 
-                            @canany(['show_project_detail','edit_project','delete_project'])
+                            @canany(['show-project_management','edit-project_management','delete-project_management'])
                                 <div class="btn-group card-option">
                                 <button type="button" class="btn dropdown-toggle p-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="link-icon"  data-feather="more-vertical"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" style="">
 
-                                    @can('edit_project')
+                                    @can('edit-project_management')
                                         <a href="{{route('admin.projects.edit',$value->id)}}" class="d-block py-1">
                                             <i class="link-icon me-2" data-feather="edit"></i> Edit
                                         </a>
                                     @endcan
 
-                                    @can('show_project_detail')
+                                    @can('show-project_management')
                                         <a href="{{route('admin.projects.show',$value->id)}}" class="d-block py-1">
                                             <i class="link-icon me-2" data-feather="eye"></i> View
                                         </a>
                                     @endcan
 
-                                    @can('delete_project')
+                                    @can('delete-project_management')
                                         <a data-href="{{route('admin.projects.delete',$value->id)}}" class="delete d-block py-1">
                                             <i class="link-icon me-2"  data-feather="delete"></i> Delete
                                         </a>
                                     @endcan
-
                                 </div>
                             </div>
                             @endcanany

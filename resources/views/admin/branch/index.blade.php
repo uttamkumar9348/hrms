@@ -16,9 +16,9 @@
                 <li class="breadcrumb-item active" aria-current="page">Branches</li>
             </ol>
 
-            @can('create_branch')
+            @can('create-branch')
                 <button
-                    class="btn btn-primary add_branch"
+                    class="btn btn-primary add-branch"
                     data-bs-toggle="modal"
                     data-href="{{route('admin.branch.create')}}"
                     data-bs-target="#addslider">
@@ -68,7 +68,7 @@
                             <th class="text-center">Phone</th>
                             <th class="text-center">Total Employee</th>
                             <th class="text-center">Status</th>
-                            @canany(['edit_branch','delete_branch'])
+                            @canany(['edit-branch','delete-branch'])
                                 <th class="text-center">Action</th>
                             @endcan
                         </tr>
@@ -90,10 +90,10 @@
                                     </label>
                                 </td>
 
-                                @canany(['edit_branch','delete_branch'])
+                                @canany(['edit-branch','delete-branch'])
                                     <td class="text-center">
                                         <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                            @can('edit_branch')
+                                            @can('edit-branch')
                                                 <li class="me-2">
                                                     <a id="editBranch"
                                                        data-href="{{route('admin.branch.edit',$value->id)}}"
@@ -104,7 +104,7 @@
                                                 </li>
                                             @endcan
 
-                                            @can('delete_branch')
+                                            @can('delete-branch')
                                                 <li>
                                                     <a class="deleteBranch" data-href="{{route('admin.branch.delete',$value->id)}}"><i class="link-icon"  data-feather="delete"></i></a>
                                                 </li>
@@ -183,7 +183,7 @@
                 })
             })
 
-            $('body').on('click', '.add_branch', function (event) {
+            $('body').on('click', '.add-branch', function (event) {
                 event.preventDefault();
                 let url = $(this).data('href');
                 $('#branch_head').find('option').not(':first').remove();

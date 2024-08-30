@@ -23,7 +23,7 @@
                 <li class="breadcrumb-item active" aria-current="page">QR</li>
             </ol>
 
-            @can('create_qr')
+            @can('create-qr')
                 <a href="{{ route('admin.qr.create')}}">
                     <button class="btn btn-primary add_qr">
                         <i class="link-icon" data-feather="plus"></i>Add QR
@@ -62,14 +62,14 @@
                                                 <i class="link-icon" data-feather="printer"></i>
                                             </a>
                                         </li>
-                                        @can('edit_qr')
+                                        @can('edit-qr')
                                             <li class="me-2">
                                                 <a href="{{route('admin.qr.edit',$qr->id)}}" class="text-warning" title="Edit QR ">
                                                     <i class="link-icon" data-feather="edit"></i>
                                                 </a>
                                             </li>
                                         @endcan
-                                        @can('delete_qr')
+                                        @can('delete-qr')
                                             <li class="me-2">
                                                 <a class="deleteQR"
                                                    data-href="{{route('admin.qr.destroy',$qr->id)}}" title="Delete QR">

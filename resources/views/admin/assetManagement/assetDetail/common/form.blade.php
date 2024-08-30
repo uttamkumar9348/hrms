@@ -149,7 +149,7 @@
         <textarea class="form-control" name="note" id="tinymceExample" rows="2">{{ ( isset($assetDetail) ? $assetDetail->note: old('note') )}}</textarea>
     </div>
 
-    @canany(['edit_assets','create_assets'])
+    @canany(['edit-assets','create-assets'])
         <div class="text-start">
             <button type="submit" class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>

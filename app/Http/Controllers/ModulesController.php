@@ -17,8 +17,12 @@ class ModulesController extends Controller
      */
     public function index()
     {
-        $modules = Module::all();
-        return view('admin.modules.index', compact('modules'));
+        if (\Auth::user()->can('manage-modules')) {
+            $modules = Module::all();
+            return view('admin.modules.index', compact('modules'));
+        } else {
+            return redirect()->back()->with('danger', __('Permission denied.'));
+        }
     }
 
     /**
@@ -28,7 +32,11 @@ class ModulesController extends Controller
      */
     public function create()
     {
-        return view('admin.modules.create');
+        if (\Auth::user()->can('create-modules')) {
+            return view('admin.modules.create');
+        } else {
+            return redirect()->back()->with('danger', __('Permission denied.'));
+        }
     }
 
     /**
@@ -39,33 +47,35 @@ class ModulesController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-        try {
-            $modual = new Module();
-            $modual->name = $request->name;
-            $modual->save();
-            $data = [];
-            if (!empty($request['permissions'])) {
-                foreach ($request['permissions'] as $check) {
-                    if ($check == 'M') {
-                        $data[] = ['name' => 'manage-' . $request->name, 'guard_name' => 'web'];
-                    } else if ($check == 'C') {
-                        $data[] = ['name' => 'create-' . $request->name, 'guard_name' => 'web'];
-                    } else if ($check == 'E') {
-                        $data[] = ['name' => 'edit-' . $request->name, 'guard_name' => 'web'];
-                    } else if ($check == 'D') {
-                        $data[] = ['name' => 'delete-' . $request->name, 'guard_name' => 'web'];
-                    } else if ($check == 'S') {
-                        $data[] = ['name' => 'show-' . $request->name, 'guard_name' => 'web'];
+        if (\Auth::user()->can('create-modules')) {
+            try {
+                $modual = new Module();
+                $modual->name = $request->name;
+                $modual->save();
+                $data = [];
+                if (!empty($request['permissions'])) {
+                    foreach ($request['permissions'] as $check) {
+                        if ($check == 'M') {
+                            $data[] = ['name' => 'manage-' . $request->name, 'guard_name' => 'web'];
+                        } else if ($check == 'C') {
+                            $data[] = ['name' => 'create-' . $request->name, 'guard_name' => 'web'];
+                        } else if ($check == 'E') {
+                            $data[] = ['name' => 'edit-' . $request->name, 'guard_name' => 'web'];
+                        } else if ($check == 'D') {
+                            $data[] = ['name' => 'delete-' . $request->name, 'guard_name' => 'web'];
+                        } else if ($check == 'S') {
+                            $data[] = ['name' => 'show-' . $request->name, 'guard_name' => 'web'];
+                        }
                     }
                 }
+                Permission::insert($data);
+                return redirect()->route('admin.modules.index')
+                    ->with('success', __('module Created Successfully'));
+            } catch (Exception $e) {
+                return redirect()->back()->with('danger', $e->getMessage());
             }
-            // dd($data);
-            Permission::insert($data);
-            return redirect()->route('admin.modules.index')
-                ->with('success', __('module Created Successfully'));
-        } catch (Exception $e) {
-            return redirect()->back()->with('danger', $e->getMessage());
+        } else {
+            return redirect()->back()->with('danger', __('Permission denied.'));
         }
     }
 
@@ -88,8 +98,12 @@ class ModulesController extends Controller
      */
     public function edit($id)
     {
-        $module = Module::find($id);
-        return view('admin.modules.edit', compact('module'));
+        if (\Auth::user()->can('edit-modules')) {
+            $module = Module::find($id);
+            return view('admin.modules.edit', compact('module'));
+        } else {
+            return redirect()->back()->with('danger', __('Permission denied.'));
+        }
     }
 
     /**
@@ -101,47 +115,50 @@ class ModulesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
-        try {
-            $modules = Module::find($id);
-            
-            $this->validate($request, [
-                'name' => 'required|regex:/^[a-zA-Z0-9\-_\.]+$/|min:4|unique:modules,name,' . $modules->id,
-            ], [
-                'regex' => 'Invalid Entry! Only letters,underscores,hypens and numbers are allowed',
-            ]);
-            
-            $permissions = DB::table('permissions')
-            ->where('name', 'like', '%' . $modules->name . '%')
-            ->get();
+        if (\Auth::user()->can('edit-modules')) {
+            try {
+                $modules = Module::find($id);
 
-            $module_name  = str_replace(' ', '-', strtolower($request->name));
-            foreach ($permissions as $permission) {
-                $update_permission = Permission::find($permission->id);
-                if ($permission->name == 'manage-' . $modules->name) {
-                    $update_permission->name = 'manage-' . $module_name;
+                $this->validate($request, [
+                    'name' => 'required|regex:/^[a-zA-Z0-9\-_\.]+$/|min:4|unique:modules,name,' . $modules->id,
+                ], [
+                    'regex' => 'Invalid Entry! Only letters,underscores,hypens and numbers are allowed',
+                ]);
+
+                $permissions = DB::table('permissions')
+                    ->where('name', 'like', '%' . $modules->name . '%')
+                    ->get();
+
+                $module_name  = str_replace(' ', '-', strtolower($request->name));
+                foreach ($permissions as $permission) {
+                    $update_permission = Permission::find($permission->id);
+                    if ($permission->name == 'manage-' . $modules->name) {
+                        $update_permission->name = 'manage-' . $module_name;
+                    }
+                    if ($permission->name == 'create-' . $modules->name) {
+                        $update_permission->name = 'create-' . $module_name;
+                    }
+                    if ($permission->name == 'edit-' . $modules->name) {
+                        $update_permission->name = 'edit-' . $module_name;
+                    }
+                    if ($permission->name == 'delete-' . $modules->name) {
+                        $update_permission->name = 'delete-' . $module_name;
+                    }
+                    if ($permission->name == 'show-' . $modules->name) {
+                        $update_permission->name = 'show-' . $module_name;
+                    }
+                    $update_permission->save();
                 }
-                if ($permission->name == 'create-' . $modules->name) {
-                    $update_permission->name = 'create-' . $module_name;
-                }
-                if ($permission->name == 'edit-' . $modules->name) {
-                    $update_permission->name = 'edit-' . $module_name;
-                }
-                if ($permission->name == 'delete-' . $modules->name) {
-                    $update_permission->name = 'delete-' . $module_name;
-                }
-                if ($permission->name == 'show-' . $modules->name) {
-                    $update_permission->name = 'show-' . $module_name;
-                }
-                $update_permission->save();
+
+                $modules->name = str_replace(' ', '-', strtolower($request->name));
+                $modules->save();
+
+                return redirect()->route('admin.modules.index')->with('success', 'Module Updated Sucessfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('danger', $e->getMessage());
             }
-
-            $modules->name = str_replace(' ', '-', strtolower($request->name));
-            $modules->save();
-
-            return redirect()->route('admin.modules.index')->with('success', 'Module Updated Sucessfully.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('danger', $e->getMessage());
+        } else {
+            return redirect()->back()->with('danger', __('Permission denied.'));
         }
     }
 
@@ -153,14 +170,18 @@ class ModulesController extends Controller
      */
     public function destroy($id)
     {
-        $module = Module::findorfail($id);
-        
-        $permissions = DB::table('permissions')
-        ->where('name', 'like', '%' . $module->name . '%');
+        if (\Auth::user()->can('delete-modules')) {
+            $module = Module::findorfail($id);
 
-        $permissions->delete();
-        $module->delete();
+            $permissions = DB::table('permissions')
+                ->where('name', 'like', '%' . $module->name . '%');
 
-        return redirect()->route('admin.modules.index')->with('success', __('Module Deleted successfully.'));
+            $permissions->delete();
+            $module->delete();
+
+            return redirect()->route('admin.modules.index')->with('success', __('Module Deleted successfully.'));
+        } else {
+            return redirect()->back()->with('danger', __('Permission denied.'));
+        }
     }
 }

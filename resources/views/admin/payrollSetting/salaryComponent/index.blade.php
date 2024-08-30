@@ -21,7 +21,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="justify-content-end">
-                            @can('add_salary_component')
+                            @can('add-payroll_setting')
                                 <a class="btn btn-success"
                                    href="{{ route('admin.salary-components.create')}}">
                                     <i class="link-icon" data-feather="plus"></i> Add Salary Component
@@ -66,7 +66,7 @@
 
                                         <td class="text-center">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                                @can('edit_salary_component')
+                                                @can('edit-payroll_setting')
                                                     <li class="me-2">
                                                         <a href="{{route('admin.salary-components.edit',$value->id)}}"
                                                             data-bs-toggle="tooltip" title="{{ __('Edit') }}">
@@ -74,7 +74,7 @@
                                                         </a>
                                                     </li>
                                                 @endcan
-                                                @can('delete_salary_component')
+                                                @can('delete-payroll_setting')
                                                     <li>
                                                         <a class="delete"
                                                            data-href="{{route('admin.salary-components.delete',$value->id)}}"

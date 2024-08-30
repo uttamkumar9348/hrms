@@ -2,7 +2,7 @@
 @section('title','Asset Types')
 @section('action','Lists')
 @section('button')
-    @can('create_type')
+    @can('create-asset_types')
         <a href="{{ route('admin.asset-types.create')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Add Types
@@ -26,7 +26,7 @@
                             <th>Name</th>
                             <th class="text-center">Asset Item Count</th>
                             <th class="text-center">Status</th>
-                            @canany(['edit_type','delete_type'])
+                            @canany(['edit-asset_types','delete-asset_types'])
                                 <th class="text-center">Action</th>
                             @endcanany
                         </tr>
@@ -50,7 +50,7 @@
 
                                 <td class="text-center">
                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                        @can('edit_type')
+                                        @can('edit-asset_types')
                                             <li class="me-2">
                                                 <a href="{{route('admin.asset-types.edit',$value->id)}}" title="Edit Detail">
                                                     <i class="link-icon" data-feather="edit"></i>
@@ -58,7 +58,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('delete_type')
+                                        @can('delete-asset_types')
                                             <li>
                                                 <a class="delete"
                                                    data-href="{{route('admin.asset-types.delete',$value->id)}}" title="Delete">

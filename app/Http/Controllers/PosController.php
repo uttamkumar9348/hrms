@@ -46,7 +46,8 @@ class PosController extends Controller
 
             return view('admin.pos.index', compact('customers', 'warehouses', 'details'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -138,7 +139,8 @@ class PosController extends Controller
 
             return view('admin.pos.show', compact('sales', 'details'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -257,7 +259,8 @@ class PosController extends Controller
                 );
             }
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -281,10 +284,12 @@ class PosController extends Controller
 
                 return view('admin.pos.view', compact('pos', 'customer', 'iteams', 'posPayment'));
             } else {
-                return redirect()->back()->with('error', __('Permission denied.'));
+                            return redirect()->back()->with('danger', __('Permission denied.'));
+
             }
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -311,7 +316,8 @@ class PosController extends Controller
 
             return view('admin.pos.barcode', compact('productServices', 'barcode'));
         } else {
-            return redirect()->back()->with('error', __('Permission Denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -358,7 +364,8 @@ class PosController extends Controller
 
             return view('admin.pos.print', compact('warehouses'));
         } else {
-            return redirect()->back()->with('error', __('Permission Denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -498,7 +505,8 @@ class PosController extends Controller
 
             return view('admin.pos.templates.' . $settings['pos_template'], compact('pos', 'posPayment', 'color', 'settings', 'customer', 'img', 'font_color'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 

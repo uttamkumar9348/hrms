@@ -6,7 +6,7 @@
 
 @section('button')
     <div class="float-end">
-        @can('edit_employee')
+        @can('edit-employees')
             <a style="float: left;" href="{{ route('admin.users.edit',$userDetail->id)}}">
                 <button class="btn btn-secondary btn-sm me-2">
                     <i class="link-icon" data-feather="edit"></i>Edit Detail

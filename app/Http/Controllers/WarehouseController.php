@@ -22,7 +22,8 @@ class WarehouseController extends Controller
 
             return view('admin.warehouse.index', compact('warehouses'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -36,7 +37,8 @@ class WarehouseController extends Controller
         if (\Auth::user()->can('create-warehouse')) {
             return view('admin.warehouse.create');
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -71,7 +73,8 @@ class WarehouseController extends Controller
 
             return redirect()->route('admin.warehouse.index')->with('success', __('Warehouse successfully created.'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -97,7 +100,8 @@ class WarehouseController extends Controller
                 return view('admin.warehouse.show', compact('warehouse'));
             }
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
     /**
@@ -149,10 +153,12 @@ class WarehouseController extends Controller
 
                 return redirect()->route('admin.warehouse.index')->with('success', __('Warehouse successfully updated.'));
             } else {
-                return redirect()->back()->with('error', __('Permission denied.'));
+                            return redirect()->back()->with('danger', __('Permission denied.'));
+
             }
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -172,10 +178,12 @@ class WarehouseController extends Controller
 
                 return redirect()->route('admin.warehouse.index')->with('success', __('Warehouse successfully deleted.'));
             } else {
-                return redirect()->back()->with('error', __('Permission denied.'));
+                            return redirect()->back()->with('danger', __('Permission denied.'));
+
             }
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 }

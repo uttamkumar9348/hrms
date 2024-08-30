@@ -25,7 +25,8 @@ class ProductServiceCategoryController extends Controller
         }
         else
         {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -85,7 +86,8 @@ class ProductServiceCategoryController extends Controller
         }
         else
         {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -140,12 +142,14 @@ class ProductServiceCategoryController extends Controller
             }
             else
             {
-                return redirect()->back()->with('error', __('Permission denied.'));
+                            return redirect()->back()->with('danger', __('Permission denied.'));
+
             }
         }
         else
         {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -181,12 +185,14 @@ class ProductServiceCategoryController extends Controller
             }
             else
             {
-                return redirect()->back()->with('error', __('Permission denied.'));
+                            return redirect()->back()->with('danger', __('Permission denied.'));
+
             }
         }
         else
         {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 

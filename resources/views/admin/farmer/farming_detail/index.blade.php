@@ -14,11 +14,11 @@
         </ol>
 
         <div class="float-end">
-            {{-- @can('create farmer detail') --}}
+            @can('create-plot')
             <a href="{{ route('admin.farmer.farming_detail.create') }}" class="btn btn-sm btn-primary">
                 Add
             </a>
-            {{-- @endcan --}}
+            @endcan
         </div>
     </nav>
 
@@ -61,7 +61,7 @@
                                         <td class="Action">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
                                             @if ($farming_detail->is_cutting_order != '1')
-                                                @can('edit farmer detail')
+                                                @can('edit-plot')
                                                     <li class="me-2">
                                                         <a href="{{ route('admin.farmer.farming_detail.edit', $farming_detail->id) }}"
                                                             data-bs-toggle="tooltip" title="{{ __('Edit') }}">
@@ -69,7 +69,7 @@
                                                         </a>
                                                     </li>
                                                 @endcan
-                                                @can('delete farmer detail')
+                                                @can('delete-plot')
                                                     <li>
                                                         <a class="deleteBtn" data-href="{{ route('admin.farmer.farming_detail.destroy', $farming_detail->id) }}"
                                                             data-bs-toggle="tooltip" title="{{ __('Delete') }}">

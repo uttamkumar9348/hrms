@@ -89,13 +89,14 @@
 </head>
 
 <body>
-    <li class="nav-item ">
-        <a id="myBtn" class="nav-link">
-            <i class="link-icon" data-feather="file-text"></i>
-            <span class="link-title">Regularization</span>
-        </a>
-    </li>
-
+    @can('manage-regularization')
+        <li class="nav-item ">
+            <a id="myBtn" class="nav-link">
+                <i class="link-icon" data-feather="file-text"></i>
+                <span class="link-title">Regularization</span>
+            </a>
+        </li>
+    @endcan
     <div id="myModal" class="modal">
 
         <!-- Modal content -->

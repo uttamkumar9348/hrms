@@ -34,7 +34,7 @@
 
 @section('main-content')
 
-    @can('send bill')
+    @can('show-bill')
         @if($bill->status!=4)
             <div class="row">
                 <div class="col-12">
@@ -47,7 +47,7 @@
                                     </div>
                                     <h6 class="text-primary my-3">{{__('Create Bill')}}</h6>
                                     <p class="text-muted text-sm mb-3"><i class="ti ti-clock mr-2"></i>{{__('Created on ')}}{{\Auth::user()->dateFormat($bill->bill_date)}}</p>
-                                    @can('edit bill')
+                                    @can('edit-bill')
                                         <a href="{{ route('bill.edit',\Crypt::encrypt($bill->id)) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil mr-2"></i>{{__('Edit')}}</a>
 
                                     @endcan
@@ -61,16 +61,12 @@
                                         @if($bill->status!=0)
                                             <i class="ti ti-clock mr-2"></i>{{__('Sent on')}} {{\Auth::user()->dateFormat($bill->send_date)}}
                                         @else
-                                            @can('send bill')
                                                 <small>{{__('Status')}} : {{__('Not Sent')}}</small>
-                                            @endcan
                                         @endif
                                     </p>
 
                                     @if($bill->status==0)
-                                        @can('send bill')
                                             <a href="{{ route('bill.sent',$bill->id) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-original-title="{{__('Mark Sent')}}"><i class="ti ti-send mr-2"></i>{{__('Send')}}</a>
-                                        @endcan
                                     @endif
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-4">
@@ -80,7 +76,7 @@
                                     <h6 class="text-info my-3">{{__('Get Paid')}}</h6>
                                     <p class="text-muted text-sm mb-3">{{__('Status')}} : {{__('Awaiting payment')}} </p>
                                     @if($bill->status!=0)
-                                        @can('create payment bill')
+                                        @can('create-bill')
                                             <a href="#" data-url="{{ route('bill.payment',$bill->id) }}" data-ajax-popup="true" data-title="{{__('Add Payment')}}" class="btn btn-sm btn-info" data-original-title="{{__('Add Payment')}}"><i class="ti ti-report-money mr-2"></i>{{__('Add Payment')}}</a> <br>
                                         @endcan
                                     @endif
@@ -441,7 +437,7 @@
                                 <th class="text-dark">{{__('Account')}}</th>
                                 <th class="text-dark">{{__('Reference')}}</th>
                                 <th class="text-dark">{{__('Description')}}</th>
-                                @can('delete payment bill')
+                                @can('delete-bill')
                                     <th class="text-dark">{{__('Action')}}</th>
                                 @endcan
                             </tr>
@@ -461,7 +457,7 @@
                                     <td>{{$payment->reference}}</td>
                                     <td>{{$payment->description}}</td>
                                     <td class="text-dark">
-                                        @can('delete bill product')
+                                        @can('delete-bill')
                                             <div class="action-btn bg-danger ms-2">
                                                 {!! Form::open(['method' => 'post', 'route' => ['bill.payment.destroy',$bill->id,$payment->id],'id'=>'delete-form-'.$payment->id]) !!}
                                                 <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip"  title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$payment->id}}').submit();">
@@ -507,12 +503,12 @@
                                     <td>{{\Auth::user()->priceFormat($debitNote->amount)}}</td>
                                     <td>{{$debitNote->description}}</td>
                                     <td>
-                                        @can('edit debit note')
+                                        @can('edit-bill')
                                             <a data-url="{{ route('bill.edit.debit.note',[$debitNote->bill,$debitNote->id]) }}" data-ajax-popup="true" data-title="{{__('Add Debit Note')}}" href="#" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}">
                                                 <i class="link-icon" data-feather="edit"></i>
                                             </a>
                                         @endcan
-                                        @can('delete debit note')
+                                        @can('delete-bill')
                                             <div class="action-btn bg-danger ms-2">
                                                 {!! Form::open(['method' => 'DELETE', 'route' => array('bill.delete.debit.note', $debitNote->bill,$debitNote->id),'id'=>'delete-form-'.$debitNote->id]) !!}
                                                 <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip"  title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$debitNote->id}}').submit();">

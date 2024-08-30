@@ -6,7 +6,7 @@
 @section('action','Lists')
 
 @section('button')
-    @can('create_leave_request')
+    @can('create-leave_request')
         <a href="{{ route('admin.leave-request.add')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Create Leave Request
@@ -111,10 +111,10 @@
                                     <th>Requested Date</th>
                                     <th>Requested By</th>
                                     <th class="text-center">Requested Days</th>
-                                    @can('show_leave_request_detail')
+                                    @can('show-leave_request')
                                         <th class="text-center">Reason</th>
                                     @endcan
-                                    @can('update_leave_request')
+                                    @can('edit-leave_request')
                                         <th class="text-center">Status</th>
                                     @endcan
                                 </tr>
@@ -140,7 +140,7 @@
                                         <td>{{$value->leaveRequestedBy ? ucfirst($value->leaveRequestedBy->name) : 'N/A'}} </td>
                                         <td class="text-center">{{($value->no_of_days )}}</td>
 
-                                        @can('show_leave_request_detail')
+                                        @can('show-leave_request')
                                             <td class="text-center">
                                                 <a href=""
                                                    id="showLeaveReason"
@@ -151,7 +151,7 @@
                                             </td>
                                         @endcan
 
-                                        @can('update_leave_request')
+                                        @can('edit-leave_request')
                                             <td class="text-center">
                                                 <a href=""
                                                    id="leaveRequestUpdate"

@@ -20,7 +20,8 @@ class WarehouseTransferController extends Controller
             $warehouse_transfers = WarehouseTransfer::where('created_by', '=', \Auth::user()->creatorId())->with(['product', 'fromWarehouse'])->get();
             return view('admin.warehouse-transfer.index', compact('warehouse_transfers'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -36,7 +37,8 @@ class WarehouseTransferController extends Controller
 
             return view('admin.warehouse-transfer.create', compact('from_warehouses', 'to_warehouses', 'ware_pro'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -76,7 +78,8 @@ class WarehouseTransferController extends Controller
 
             return redirect()->route('admin.warehouse-transfer.index')->with('success', __('Warehouse Transfer successfully created.'));
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 
@@ -95,10 +98,12 @@ class WarehouseTransferController extends Controller
 
                 return redirect()->route('warehouse-transfer.index')->with('success', __('Warehouse Transfer successfully deleted.'));
             } else {
-                return redirect()->back()->with('error', __('Permission denied.'));
+                            return redirect()->back()->with('danger', __('Permission denied.'));
+
             }
         } else {
-            return redirect()->back()->with('error', __('Permission denied.'));
+                        return redirect()->back()->with('danger', __('Permission denied.'));
+
         }
     }
 

@@ -6,7 +6,7 @@
 @section('action','Lists')
 
 @section('button')
-    @can('create_content')
+    @can('create-content_management')
         <a href="{{ route('admin.static-page-contents.create')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Add Content
@@ -33,13 +33,13 @@
                             <th>Title</th>
                             <th>Type</th>
 
-                            @can('show_content')
+                            @can('show-content_management')
                                 <th class="text-center">Content</th>
                             @endcan
 
                             <th class="text-center">Status</th>
 
-                            @canany(['edit_content','delete_content'])
+                            @canany(['edit-content_management','delete-content_management'])
                                 <th class="text-center">Action</th>
                             @endcanany
                         </tr>
@@ -53,7 +53,7 @@
                                 <td>{{removeSpecialChars($value->title)}}</td>
                                 <td>{{removeSpecialChars($value->content_type)}}</td>
 
-                                @can('show_content')
+                                @can('show-content_management')
                                     <td class="text-center">
                                         <a href=""
                                            id="showStaticPageDescription"
@@ -73,10 +73,10 @@
                                     </label>
                                 </td>
 
-                                @canany(['edit_content','delete_content'])
+                                @canany(['edit-content_management','delete-content_management'])
                                 <td class="text-center">
                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                        @can('edit_content')
+                                        @can('edit-content_management')
                                             <li class="me-2">
                                                 <a href="{{route('admin.static-page-contents.edit',$value->id)}}" title="Edit static page content ">
                                                     <i class="link-icon" data-feather="edit"></i>
@@ -84,7 +84,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('delete_content')
+                                        @can('delete-content_management')
                                             <li>
                                                 <a class="deleteStaticPageContent"
                                                    data-href="{{route('admin.static-page-contents.delete',$value->id)}}" title="Delete static page content">

@@ -4203,10 +4203,10 @@
                                     <div class="col-6">
                                         <h5 class="mb-2">{{ __('Webhook Settings') }}</h5>
                                     </div>
-                                    @can('create webhook')
+                                    @can('create-webhook')
                                         <div class="col-6 text-end">
                                             <a href="#" data-size="lg" data-url="{{ route('webhook.create') }}" data-ajax-popup="true"
-                                               data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create New Webhook')}}" class="btn btn-sm btn-primary">
+                                               data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create New-Webhook')}}" class="btn btn-sm btn-primary">
                                                 <i class="ti ti-plus"></i>
                                             </a>
                                         </div>
@@ -4232,7 +4232,7 @@
                                                 <td>{{ucwords($webhooksetting->method)}}</td>
                                                 <td class="Action">
                                                     <span>
-                                                        @can('edit webhook')
+                                                        @can('edit-webhook')
                                                             <div class="action-btn bg-primary ms-2">
                                                                 <a href="#" class="mx-3 btn btn-sm d-inline-flex align-items-center"
                                                                    data-url="{{ URL::to('webhook-settings/'.$webhooksetting->id.'/edit') }}" data-ajax-popup="true"
@@ -4241,7 +4241,7 @@
                                                                 </a>
                                                             </div>
                                                         @endcan
-                                                        @can('delete webhook')
+                                                        @can('delete-webhook')
                                                             <div class="action-btn bg-danger ms-2">
                                                                 {!! Form::open(['method' => 'DELETE', 'route' => ['webhook.destroy', $webhooksetting->id],'id'=>'delete-form-'.$webhooksetting->id]) !!}
                                                                     <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}">
@@ -4433,7 +4433,7 @@
                                     <div class="col-6">
                                         <h5 class="mb-2">{{ __('IP Restriction Settings') }}</h5>
                                     </div>
-                                    @can('create webhook')
+                                    @can('create-webhook')
                                         <div class="col-6 text-end">
                                             <a data-size="md" data-url="{{ route('create.ip') }}" data-ajax-popup="true"
                                                data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create New IP')}}" class="btn btn-sm btn-primary">
@@ -4460,7 +4460,7 @@
 
                                                 <td class="Action">
                                                     <span>
-                                                        @can('edit webhook')
+                                                        @can('edit-webhook')
                                                             <div class="action-btn bg-primary ms-2">
                                                                 <a  class="mx-3 btn btn-sm d-inline-flex align-items-center"
                                                                     data-url="{{ route('edit.ip', $ip->id) }}" data-ajax-popup="true"
@@ -4469,7 +4469,7 @@
                                                                 </a>
                                                             </div>
                                                         @endcan
-                                                        @can('delete webhook')
+                                                        @can('delete-webhook')
                                                             <div class="action-btn bg-danger ms-2">
                                                                 {!! Form::open(['method' => 'DELETE', 'route' => ['destroy.ip', $ip->id],'id'=>'delete-form-'.$ip->id]) !!}
                                                                     <a  class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}">

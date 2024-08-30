@@ -11,11 +11,11 @@
             <li class="breadcrumb-item">{{ __('Farmer Security Deposit') }}</li>
         </ol>
         <div class="float-end">
-            {{-- @can('create farmer security deposit') --}}
+            @can('create-security_deposite')
             <a href="{{ route('admin.farmer.payment.create') }}" class="btn btn-sm btn-primary">
                 Add
             </a>
-            {{-- @endcan --}}
+            @endcan
         </div>
     </nav>
     <div class="row">
@@ -47,7 +47,7 @@
 
                                         <td class="Action">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                                @can('edit farmer security deposit')
+                                                @can('edit-security_deposite')
                                                     <li class="me-2">
                                                         <a href="{{ route('admin.farmer.payment.edit', $payment->id) }}"
                                                             data-bs-toggle="tooltip" title="{{ __('Edit') }}">
@@ -55,7 +55,7 @@
                                                         </a>
                                                     </li>
                                                 @endcan
-                                                @can('delete farmer security deposit')
+                                                @can('delete-security_deposite')
                                                     <li>
                                                         <a data-href="{{ route('admin.farmer.payment.destroy', $payment->id) }}"
                                                             class="deleteBtn" data-bs-toggle="tooltip"

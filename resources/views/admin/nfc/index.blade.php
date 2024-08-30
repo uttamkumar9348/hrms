@@ -48,7 +48,7 @@
                                 </td>
 
                                 <td class="text-center">
-                                    @can('delete_nfc')
+                                    @can('delete-nfc')
                                         <ul class="d-flex list-unstyled mb-0 justify-content-center">
                                             <li class="me-2">
                                                 <a class="deleteNFC"

@@ -3,7 +3,7 @@
 @section('action','Lists')
 
 @section('button')
-    @can('create_task')
+    @can('create-task_management')
         <a href="{{ route('admin.tasks.create')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Create Tasks
@@ -114,26 +114,26 @@
 
                                 </div>
 
-                                @canany(['edit_task','show_task_detail','delete_task'])
+                                @canany(['edit-task_management','show-task_management','delete-task_management'])
                                     <div class="btn-group card-option">
                                     <button type="button" class="btn dropdown-toggle p-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="link-icon"  data-feather="more-vertical"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-end" style="">
 
-                                        @can('edit_task')
+                                        @can('edit-task_management')
                                             <a href="{{route('admin.tasks.edit',$value->id)}}" class="d-block py-1">
                                                 <i class="link-icon me-2" data-feather="edit"></i> Edit
                                             </a>
                                         @endcan
 
-                                        @can('show_task_detail')
+                                        @can('show-task_management')
                                             <a href="{{route('admin.tasks.show',$value->id)}}" class="d-block py-1">
                                                 <i class="link-icon me-2" data-feather="eye"></i> View
                                             </a>
                                         @endcan
 
-                                        @can('delete_task')
+                                        @can('delete-task_management')
                                             <a data-href="{{route('admin.tasks.delete',$value->id)}}" class="delete d-block py-1">
                                                 <i class="link-icon me-2"  data-feather="delete"></i> Delete
                                             </a>

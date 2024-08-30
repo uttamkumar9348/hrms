@@ -5,7 +5,7 @@
 @section('action','Router Lists ')
 
 @section('button')
-    @can('create_router')
+    @can('create-routers')
         <a href="{{ route('admin.routers.create')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Add Router
@@ -33,7 +33,7 @@
                             <th>Branch </th>
                             <th>Company</th>
                             <th>Status</th>
-                            @canany(['edit_router','delete_router'])
+                            @canany(['edit-routers','delete-routers'])
                                 <th>Action</th>
                             @endcanany
                         </tr>
@@ -54,10 +54,10 @@
                                         <span class="slider round"></span>
                                     </label>
                                 </td>
-                                @canany(['edit_router','delete_router'])
+                                @canany(['edit-routers','delete-routers'])
                                     <td>
                                     <ul class="d-flex list-unstyled mb-0">
-                                        @can('edit_router')
+                                        @can('edit-routers')
                                             <li class="me-2">
                                                 <a href="{{route('admin.routers.edit',$value->id)}}" title="Edit">
                                                     <i class="link-icon" data-feather="edit"></i>
@@ -65,7 +65,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('delete_router')
+                                        @can('delete-routers')
                                             <li>
                                                 <a class="deleteRouter"
                                                    data-href="{{route('admin.routers.delete',$value->id)}}" title="Delete">

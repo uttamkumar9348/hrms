@@ -11,7 +11,7 @@
             <li class="breadcrumb-item">{{ __('Farmer Reimbursement') }}</li>
         </ol>
         <div class="float-end">
-            @can('create farmer reimbursement')
+            @can('create-reimbursement')
                 <a href="{{ route('admin.farmer.reimbursement.create') }}" class="btn btn-sm btn-primary">
                     Add
                 </a>
@@ -47,14 +47,14 @@
 
                                         <td class="Action">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                                @can('edit farmer reimbursement')
+                                                @can('edit-reimbursement')
                                                     <li class="me-2">
                                                         <a href="{{ route('admin.farmer.payment.edit', $payment->id) }}">
                                                             <i class="link-icon" data-feather="edit"></i>
                                                         </a>
                                                     </li>
                                                 @endcan
-                                                @can('delete farmer reimbursement')
+                                                @can('delete-reimbursement')
                                                     <li>
                                                         <a data-href="{{ route('admin.farmer.payment.destroy', $payment->id) }}"
                                                             data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="link-icon" data-feather="delete"></i></a>

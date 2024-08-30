@@ -55,15 +55,15 @@
 
                                         {{-- @if (Gate::check('show warehouse') || Gate::check('edit warehouse') || Gate::check('delete warehouse')) --}}
                                         <td class="Action">
-                                            {{-- @can('show warehouse') --}}
+                                            @can('show-warehouse')
                                             <div class="action-btn bg-warning">
                                                 <a href="{{ route('admin.warehouse.show', $warehouse->id) }}"
                                                     class="btn btn-sm d-inline-flex align-items-center"
                                                     data-bs-toggle="tooltip" title="{{ __('View') }}"><i
                                                         class="link-icon" data-feather="eye"></i></a>
                                             </div>
-                                            {{-- @endcan --}}
-                                            {{-- @can('edit warehouse') --}}
+                                            @endcan
+                                            @can('edit-warehouse')
                                             <div class="action-btn bg-info">
                                                 <a href="{{ route('admin.warehouse.edit', $warehouse->id) }}"
                                                     class="btn btn-sm  align-items-center" data-bs-toggle="tooltip"
@@ -71,8 +71,8 @@
                                                     <i class="link-icon" data-feather="edit"></i>
                                                 </a>
                                             </div>
-                                            {{-- @endcan --}}
-                                            {{-- @can('delete warehouse') --}}
+                                            @endcan
+                                            @can('delete-warehouse')
                                             <div class="action-btn bg-danger">
                                                 {{ Form::open(['route' => ['admin.warehouse.destroy', $warehouse->id],'id' => 'delete-form-' . $warehouse->id, 'class' => 'w-100 delete_btn']) }}
                                                 <a type="submit"
@@ -81,7 +81,7 @@
                                                         class="link-icon" data-feather="trash"></i></a>
                                                 {{ Form::close() }}
                                             </div>
-                                            {{-- @endcan --}}
+                                            @endcan
                                         </td>
                                         {{-- @endif --}}
                                     </tr>

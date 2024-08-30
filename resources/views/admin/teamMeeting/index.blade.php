@@ -6,7 +6,7 @@
 @section('action','Lists')
 
 @section('button')
-    @can('create_team_meeting')
+    @can('create-team_meeting')
         <a href="{{ route('admin.team-meetings.create')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Create Team Meeting
@@ -81,11 +81,11 @@
                             <th class="text-center">Start Time</th>
                             <th>Participators</th>
 
-                            @can('show_team_meeting')
+                            @can('show-team_meeting')
                                 <th class="text-center">Description</th>
                             @endcan
 
-                            @canany(['edit_team_meeting','delete_team_meeting'])
+                            @canany(['edit-team_meeting','delete-team_meeting'])
                                 <th class="text-center">Action</th>
                             @endcanany
                         </tr>
@@ -106,7 +106,7 @@
                                         @endforeach
                                     </ul>
                                 </td>
-                                @can('show_team_meeting')
+                                @can('show-team_meeting')
                                     <td class="text-center">
                                         <a href=""
                                            id="showMeetingDescription"
@@ -117,10 +117,10 @@
                                     </td>
                                 @endcan
 
-                                @canany(['edit_team_meeting','delete_team_meeting'])
+                                @canany(['edit-team_meeting','delete-team_meeting'])
                                     <td class="text-center">
                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                        @can('edit_team_meeting')
+                                        @can('edit-team_meeting')
                                             <li class="me-2">
                                                 <a href="{{route('admin.team-meetings.edit',$value->id)}}" title="Edit meeting detail ">
                                                     <i class="link-icon" data-feather="edit"></i>
@@ -128,7 +128,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('delete_team_meeting')
+                                        @can('delete-team_meeting')
                                             <li class="me-2">
                                                 <a class="delete"
                                                    data-href="{{route('admin.team-meetings.delete',$value->id)}}" title="Delete team meeting detail">

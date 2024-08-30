@@ -11,11 +11,11 @@
             <li class="breadcrumb-item">{{ __('Seeds,Fertiliser & Pesticides Allotment') }}</li>
         </ol>
         <div class="float-end">
-            {{-- @can('create farmer loan') --}}
+            @can('create-allotment')
             <a href="{{ route('admin.farmer.loan.create') }}" class="btn btn-primary">
                 Add
             </a>
-            {{-- @endcan --}}
+            @endcan
         </div>
     </nav>
     <div class="row">
@@ -99,7 +99,7 @@
 
                                         <td class="Action">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                                {{-- @can('edit farmer loan') --}}
+                                                @can('edit-allotment')
                                                 @if ($loan->invoice_generate_status == 0)
                                                     <li class="me-2">
                                                         <a href="{{ route('admin.farmer.loan.edit', $loan->id) }}">
@@ -113,8 +113,8 @@
                                                         <i class="link-icon" data-feather="file-text"></i>
                                                     </a>
                                                 </li>
-                                                {{-- @endcan --}}
-                                                {{-- @can('delete farmer loan') --}}
+                                                @endcan
+                                                @can('delete-allotment')
                                                 <li>
                                                     <a href="" class="deleteBtn"
                                                         data-href="{{ route('admin.farmer.loan.destroy', $loan->id) }}"
@@ -122,7 +122,7 @@
                                                         <i class="link-icon" data-feather="delete"></i>
                                                     </a>
                                                 </li>
-                                                {{-- @endcan --}}
+                                                @endcan
                                             </ul>
                                         </td>
                                     </tr>

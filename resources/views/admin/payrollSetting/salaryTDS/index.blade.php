@@ -21,7 +21,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="justify-content-end">
-                            @can('add_tds')
+                            @can('add-salary_tds')
                                 <a class="btn btn-success" href="{{ route('admin.salary-tds.create') }}">
                                     <i class="link-icon" data-feather="plus"></i> Add Salary TDS
                                 </a>
@@ -61,7 +61,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                                    @can('edit_tds')
+                                                    @can('edit-salary_tds')
                                                         <li class="me-2">
                                                             <a href="{{ route('admin.salary-tds.edit', $value->id) }}"
                                                                 data-bs-toggle="tooltip" title="{{ __('Edit') }}">
@@ -69,7 +69,7 @@
                                                             </a>
                                                         </li>
                                                     @endcan
-                                                    @can('delete_tds')
+                                                    @can('delete-salary_tds')
                                                         <li>
                                                             <a class="delete" href="#"
                                                                 data-href="{{ route('admin.salary-tds.delete', $value->id) }}"

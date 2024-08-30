@@ -5,7 +5,7 @@
 @section('action','Office Time lists')
 
 @section('button')
-    @can('create_office_time')
+    @can('create-office_time')
         <a href="{{ route('admin.office-times.create')}}">
             <button class="btn btn-primary">
                 <i class="link-icon" data-feather="plus"></i>Add Office Time
@@ -35,7 +35,7 @@
                             <th class="text-center">Shift</th>
                             <th class="text-center">Category</th>
                             <th class="text-center">Status</th>
-                            @canany(['show_office_time','edit_office_time','delete_office_time'])
+                            @canany(['show-office_time','edit-office_time','delete-office_time'])
                                 <th class="text-center">Action</th>
                             @endcan
                         </tr>
@@ -59,10 +59,10 @@
                                     </label>
                                 </td>
 
-                                @canany(['show_office_time','edit_office_time','delete_office_time'])
+                                @canany(['show-office_time','edit-office_time','delete-office_time'])
                                     <td class="text-center">
                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                        @can('edit_office_time')
+                                        @can('edit-office_time')
                                             <li class="me-2">
                                                 <a href="{{route('admin.office-times.edit',$value->id)}}" title="Edit">
                                                     <i class="link-icon" data-feather="edit"></i>
@@ -70,7 +70,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('show_office_time')
+                                        @can('show-office_time')
                                             <li class="me-2">
                                                 <a href=""
                                                    id="showOfficeTimeDetail"
@@ -81,7 +81,7 @@
                                             </li>
                                         @endcan
 
-                                        @can('delete_office_time')
+                                        @can('delete-office_time')
                                             <li>
                                                 <a class="deleteOfficeTime"
                                                    data-href="{{route('admin.office-times.delete',$value->id)}}" title="Delete">

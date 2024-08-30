@@ -11,8 +11,8 @@
             <li class="breadcrumb-item">{{ __('Warehouse Transfer') }}</li>
         </ol>
         <div class="float-end">
-            <a href="{{ route('admin.warehouse-transfer.create') }}" data-bs-toggle="tooltip" title="{{ __('Create') }}" data-title="{{ __('Create Warehouse Transfer') }}"
-                class="btn btn-sm btn-primary">
+            <a href="{{ route('admin.warehouse-transfer.create') }}" data-bs-toggle="tooltip" title="{{ __('Create') }}"
+                data-title="{{ __('Create Warehouse Transfer') }}" class="btn btn-sm btn-primary">
                 Add
             </a>
         </div>
@@ -50,13 +50,17 @@
 
                                         @if (Gate::check('edit warehouse') || Gate::check('delete warehouse'))
                                             <td class="Action">
-                                                {{--                                            @can('edit warehouse') --}}
-                                                {{--                                                <div class="action-btn bg-info ms-2"> --}}
-                                                {{--                                                    <a href="#" class="mx-3 btn btn-sm  align-items-center" data-url="{{ route('admin.warehouse-transfer.edit',$warehouse_transfer->id) }}" data-ajax-popup="true"  data-size="lg " data-bs-toggle="tooltip" title="{{__('Edit')}}"  data-title="{{__('Edit Warehouse')}}"> --}}
-                                                {{--                                                        <i class="link-icon" data-feather="edit"></i> --}}
-                                                {{--                                                    </a> --}}
-                                                {{--                                                </div> --}}
-                                                {{--                                            @endcan --}}
+                                                @can('edit-warehouse')
+                                                    <div class="action-btn bg-info ms-2">
+                                                        <a href="#" class="mx-3 btn btn-sm  align-items-center"
+                                                            data-url="{{ route('admin.warehouse-transfer.edit', $warehouse_transfer->id) }}"
+                                                            data-ajax-popup="true" data-size="lg " data-bs-toggle="tooltip"
+                                                            title="{{ __('Edit') }}"
+                                                            data-title="{{ __('Edit Warehouse') }}">
+                                                            <i class="link-icon" data-feather="edit"></i>
+                                                        </a>
+                                                    </div>
+                                                @endcan
                                                 @can('delete-warehouse')
                                                     <div class="action-btn bg-danger ms-2">
                                                         {!! Form::open([
@@ -84,4 +88,3 @@
         </div>
     </div>
 @endsection
-

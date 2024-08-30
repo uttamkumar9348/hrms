@@ -5,13 +5,13 @@
 @section('action','Module Listing')
 
 @section('button')
-    {{-- @can('create_module') --}}
+    @can('create-module')
         <a href="{{ route('admin.modules.create')}}">
             <button class="btn btn-primary">
-                <i class="link-icon" data-feather="plus"></i>Add Role
+                <i class="link-icon" data-feather="plus"></i>Add Modules
             </button>
         </a>
-    {{-- @endcan --}}
+    @endcan
 @endsection
 
 
@@ -30,9 +30,9 @@
                                 <th>#</th>
                                 <th>Module</th>
                                 <th>Created At</th>
-                                {{-- @canany(['edit_module', 'delete_module', 'assign_permission']) --}}
+                                @canany(['edit-module', 'delete-module'])
                                 <th>Action</th>
-                                {{-- @endcanany --}}
+                                @endcanany
                                 <th></th>
                             </tr>
                         </thead>
@@ -44,11 +44,11 @@
                                 <td>{{ ++$key }}</td>
                                 <td>{{ $value->name }}</td>
                                 <td>{{ date('d-M-Y',strtotime($value->created_at)) }}</td>
-                                {{-- @canany(['edit_module', 'delete_module', 'assign_permission']) --}}
+                                @canany(['edit-module', 'delete-module'])
                                 @if ($value->slug !== 'admin')
                                     <td>
                                         <ul class="d-flex list-unstyled mb-0">
-                                            @can('edit_module')
+                                            @can('edit-module')
                                                 <li class="me-2">
                                                     <a href="{{ route('admin.modules.edit', $value->id) }}"
                                                         title="Edit Role Detail">
@@ -57,7 +57,7 @@
                                                 </li>
                                             @endcan
 
-                                            @can('delete_module')
+                                            @can('delete-module')
                                                 <li>
                                                     <a class="deleteRole"
                                                         data-href="{{ route('admin.modules.destroy', $value->id) }}"
@@ -69,7 +69,7 @@
                                         </ul>
                                     </td>
                                 @endif
-                                {{-- @endcanany --}}
+                                @endcanany
                             </tr>
                         @empty
                             <tr>

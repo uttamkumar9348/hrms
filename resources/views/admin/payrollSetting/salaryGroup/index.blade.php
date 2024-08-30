@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="justify-content-end">
-                            @can('add_salary_group')
+                            @can('add-salary_group')
                                 <a class="btn btn-success"
                                    href="{{ route('admin.salary-groups.create')}}">
                                     <i class="link-icon" data-feather="plus"></i> Add Salary Group
@@ -65,7 +65,7 @@
                                         </td>
                                         <td class="text-center">
                                             <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                                @can('edit_salary_group')
+                                                @can('edit-salary_group')
                                                     <li class="me-2">
                                                         <a href="{{route('admin.salary-groups.edit',$value->id)}}"
                                                             data-bs-toggle="tooltip" title="{{ __('Edit') }}">
@@ -73,7 +73,7 @@
                                                         </a>
                                                     </li>
                                                 @endcan
-                                                @can('delete_salary_group')
+                                                @can('delete-salary_group')
                                                     <li>
                                                         <a class="delete" href="#"
                                                            data-href="{{route('admin.salary-groups.delete',$value->id)}}"
