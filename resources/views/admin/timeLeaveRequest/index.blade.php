@@ -107,7 +107,7 @@
                                         @can('show-time_leave_request')
                                             <th class="text-center">Reason</th>
                                         @endcan
-                                        @can('update-time_leave_request')
+                                        @can('edit-time_leave_request')
                                             <th class="text-center">Status</th>
                                         @endcan
                                     </tr>
@@ -142,7 +142,7 @@
                                             </td>
                                         @endcan
 
-                                        @can('update-time_leave_request')
+                                        @can('edit-time_leave_request')
                                             <td class="text-center">
                                                 <a href="" id="leaveRequestUpdate"
                                                     data-href="{{ route('admin.time-leave-request.update-status', $value->id) }}"
