@@ -22,6 +22,11 @@
                                 aria-selected="true">{{ __('Farmer Details') }}</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" id="farmer-guarantor-tab" data-bs-toggle="pill" href="#plot_details"
+                                role="tab" aria-controls="pills-profile"
+                                aria-selected="false">{{ __('Plot Details') }}</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" id="farmer-guarantor-tab" data-bs-toggle="pill" href="#guarantor"
                                 role="tab" aria-controls="pills-profile"
                                 aria-selected="false">{{ __('Guarantors') }}</a>
@@ -53,6 +58,13 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     @include('admin.farmer.registration.partials.guarantors')
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="plot_details" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @include('admin.farmer.registration.partials.plot_details')
                                 </div>
                             </div>
                         </div>

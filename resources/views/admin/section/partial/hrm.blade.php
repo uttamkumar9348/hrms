@@ -32,6 +32,7 @@
     request()->routeIs('admin.asset_assignment.*') ||
     request()->routeIs('admin.static-page-contents.*') ||
     request()->routeIs('admin.supports.*') ||
+    request()->routeIs('admin.modules.*') ||
     request()->routeIs('admin.routers.*') ||
     request()->routeIs('admin.qr.*') ||
     request()->routeIs('admin.nfc.*') ||
@@ -83,6 +84,7 @@
     request()->routeIs('admin.asset_assignment.*') ||
     request()->routeIs('admin.static-page-contents.*') ||
     request()->routeIs('admin.supports.*') ||
+    request()->routeIs('admin.modules.*') ||
     request()->routeIs('admin.routers.*') ||
     request()->routeIs('admin.qr.*') ||
     request()->routeIs('admin.nfc.*') ||
@@ -112,6 +114,7 @@
             @include('admin.section.partial.assetManagement')
             @include('admin.section.partial.staticPageContent')
             @include('admin.section.partial.ticket')
+            @include('admin.section.partial.module')
             @include('admin.section.partial.setting')
             @include('admin.section.partial.regularization')
         </ul>

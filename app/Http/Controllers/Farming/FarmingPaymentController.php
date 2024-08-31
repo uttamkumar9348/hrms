@@ -62,6 +62,12 @@ class FarmingPaymentController extends Controller
                     ]);
                 }
 
+                if($request->type != null){
+                    $type = $request->type;
+                } else {
+                    $type = "Security Deposit";
+                }
+
                 $client = new FarmingPayment;
                 $client->farming_id = $request->farming_id;
                 $client->receipt_no = $request->receipt_no;
@@ -69,7 +75,7 @@ class FarmingPaymentController extends Controller
                 $client->agreement_number = $request->agreement_number;
                 $client->date = $request->date;
                 $client->amount = $request->amount;
-                $client->type = $request->type;
+                $client->type = $type;
                 $client->bank = $request->bank;
                 $client->loan_account_number = $request->loan_account_number;
                 $client->ifsc = $request->ifsc;

@@ -151,6 +151,20 @@
                     $('#land_holding_fields').show();
                 }
             });
+            $('#mobile').on('keypress', function(e) {
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode < 48 || charCode > 57) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            $('#adhaarno').on('keypress', function(e) {
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode < 48 || charCode > 57) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
         });
     </script>
 @endsection
@@ -176,14 +190,23 @@
                         <div class="form-group col-md-6">
                             {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
                             {{ Form::text('name', '', ['class' => 'form-control', 'required' => 'required']) }}
+                            {{-- @error('name')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('father_name', __('Father / Husband Name'), ['class' => 'form-label']) }}
                             {{ Form::text('father_name', '', ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
+                        {{-- @error('father_name')
+                            <span>{{ $message }}</span>
+                        @enderror --}}
                         <div class="form-group col-md-6">
                             {{ Form::label('mobile', __('Mobile'), ['class' => 'form-label']) }}
-                            {{ Form::number('mobile', '', ['class' => 'form-control', 'required' => 'required']) }}
+                            {{ Form::text('mobile', '', ['class' => 'form-control', 'required' => 'required', 'id' => 'mobile', 'maxlength' => '10']) }}
+                            {{-- @error('mobile')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -195,6 +218,9 @@
                                         <option value="{{ $country->id }}">{{ $country->name }}</option>
                                     @endforeach
                                 </select>
+                                {{-- @error('country_id')
+                                    <span>{{ $message }}</span>
+                                @enderror --}}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -204,6 +230,9 @@
                                     placeholder="Select State" required>
                                     <option value="">{{ __('Select State') }}</option>
                                 </select>
+                                {{-- @error('state_id')
+                                    <span>{{ $message }}</span>
+                                @enderror --}}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -213,6 +242,9 @@
                                     placeholder="Select District" required>
                                     <option value="">{{ __('Select District') }}</option>
                                 </select>
+                                {{-- @error('district_id')
+                                    <span>{{ $message }}</span>
+                                @enderror --}}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -222,6 +254,9 @@
                                     placeholder="Select Block" required>
                                     <option value="">{{ __('Select Block') }}</option>
                                 </select>
+                                {{-- @error('block_id')
+                                    <span>{{ $message }}</span>
+                                @enderror --}}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -231,6 +266,9 @@
                                     placeholder="Select Gram Panchyat" required>
                                     <option value="">{{ __('Select Gram Panchyat') }}</option>
                                 </select>
+                                {{-- @error('gram_panchyat_id')
+                                    <span>{{ $message }}</span>
+                                @enderror --}}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -240,15 +278,24 @@
                                     placeholder="Select Village" required>
                                     <option value="">{{ __('Select Village') }}</option>
                                 </select>
+                                {{-- @error('village_id')
+                                    <span>{{ $message }}</span>
+                                @enderror --}}
                             </div>
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('post_office', __('Post Office'), ['class' => 'form-label']) }}
                             {{ Form::text('post_office', '', ['class' => 'form-control', 'required' => 'required']) }}
+                            {{-- @error('post_office')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('police_station', __('Police Station'), ['class' => 'form-label']) }}
                             {{ Form::text('police_station', '', ['class' => 'form-control', 'required' => 'required']) }}
+                            {{-- @error('police_station')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -260,6 +307,9 @@
                                         <option value="{{ $zone->id }}">{{ $zone->name }}</option>
                                     @endforeach
                                 </select>
+                                {{-- @error('zone_id')
+                                    <span>{{ $message }}</span>
+                                @enderror --}}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -269,11 +319,17 @@
                                     placeholder="Select Center" required>
                                     <option value="">{{ __('Select Center') }}</option>
                                 </select>
+                                {{-- @error('center_id')
+                                    <span>{{ $message }}</span>
+                                @enderror --}}
                             </div>
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('age', __('Age'), ['class' => 'form-label']) }}
                             {{ Form::number('age', '', ['class' => 'form-control', 'required' => 'required']) }}
+                            {{-- @error('age')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('gender', __('Gender'), ['class' => 'form-label']) }}
@@ -283,6 +339,9 @@
                                 <option value="Male">{{ __('Male') }}</option>
                                 <option value="Female">{{ __('Female') }}</option>
                             </select>
+                            {{-- @error('gender')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('qualification', __('Qualification'), ['class' => 'form-label']) }}
@@ -295,10 +354,16 @@
                                 <option value="Master Degree">{{ __('Master Degree') }}</option>
                                 <option value="PHD">{{ __('PHD') }}</option>
                             </select>
+                            {{-- @error('qualification')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('farmer id', __('Farmer ID'), ['class' => 'form-label']) }}
                             <input type="text" name="farmer_id_2" class="form-control">
+                            {{-- @error('farmer_id_2')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('farmer category', __('Farmer Category'), ['class' => 'form-label']) }}
@@ -309,6 +374,9 @@
                                 <option value="Option 2">option 2</option>
                                 <option value="Option 3">option 3</option>
                             </select>
+                            {{-- @error('farmer_category')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('land_type', __('Land Type'), ['class' => 'form-label']) }}
@@ -316,14 +384,23 @@
                             <label><input type="radio" name="land_type" value="Leased Land" checked> Leased
                                 Land</label>
                             <label><input type="radio" name="land_type" value="Owned Land"> Owned Land</label>
+                            {{-- @error('land_type')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6" id="land_holding_fields">
                             {{ Form::label('land_holding', __('Land Holding (In Acre)'), ['class' => 'form-label']) }}
                             {{ Form::number('land_holding', '', ['class' => 'form-control', 'step' => '0.01']) }}
+                            {{-- @error('land_holding')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6">
-                            {{ Form::label('offered_area', __('Offered Area'), ['class' => 'form-label']) }}
+                            {{ Form::label('offered_area', __('Offered Area(in Acrs.)'), ['class' => 'form-label']) }}
                             {{ Form::text('offered_area', '', ['class' => 'form-control', 'required' => 'required']) }}
+                            {{-- @error('offered_area')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('irregation', __('Irregation'), ['class' => 'form-label']) }}
@@ -337,22 +414,34 @@
                                 <option value="Rivers">Rivers</option>
                                 <option value="Dams and Canals">Dams and Canals</option>
                             </select>
+                            {{-- @error('irregation')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('adhaarno', __('Adhaar No.'), ['class' => 'form-label']) }}
-                            {{ Form::text('adhaarno', '', ['class' => 'form-control', 'required' => 'required']) }}
+                            {{ Form::text('adhaarno', '', ['class' => 'form-control', 'required' => 'required', 'id' => 'adhaarno', 'maxlength' => '12']) }}
+                            {{-- @error('adhaarno')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-2">
                             {{ Form::label('language', __('Language'), ['class' => 'form-label']) }}
                             <br>
                             <label><input type="radio" name="language" value="Hindi" checked> Hindi</label>
                             <label><input type="radio" name="language" value="English"> English</label>
+                            {{-- @error('language')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                         <div class="form-group col-md-2">
                             {{ Form::label('sms_mode', __('Sms Mode'), ['class' => 'form-label']) }}
                             <br>
                             <label><input type="radio" name="sms_mode" value="Text" checked> Text</label>
                             <label><input type="radio" name="sms_mode" value="Voice"> Voice</label>
+                            {{-- @error('sms_mode')
+                                <span>{{ $message }}</span>
+                            @enderror --}}
                         </div>
                     </div>
                 </div>
@@ -362,7 +451,7 @@
                 <input type="button" value="{{ __('Cancel') }}"
                     onclick="location.href = '{{ route('admin.farmer.farming_registration.index') }}';"
                     class="btn btn-light">
-                <input type="submit" value="{{ __('Create') }}" class="btn  btn-primary">
+                <input type="submit" value="{{ __('Create') }}" class="btn btn-primary">
             </div>
             {{ Form::close() }}
         </div>

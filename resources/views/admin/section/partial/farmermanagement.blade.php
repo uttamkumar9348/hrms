@@ -22,6 +22,12 @@
                             class="nav-link {{ request()->routeIs('admin.farmer.guarantor*') ? 'active' : '' }}">{{ __('Farmer Guarantor') }}</a>
                     </li>
                 @endcan
+                @can('manage-plot')
+                    <li class="nav-item">
+                        <a class="nav-link {{ Request::is('admin/farmer/farming_detail*') ? ' active' : '' }}"
+                            href="{{ route('admin.farmer.farming_detail.index') }}">{{ __('Plot Details') }}</a>
+                    </li>
+                @endcan
                 @can('manage-security_deposite')
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('admin/farmer/payment*') ? ' active' : '' }}"
@@ -30,20 +36,14 @@
                 @endcan
                 @can('manage-allotment')
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('admin/farmer/allotment*') ? ' active' : '' }}"
-                            href="{{ route('admin.farmer.allotment.index') }}">{{ __('Allotment') }}</a>
+                        <a class="nav-link {{ Request::is('admin/farmer/loan*') ? ' active' : '' }}"
+                            href="{{ route('admin.farmer.loan.index') }}">{{ __('Allotment') }}</a>
                     </li>
                 @endcan
                 @can('manage-reimbursement')
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('admin/farmer/reimbursement*') ? ' active' : '' }}"
                             href="{{ route('admin.farmer.reimbursement.index') }}">{{ __('Reimbursement') }}</a>
-                    </li>
-                @endcan
-                @can('manage-plot')
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::is('admin/farmer/farming_detail*') ? ' active' : '' }}"
-                            href="{{ route('admin.farmer.farming_detail.index') }}">{{ __('Plot') }}</a>
                     </li>
                 @endcan
                 @can('manage-issue_cutting_order')

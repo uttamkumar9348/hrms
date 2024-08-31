@@ -9,6 +9,7 @@ use App\Models\Center;
 use App\Models\Country;
 use App\Models\District;
 use App\Models\FarmerLoan;
+use App\Models\FarmingDetail;
 use App\Models\FarmingPayment;
 use App\Models\GramPanchyat;
 use App\Models\Guarantor;
@@ -19,6 +20,7 @@ use App\Models\Zone;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class FarmingController extends Controller
 {
@@ -58,10 +60,10 @@ class FarmingController extends Controller
     {
         if (\Auth::user()->can('create-farmer_registration')) {
             try {
-                $this->validate($request, [
+                $validator = Validator::make($request->all(), [
                     'name' => 'required',
                     'father_name' => 'required',
-                    'mobile' => 'required',
+                    'mobile' => 'digits:10|required|numeric',
                     'country_id' => 'required',
                     'state_id' => 'required',
                     'district_id' => 'required',
@@ -71,8 +73,8 @@ class FarmingController extends Controller
                     'age' => 'required',
                     'gender' => 'required',
                     'qualification' => 'required',
-                    'offered_area' => 'required',
-                    'adhaarno' => 'required',
+                    'offered_area' => 'required|numeric',
+                    'adhaarno' => 'digits:12|required|numeric',
                     'language' => 'required',
                     'sms_mode' => 'required',
                     'created_by' => 'required',
@@ -81,7 +83,9 @@ class FarmingController extends Controller
                     // 'farmer_id_2' => 'required',
                     'farmer_category' => 'required',
                 ]);
-
+                if ($validator->fails()) {
+                    return redirect()->back()->withErrors($validator);
+                }
                 $request->merge([
                     'registration_no' => "ACSI" . '-' . rand(0, 9999)
                 ]);
@@ -103,13 +107,14 @@ class FarmingController extends Controller
     {
         if (\Auth::user()->can('show-farmer_registration')) {
             $farming = Farming::find($id);
+            $plot = FarmingDetail::where('farming_id', $farming->id)->get();
             $guarantors = Guarantor::where('farming_id', $farming->id)->get();
             $security_deposits = FarmingPayment::where('farming_id', $farming->id)
                 ->whereIn('type', [FarmingPayment::SECURITY_DEPOSIT, FarmingPayment::REIMBURSEMENT])->get();
             $bank_guarantees = FarmingPayment::where('farming_id', $farming->id)
                 ->where('type', FarmingPayment::BANK_GUARANTEE)->get();
             $loans = FarmerLoan::where('farming_id', $farming->id)->get();
-            return view('admin.farmer.registration.show', compact('farming', 'guarantors', 'security_deposits', 'bank_guarantees', 'loans'));
+            return view('admin.farmer.registration.show', compact('farming', 'guarantors', 'security_deposits', 'bank_guarantees', 'loans', 'plot'));
         } else {
             return redirect()->back()->with('error', 'Permission denied.');
         }
