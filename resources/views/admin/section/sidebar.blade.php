@@ -17,9 +17,12 @@
             <ul class="nav sidebar-menu">
                 @include('admin.section.partial.dashboard')
                 @include('admin.section.partial.hrm')
+                @include('admin.section.partial.project&task_management')
+                @include('admin.section.partial.assetManagement')
                 @include('admin.section.partial.farmermanagement')
                 @include('admin.section.partial.inventory')
                 @include('admin.section.partial.product')
+                @include('admin.section.partial.setting')
             </ul>
         </div>
     </nav>

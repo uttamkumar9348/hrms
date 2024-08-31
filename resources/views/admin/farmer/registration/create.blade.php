@@ -165,6 +165,13 @@
                     return false;
                 }
             });
+            $('#offered_area').on('keypress', function(e) {
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode < 48 || charCode > 57) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
         });
     </script>
 @endsection
@@ -397,7 +404,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             {{ Form::label('offered_area', __('Offered Area(in Acrs.)'), ['class' => 'form-label']) }}
-                            {{ Form::text('offered_area', '', ['class' => 'form-control', 'required' => 'required']) }}
+                            {{ Form::text('offered_area', '', ['class' => 'form-control', 'required' => 'required', 'id' => 'offered_area']) }}
                             {{-- @error('offered_area')
                                 <span>{{ $message }}</span>
                             @enderror --}}
