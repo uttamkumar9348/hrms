@@ -82,7 +82,7 @@
         });
 
         let ctx = document.getElementById('projectChart')?.getContext('2d');
-        let labels = ["Pending", "On Hold", "In progress", "Completed", "Cancelled"];
+        let labels = ["Plots", "R1", "R2", "R3", "R4", "R5"];
         let barColors = ["#7ee5e5","#f77eb9","#4d8af0","green",'red'];
         let barData = [
             {{$projectCardDetail['not_started']}},
@@ -258,7 +258,4 @@
             }
         }
     });
-
-
-
 </script>

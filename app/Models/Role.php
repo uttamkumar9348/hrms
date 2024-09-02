@@ -25,11 +25,9 @@ class Role extends Model
 
     protected $fillable = [
         'name',
-        'slug',
-        'is_active',
-        'backend_login_authorize',
-        'created_by',
-        'updated_by'
+        'guard_name',
+        'created_at',
+        'updated_at'
     ];
 
     public function __construct(array $attributes = [])

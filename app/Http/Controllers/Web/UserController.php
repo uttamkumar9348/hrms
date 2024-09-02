@@ -61,7 +61,6 @@ class UserController extends Controller
                 $with = ['branch:id,name', 'company:id,name', 'post:id,post_name', 'department:id,dept_name', 'role:id,name'];
                 $select = ['users.*', 'branch_id', 'company_id', 'department_id', 'post_id', 'role_id'];
                 $users = $this->userRepo->getAllUsers($filterParameters, $select, $with);
-
                 $company = $this->companyRepository->getCompanyDetail(['id']);
                 $branches = $this->branchRepository->getLoggedInUserCompanyBranches($company->id, ['id', 'name']);
 
@@ -135,6 +134,7 @@ class UserController extends Controller
 
                 DB::beginTransaction();
                 $user = $this->userRepo->store($validatedData);
+                $user->assignRole($user->role->name);
                 $accountValidatedData['user_id'] = $user['id'];
                 $this->accountRepo->store($accountValidatedData);
 

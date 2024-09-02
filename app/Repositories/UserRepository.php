@@ -87,6 +87,7 @@ class UserRepository
     {
         $validatedData['created_by'] = getAuthUserCode();
         $validatedData['avatar'] = $this->storeImage($validatedData['avatar'], User::AVATAR_UPLOAD_PATH, 500, 500);
+
         return User::create($validatedData)->fresh();
     }
 

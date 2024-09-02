@@ -34,8 +34,7 @@ class RoleRequest extends FormRequest
     {
         return [
             'name' => ['required','string',Rule::unique('roles','name')->ignore($this->role)],
-            'is_active' => ['nullable', 'boolean', Rule::in([1, 0])],
-            'backend_login_authorize' => ['required', 'boolean', Rule::in([1, 0])],
+            'guard_name' => ['required'],
         ];
     }
 

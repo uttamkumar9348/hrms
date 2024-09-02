@@ -14,7 +14,7 @@ class RoleRepository
 {
     public function getAllUserRoles($select=['*'])
     {
-        return Role::select($select)->latest()->get();
+        return Role::select($select)->get();
     }
 
     public function getAllRolesExceptAdmin($select=['*'])
@@ -30,7 +30,7 @@ class RoleRepository
     public function store($validatedData)
     {
         $validatedData['created_by'] = getAuthUserCode();
-        $validatedData['slug'] =   Str::slug($validatedData['name']);
+
         return Role::create($validatedData)->fresh();
     }
 

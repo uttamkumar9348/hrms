@@ -38,55 +38,53 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            @forelse($roles as $key => $value)
+                                <tr>
+                                    <td>{{ ++$key }}</td>
+                                    <td>{{ ucfirst($value->name) }}</td>
+                                    <td>{{ date('d-M-Y', strtotime($value->created_at)) }}</td>
+                                    @canany(['edit-role', 'delete-role'])
+                                        @if ($value->slug !== 'admin')
+                                            <td>
+                                                <ul class="d-flex list-unstyled mb-0">
+                                                    @can('edit-role')
+                                                        <li class="me-2">
+                                                            <a href="{{ route('admin.roles.edit', $value->id) }}"
+                                                                title="Edit Role Detail">
+                                                                <i class="link-icon" data-feather="edit"></i>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
 
-                                @forelse($roles as $key => $value)
-                            <tr>
-                                <td>{{ ++$key }}</td>
-                                <td>{{ ucfirst($value->name) }}</td>
-                                <td>{{ date('d-M-Y', strtotime($value->created_at)) }}</td>
-                                @canany(['edit-role', 'delete-role'])
-                                    @if ($value->slug !== 'admin')
-                                        <td>
-                                            <ul class="d-flex list-unstyled mb-0">
-                                                @can('edit-role')
-                                                    <li class="me-2">
-                                                        <a href="{{ route('admin.roles.edit', $value->id) }}"
-                                                            title="Edit Role Detail">
-                                                            <i class="link-icon" data-feather="edit"></i>
-                                                        </a>
-                                                    </li>
-                                                @endcan
-
-                                                @can('delete-role')
+                                                    @can('delete-role')
+                                                        <li>
+                                                            <a class="deleteRole"
+                                                                data-href="{{ route('admin.roles.delete', $value->id) }}"
+                                                                title="Delete Role">
+                                                                <i class="link-icon" data-feather="delete"></i>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
                                                     <li>
-                                                        <a class="deleteRole"
-                                                            data-href="{{ route('admin.roles.delete', $value->id) }}"
-                                                            title="Delete Role">
-                                                            <i class="link-icon" data-feather="delete"></i>
-                                                        </a>
+                                                        <span class="m-lg-3">
+                                                            <a href="{{ route('admin.roles.permission', $value->id) }}">
+                                                                <button class="btn btn-xs btn-primary ">
+                                                                    Assign Permissions
+                                                                </button>
+                                                            </a>
+                                                        </span>
                                                     </li>
-                                                @endcan
-                                                <li>
-                                                    <span class="m-lg-3">
-                                                        <a href="{{ route('admin.roles.permission', $value->id) }}">
-                                                            <button class="btn btn-xs btn-primary ">
-                                                                Assign Permissions
-                                                            </button>
-                                                        </a>
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    @endif
-                                @endcanany
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="100%">
-                                    <p class="text-center"><b>No records found!</b></p>
-                                </td>
-                            </tr>
+                                                </ul>
+                                            </td>
+                                        @endif
+                                    @endcanany
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="100%">
+                                        <p class="text-center"><b>No records found!</b></p>
+                                    </td>
+                                </tr>
                             @endforelse
 
                         </tbody>
