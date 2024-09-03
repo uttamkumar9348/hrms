@@ -6,6 +6,7 @@
         request()->routeIs('admin.payment-currency.*') ||
         request()->routeIs('admin.app-settings.*') ||
         request()->routeIs('admin.feature.*') ||
+        request()->routeIs('admin.modules.*') ||
         request()->routeIs('admin.static-page-contents.*')
             ? 'active'
             : '' }}">
@@ -21,6 +22,7 @@
         request()->routeIs('admin.payment-currency.*') ||
         request()->routeIs('admin.app-settings.*') ||
         request()->routeIs('admin.feature.*') ||
+        request()->routeIs('admin.modules.*') ||
         request()->routeIs('admin.static-page-contents.*')
             ? ''
             : 'collapse' }} "
@@ -33,7 +35,14 @@
                             class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">Roles & Permissions</a>
                     </li>
                 @endcan
-
+                @can('manage-modules')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.modules.index') }}" data-href="{{ route('admin.modules.index') }}"
+                            class="nav-link {{ request()->routeIs('admin.modules.*') ? 'active' : '' }}">
+                            <span>Modules</span>
+                        </a>
+                    </li>
+                @endcan
                 @can('manage-general_settings')
                     <li class="nav-item">
                         <a href="{{ route('admin.general-settings.index') }}"
@@ -66,8 +75,16 @@
                         class="nav-link {{ request()->routeIs('admin.feature.index') ? 'active' : '' }}"> Feature
                         Control</a>
                 </li>
-                @include('admin.section.partial.staticPageContent')
+                @can('manage-content_management')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.static-page-contents.index') }}"
+                            data-href="{{ route('admin.static-page-contents.index') }}"
+                            class="nav-link {{ request()->routeIs('admin.static-page-contents.*') ? 'active' : '' }}">
+                            Content Management
+                        </a>
+                    </li>
+                @endcan
             </ul>
-        </div>
+        </div>  
     </li>
 @endcanany

@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\BankTransferController;
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\CreditNoteController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Farming\CuttingOrderController;
 use App\Http\Controllers\Farming\FarmerLoanController;
 use App\Http\Controllers\Farming\FarmingController;
@@ -9,6 +13,7 @@ use App\Http\Controllers\Farming\FarmingDetailController;
 use App\Http\Controllers\Farming\FarmingPaymentController;
 use App\Http\Controllers\Farming\GuarantorController;
 use App\Http\Controllers\Farming\SeedCategoryController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ModulesController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\PosController;
@@ -20,6 +25,8 @@ use App\Http\Controllers\ProductServiceCategoryController;
 use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\ProductServiceUnitController;
 use App\Http\Controllers\ProductStockController;
+use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\Web\AppSettingController;
 use App\Http\Controllers\Web\AssetController;
 use App\Http\Controllers\Web\AssetTypeController;
@@ -98,6 +105,9 @@ Route::group([
 
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('hr_dashboard', [DashboardController::class, 'hr_index'])->name('hr_dashboard');
+        Route::get('account_dashboard', [DashboardController::class, 'account_index'])->name('account_dashboard');
+        Route::get('farmer_dashboard', [DashboardController::class, 'farmer_index'])->name('dashboard_farmer');
 
         /** User route */
         Route::resource('users', UserController::class);
@@ -437,15 +447,18 @@ Route::group([
                 Route::post('location/get_centers', [FarmingController::class, 'getCenters'])->name('location.get_centers');
                 Route::post('location/get_country_state', [FarmingController::class, 'get_country_state'])->name('location.get_country_state');
 
+                //registration
                 Route::get('farming_registration/validate/{id}', [FarmingController::class, 'validateProfile'])->name('farming_registration.validate');
                 Route::resource('farming_registration', FarmingController::class);
                 Route::post('search_filter', [FarmingController::class, 'search'])->name('farming_registration.search_filter');
                 Route::get('farming_registration/{id}/destroy', [FarmingController::class, 'destroy'])->name('farming_registration.destroy');
                 Route::post('registration_id', [FarmingController::class, 'registration_id'])->name('registration_id');
 
+                //guarantor
                 Route::resource('guarantor', GuarantorController::class);
                 Route::get('guarantor/{id}/destroy', [GuarantorController::class, 'destroy'])->name('guarantor.destroy');
 
+                //bank guarentee
                 Route::get('bank_guarantee', [FarmingPaymentController::class, 'bankGuarantee'])->name('bank_guarantee.index');
                 Route::get('bank_guarantee/{id}', [FarmingPaymentController::class, 'editBankGuarantee'])->name('bank_guarantee.edit');
                 Route::get('bank_guarantee/pdf/{id}', [FarmingPaymentController::class, 'pdfBankGuarantee'])->name('bank_guarantee.pdf');
@@ -453,8 +466,8 @@ Route::group([
                 Route::get('payment/{id}/destroy', [FarmingPaymentController::class, 'destroy'])->name('payment.destroy');
                 Route::post('g_code', [FarmingPaymentController::class, 'g_code'])->name('g_code');
 
+                //allotment
                 Route::view('allotment', 'admin.farmer.allotment.index')->name('allotment.index');
-
                 Route::post('get_product_service_by_category', [FarmerLoanController::class, 'getProductServiceByCategory'])->name('loan.get_product_service_by_category');
                 Route::post('get_product_service_detail', [FarmerLoanController::class, 'getProductServiceDetail'])->name('loan.get_product_service_detail');
                 Route::post('get_farming_detail', [FarmerLoanController::class, 'getFarmingDetail'])->name('loan.get_farming_detail');
@@ -462,6 +475,7 @@ Route::group([
                 Route::get('loan/{id}/invoice', [FarmerLoanController::class, 'invoice_generate'])->name('loan.invoice_generate');
                 Route::get('loan/{id}/destroy', [FarmerLoanController::class, 'destroy'])->name('loan.destroy');
 
+                //reimbursement
                 Route::get('reimbursement/create', [FarmingPaymentController::class, 'reimbursementCreate'])->name('reimbursement.create');
                 Route::get('reimbursement', [FarmingPaymentController::class, 'reimbursement'])->name('reimbursement.index');
                 Route::get('reimbursement/{id}/delete', [FarmingPaymentController::class, 'reimbursement_delete'])->name('reimbursement.delete');
@@ -469,10 +483,12 @@ Route::group([
                 Route::resource('seed_category', SeedCategoryController::class);
                 Route::get('seed_category/{id}/destroy', [SeedCategoryController::class, 'destroy'])->name('seed_category.destroy');
 
+                //plot details
                 Route::post('get_detail', [FarmingDetailController::class, 'getFarmingDetail'])->name('farming.get_detail');
                 Route::resource('farming_detail', FarmingDetailController::class);
                 Route::get('farming_detail/{id}/destroy', [FarmingDetailController::class, 'destroy'])->name('farming_detail.destroy');
 
+                //cutting order
                 Route::post('update_cutting_order', [CuttingOrderController::class, 'updateCuttingOrder'])->name('farming.update_cutting_order');
                 Route::resource('cutting_order', CuttingOrderController::class);
             }
@@ -569,6 +585,45 @@ Route::group([
         Route::resource('modules', ModulesController::class);
         Route::get('modules/{id}/destroy', [ModulesController::class, 'destroy'])->name('modules.destroy');
         Route::resource('permissions', PermissionsController::class);
+
+        //account system
+        Route::resource('bank-account', BankAccountController::class);
+        Route::get('bank-transfer/index', [BankTransferController::class, 'index'])->name('bank-transfer.index');
+        Route::resource('bank-transfer', BankTransferController::class);
+        Route::get('customer/{id}/show', [CustomerController::class, 'show'])->name('customer.show');
+        Route::resource('customer', CustomerController::class);
+        //proposal
+        Route::get('proposal/{id}/status/change', [ProposalController::class, 'statusChange'])->name('proposal.status.change');
+        Route::get('proposal/{id}/convert', [ProposalController::class, 'convert'])->name('proposal.convert');
+        Route::get('proposal/{id}/duplicate', [ProposalController::class, 'duplicate'])->name('proposal.duplicate');
+        Route::post('proposal/product/destroy', [ProposalController::class, 'productDestroy'])->name('proposal.product.destroy');
+        Route::post('proposal/customer', [ProposalController::class, 'customer'])->name('proposal.customer');
+        Route::post('proposal/product', [ProposalController::class, 'product'])->name('proposal.product');
+        Route::get('proposal/items', [ProposalController::class, 'items'])->name('proposal.items');
+        Route::get('proposal/{id}/sent', [ProposalController::class, 'sent'])->name('proposal.sent');
+        Route::get('proposal/{id}/resent', [ProposalController::class, 'resent'])->name('proposal.resent');
+        Route::resource('proposal', ProposalController::class);
+        Route::get('proposal/create/{cid}', [ProposalController::class, 'create'])->name('proposal.create');
+        //invoice
+        Route::get('invoice/{id}/duplicate', [InvoiceController::class, 'duplicate'])->name('invoice.duplicate');
+        Route::get('invoice/{id}/shipping/print', [InvoiceController::class, 'shippingDisplay'])->name('invoice.shipping.print');
+        Route::get('invoice/{id}/payment/reminder', [InvoiceController::class, 'paymentReminder'])->name('invoice.payment.reminder');
+        Route::get('invoice/index', [InvoiceController::class, 'index'])->name('invoice.index');
+        Route::post('invoice/product/destroy', [InvoiceController::class, 'productDestroy'])->name('invoice.product.destroy');
+        Route::post('invoice/product', [InvoiceController::class, 'product'])->name('invoice.product');
+        Route::post('invoice/customer', [InvoiceController::class, 'customer'])->name('invoice.customer');
+        Route::get('invoice/{id}/sent', [InvoiceController::class, 'sent'])->name('invoice.sent');
+        Route::get('invoice/{id}/resent', [InvoiceController::class, 'resent'])->name('invoice.resent');
+        Route::get('invoice/{id}/payment', [InvoiceController::class, 'payment'])->name('invoice.payment');
+        Route::post('invoice/{id}/payment', [InvoiceController::class, 'createPayment'])->name('invoice.payment');
+        Route::post('invoice/{id}/payment/{pid}/destroy', [InvoiceController::class, 'paymentDestroy'])->name('invoice.payment.destroy');
+        Route::get('invoice/items', [InvoiceController::class, 'items'])->name('invoice.items');
+        Route::resource('invoice', InvoiceController::class);
+        Route::get('invoice/create/{cid}', [InvoiceController::class, 'create'])->name('invoice.create');
+        //revenue
+        Route::get('revenue/index', [RevenueController::class, 'index'])->name('revenue.index');
+        Route::resource('revenue', RevenueController::class);
+        Route::get('credit-note', [CreditNoteController::class, 'index'])->name('credit.note');
     });
 });
 
