@@ -4,8 +4,12 @@ use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\BankTransferController;
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CreditNoteController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DebitNoteController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\Farming\CuttingOrderController;
 use App\Http\Controllers\Farming\FarmerLoanController;
 use App\Http\Controllers\Farming\FarmingController;
@@ -13,8 +17,11 @@ use App\Http\Controllers\Farming\FarmingDetailController;
 use App\Http\Controllers\Farming\FarmingPaymentController;
 use App\Http\Controllers\Farming\GuarantorController;
 use App\Http\Controllers\Farming\SeedCategoryController;
+use App\Http\Controllers\GoalController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\ModulesController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\PurchaseController;
@@ -26,7 +33,10 @@ use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\ProductServiceUnitController;
 use App\Http\Controllers\ProductStockController;
 use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RevenueController;
+use App\Http\Controllers\TaxController;
+use App\Http\Controllers\VenderController;
 use App\Http\Controllers\Web\AppSettingController;
 use App\Http\Controllers\Web\AssetController;
 use App\Http\Controllers\Web\AssetTypeController;
@@ -624,6 +634,56 @@ Route::group([
         Route::get('revenue/index', [RevenueController::class, 'index'])->name('revenue.index');
         Route::resource('revenue', RevenueController::class);
         Route::get('credit-note', [CreditNoteController::class, 'index'])->name('credit.note');
+        //vender
+        Route::get('vender/{id}/show', [VenderController::class, 'show'])->name('vender.show');
+        Route::resource('vender', VenderController::class);
+        //expense
+        Route::get('expense/index', [ExpenseController::class, 'index'])->name('expense.index');
+        Route::any('expense/customer', [ExpenseController::class, 'customer'])->name('expense.customer');
+        Route::post('expense/vender', [ExpenseController::class, 'vender'])->name('expense.vender');
+        Route::post('expense/employee', [ExpenseController::class, 'employee'])->name('expense.employee');
+
+        Route::post('expense/product/destroy', [ExpenseController::class, 'productDestroy'])->name('expense.product.destroy');
+
+        Route::post('expense/product', [ExpenseController::class, 'product'])->name('expense.product');
+        Route::get('expense/{id}/payment', [ExpenseController::class, 'payment'])->name('expense.payment');
+        Route::get('expense/items', [ExpenseController::class, 'items'])->name('expense.items');
+
+        Route::resource('expense', ExpenseController::class);
+        Route::get('expense/create/{cid}', [ExpenseController::class, 'create'])->name('expense.create');
+        //payment
+        Route::get('payment/index', [PaymentController::class, 'index'])->name('payment.index');
+
+        Route::resource('payment', PaymentController::class);
+        //debit note
+        Route::get('debit-note', [DebitNoteController::class, 'index'])->name('debit.note');
+        Route::get('custom-debit-note', [DebitNoteController::class, 'customCreate'])->name('bill.custom.debit.note');
+        Route::post('custom-debit-note', [DebitNoteController::class, 'customStore'])->name('bill.custom.debit.note');
+        Route::get('debit-note/bill', [DebitNoteController::class, 'getbill'])->name('bill.get');
+        Route::get('bill/{id}/debit-note', [DebitNoteController::class, 'create'])->name('bill.debit.note');
+        Route::post('bill/{id}/debit-note', [DebitNoteController::class, 'store'])->name('bill.debit.note');
+        Route::get('bill/{id}/debit-note/edit/{cn_id}', [DebitNoteController::class, 'edit'])->name('bill.edit.debit.note');
+        Route::post('bill/{id}/debit-note/edit/{cn_id}', [DebitNoteController::class, 'update'])->name('bill.edit.debit.note');
+        Route::delete('bill/{id}/debit-note/delete/{cn_id}', [DebitNoteController::class, 'destroy'])->name('bill.delete.debit.note');
+        //chart-of-account
+        Route::resource('chart-of-account', ChartOfAccountController::class);
+        //journal-entry
+        Route::post('journal-entry/account/destroy', [JournalEntryController::class, 'accountDestroy'])->name('journal.account.destroy');
+        Route::delete('journal-entry/journal/destroy/{item_id}', [JournalEntryController::class, 'journalDestroy'])->name('journal.destroy');
+
+        Route::resource('journal-entry', JournalEntryController::class);
+        //report
+        Route::get('report/ledger/{account?}', [ReportController::class, 'ledgerSummary'])->name('report.ledger');
+        Route::get('report/balance-sheet/{view?}', [ReportController::class, 'balanceSheet'])->name('report.balance.sheet');
+        Route::get('report/profit-loss/{view?}', [ReportController::class, 'profitLoss'])->name('report.profit.loss');
+        Route::get('report/trial-balance', [ReportController::class, 'trialBalanceSummary'])->name('trial.balance');
+        //budget
+        Route::resource('budget', BudgetController::class);
+        //goal
+        Route::resource('goal', GoalController::class);
+        //taxes
+        Route::resource('taxes', TaxController::class);
+        Route::get('print-setting', [SystemController::class, 'printIndex'])->name('print.setting');
     });
 });
 
