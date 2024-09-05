@@ -17,43 +17,38 @@ class BankAccountController extends Controller
 
     public function index()
     {
-        if(\Auth::user()->can('create bank account'))
-        {
+        if (\Auth::user()->can('manage-bank_account')) {
             $accounts = BankAccount::where('created_by', '=', \Auth::user()->creatorId())->with(['chartAccount'])->get();
 
             return view('admin.bankAccount.index', compact('accounts'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
     public function create()
     {
-        if(\Auth::user()->can('create bank account'))
-        {
+        if (\Auth::user()->can('create-bank_account')) {
             $chart_accounts = ChartOfAccount::select(\DB::raw('CONCAT(code, " - ", name) AS code_name, id'))
                 ->where('created_by', \Auth::user()->creatorId())->get()
                 ->pluck('code_name', 'id');
             $chart_accounts->prepend('Select Account', '');
             $customFields = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'account')->get();
 
-            return view('admin.bankAccount.create', compact('customFields','chart_accounts'));
-        }
-        else
-        {
+            return view('admin.bankAccount.create', compact('customFields', 'chart_accounts'));
+        } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }
     }
 
     public function store(Request $request)
     {
-        if(\Auth::user()->can('create bank account'))
-        {
+        // dd($request->all());
+        if (\Auth::user()->can('create-bank_account')) {
 
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'holder_name' => 'required',
                     'bank_name' => 'required',
                     'account_number' => 'required',
@@ -62,11 +57,10 @@ class BankAccountController extends Controller
                 ]
             );
 
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
-                return redirect()->route('bank-account.index')->with('error', $messages->first());
+                return redirect()->route('admin.bank-account.create')->with('error', $messages->first());
             }
 
             $account                  = new BankAccount();
@@ -81,10 +75,8 @@ class BankAccountController extends Controller
             $account->save();
             CustomField::saveData($account, $request->customField);
 
-            return redirect()->route('bank-account.index')->with('success', __('Account successfully created.'));
-        }
-        else
-        {
+            return redirect()->route('admin.bank-account.index')->with('success', __('Account successfully created.'));
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
@@ -92,16 +84,18 @@ class BankAccountController extends Controller
 
     public function show()
     {
-        return redirect()->route('bank-account.index');
+        if (\Auth::user()->can('show-bank_account')) {
+            return redirect()->route('admin.bank-account.index');
+        } else {
+            return response()->json(['error' => __('Permission denied.')], 401);
+        }
     }
 
 
     public function edit(BankAccount $bankAccount)
     {
-        if(\Auth::user()->can('edit bank account'))
-        {
-            if($bankAccount->created_by == \Auth::user()->creatorId())
-            {
+        if (\Auth::user()->can('edit-bank_account')) {
+            if ($bankAccount->created_by == \Auth::user()->creatorId()) {
                 $chart_accounts = ChartOfAccount::select(\DB::raw('CONCAT(code, " - ", name) AS code_name, id'))
                     ->where('created_by', \Auth::user()->creatorId())->get()
                     ->pluck('code_name', 'id');
@@ -110,15 +104,11 @@ class BankAccountController extends Controller
                 $bankAccount->customField = CustomField::getData($bankAccount, 'account');
                 $customFields             = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'account')->get();
 
-                return view('admin.bankAccount.edit', compact('bankAccount', 'customFields','chart_accounts'));
-            }
-            else
-            {
+                return view('admin.bankAccount.edit', compact('bankAccount', 'customFields', 'chart_accounts'));
+            } else {
                 return response()->json(['error' => __('Permission denied.')], 401);
             }
-        }
-        else
-        {
+        } else {
             return response()->json(['error' => __('Permission denied.')], 401);
         }
     }
@@ -126,11 +116,11 @@ class BankAccountController extends Controller
 
     public function update(Request $request, BankAccount $bankAccount)
     {
-        if(\Auth::user()->can('create bank account'))
-        {
+        if (\Auth::user()->can('edit-bank_account')) {
 
             $validator = \Validator::make(
-                $request->all(), [
+                $request->all(),
+                [
                     'holder_name' => 'required',
                     'bank_name' => 'required',
                     'account_number' => 'required',
@@ -139,11 +129,10 @@ class BankAccountController extends Controller
                 ]
             );
 
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
-                return redirect()->route('bank-account.index')->with('error', $messages->first());
+                return redirect()->route('admin.bank-account.index')->with('error', $messages->first());
             }
             $bankAccount->chart_account_id = $request->chart_account_id;
             $bankAccount->holder_name     = $request->holder_name;
@@ -156,46 +145,35 @@ class BankAccountController extends Controller
             $bankAccount->save();
             CustomField::saveData($bankAccount, $request->customField);
 
-            return redirect()->route('bank-account.index')->with('success', __('Account successfully updated.'));
-        }
-        else
-        {
+            return redirect()->route('admin.bank-account.index')->with('success', __('Account successfully updated.'));
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
 
-    public function destroy(BankAccount $bankAccount)
+    public function destroy($id)
     {
-        if(\Auth::user()->can('delete bank account'))
-        {
-            if($bankAccount->created_by == \Auth::user()->creatorId())
-            {
+        if (\Auth::user()->can('delete-bank_account')) {
+            $bankAccount = BankAccount::find($id);
+            if ($bankAccount->created_by == \Auth::user()->creatorId()) {
                 $revenue        = Revenue::where('account_id', $bankAccount->id)->first();
                 $invoicePayment = InvoicePayment::where('account_id', $bankAccount->id)->first();
                 $transaction    = Transaction::where('account', $bankAccount->id)->first();
                 $payment        = Payment::where('account_id', $bankAccount->id)->first();
                 $billPayment    = BillPayment::first();
 
-                if(!empty($revenue) && !empty($invoicePayment) && !empty($transaction) && !empty($payment) && !empty($billPayment))
-                {
-                    return redirect()->route('bank-account.index')->with('error', __('Please delete related record of this account.'));
-                }
-                else
-                {
+                if (!empty($revenue) && !empty($invoicePayment) && !empty($transaction) && !empty($payment) && !empty($billPayment)) {
+                    return redirect()->route('admin.bank-account.index')->with('error', __('Please delete related record of this account.'));
+                } else {
                     $bankAccount->delete();
 
-                    return redirect()->route('bank-account.index')->with('success', __('Account successfully deleted.'));
+                    return redirect()->route('admin.bank-account.index')->with('success', __('Account successfully deleted.'));
                 }
-
-            }
-            else
-            {
+            } else {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }

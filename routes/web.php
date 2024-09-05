@@ -598,6 +598,7 @@ Route::group([
 
         //account system
         Route::resource('bank-account', BankAccountController::class);
+        Route::get('bank-account/{id}/destroy', [BankAccountController::class,'destroy'])->name('bank-account.destroy');
         Route::get('bank-transfer/index', [BankTransferController::class, 'index'])->name('bank-transfer.index');
         Route::resource('bank-transfer', BankTransferController::class);
         Route::get('customer/{id}/show', [CustomerController::class, 'show'])->name('customer.show');
@@ -642,18 +643,14 @@ Route::group([
         Route::any('expense/customer', [ExpenseController::class, 'customer'])->name('expense.customer');
         Route::post('expense/vender', [ExpenseController::class, 'vender'])->name('expense.vender');
         Route::post('expense/employee', [ExpenseController::class, 'employee'])->name('expense.employee');
-
         Route::post('expense/product/destroy', [ExpenseController::class, 'productDestroy'])->name('expense.product.destroy');
-
         Route::post('expense/product', [ExpenseController::class, 'product'])->name('expense.product');
         Route::get('expense/{id}/payment', [ExpenseController::class, 'payment'])->name('expense.payment');
         Route::get('expense/items', [ExpenseController::class, 'items'])->name('expense.items');
-
         Route::resource('expense', ExpenseController::class);
         Route::get('expense/create/{cid}', [ExpenseController::class, 'create'])->name('expense.create');
         //payment
         Route::get('payment/index', [PaymentController::class, 'index'])->name('payment.index');
-
         Route::resource('payment', PaymentController::class);
         //debit note
         Route::get('debit-note', [DebitNoteController::class, 'index'])->name('debit.note');
@@ -670,7 +667,6 @@ Route::group([
         //journal-entry
         Route::post('journal-entry/account/destroy', [JournalEntryController::class, 'accountDestroy'])->name('journal.account.destroy');
         Route::delete('journal-entry/journal/destroy/{item_id}', [JournalEntryController::class, 'journalDestroy'])->name('journal.destroy');
-
         Route::resource('journal-entry', JournalEntryController::class);
         //report
         Route::get('report/ledger/{account?}', [ReportController::class, 'ledgerSummary'])->name('report.ledger');
