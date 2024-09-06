@@ -10,6 +10,7 @@
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item">{{ __('Accounting system') }}</li>
             <li class="breadcrumb-item">{{ __('Bank Account') }}</li>
+            <li class="breadcrumb-item">{{ __('Create') }}</li>
         </ol>
         <div class="float-end">
             <a href="{{ route('admin.bank-account.index') }}" class="btn btn-primary">

@@ -58,7 +58,7 @@
                                                             @can('edit-bank_account')
                                                                 <li class="me-2">
                                                                     <a href="{{ route('admin.bank-account.edit', $account->id) }}" title="{{ __('Edit') }}">
-                                                                        <i class="link-icon" data-feather="eye"></i>
+                                                                        <i class="link-icon" data-feather="edit"></i>
                                                                     </a>
                                                                 </li>
                                                             @endcan
