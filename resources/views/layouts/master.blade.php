@@ -61,11 +61,9 @@
     </div>
 
     @include('admin.section.body_links')
-
     @include('layouts.nav_notification_scripts')
     @include('layouts.nav_search_scripts')
     @include('layouts.theme_scripts')
-    {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
     <script src="{{ asset('assets/vendors/select2/select2.min.js') }}"></script>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>

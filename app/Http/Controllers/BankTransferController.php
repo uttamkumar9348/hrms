@@ -12,8 +12,7 @@ class BankTransferController extends Controller
 
     public function index(Request $request)
     {
-
-        if(\Auth::user()->can('manage bank transfer'))
+        if(\Auth::user()->can('manage-bank_transfer'))
         {
             $account = BankAccount::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('holder_name', 'id');
             $account->prepend('Select Account', '');
@@ -41,7 +40,7 @@ class BankTransferController extends Controller
             }
             $transfers = $query->with(['fromBankAccount','toBankAccount'])->get();
 
-            return view('bank-transfer.index', compact('transfers', 'account'));
+            return view('admin.bank-transfer.index', compact('transfers', 'account'));
         }
         else
         {
@@ -51,11 +50,11 @@ class BankTransferController extends Controller
 
     public function create()
     {
-        if(\Auth::user()->can('create bank transfer'))
+        if(\Auth::user()->can('create-bank_transfer'))
         {
             $bankAccount = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
-            return view('bank-transfer.create', compact('bankAccount'));
+            return view('admin.bank-transfer.create', compact('bankAccount'));
         }
         else
         {
@@ -65,7 +64,7 @@ class BankTransferController extends Controller
 
     public function store(Request $request)
     {
-        if(\Auth::user()->can('create bank transfer'))
+        if(\Auth::user()->can('create-bank_transfer'))
         {
             $validator = \Validator::make(
                 $request->all(), [
@@ -97,7 +96,7 @@ class BankTransferController extends Controller
 
             Utility::bankAccountBalance($request->to_account, $request->amount, 'credit');
 
-            return redirect()->route('bank-transfer.index')->with('success', __('Amount successfully transfer.'));
+            return redirect()->route('admin.bank-transfer.index')->with('success', __('Amount successfully transfer.'));
         }
         else
         {
@@ -106,17 +105,17 @@ class BankTransferController extends Controller
     }
     public function show()
     {
-        return redirect()->route('bank-transfer.index');
+        return redirect()->route('admin.bank-transfer.index');
     }
 
     public function edit(BankTransfer $transfer,$id)
     {
-        if(\Auth::user()->can('edit bank transfer'))
+        if(\Auth::user()->can('edit-bank_transfer'))
         {
             $transfer = BankTransfer::where('id',$id)->first();
             $bankAccount = BankAccount::select('*', \DB::raw("CONCAT(bank_name,' ',holder_name) AS name"))->where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
-            return view('bank-transfer.edit', compact('bankAccount', 'transfer'));
+            return view('admin.bank-transfer.edit', compact('bankAccount', 'transfer'));
         }
         else
         {
@@ -126,7 +125,7 @@ class BankTransferController extends Controller
 
     public function update(Request $request, BankTransfer $transfer,$id)
     {
-        if(\Auth::user()->can('edit bank transfer'))
+        if(\Auth::user()->can('edit-bank_transfer'))
         {
             $transfer = BankTransfer::find($id);
             $validator = \Validator::make(
@@ -160,7 +159,7 @@ class BankTransferController extends Controller
             Utility::bankAccountBalance($request->from_account, $request->amount, 'debit');
             Utility::bankAccountBalance($request->to_account, $request->amount, 'credit');
 
-            return redirect()->route('bank-transfer.index')->with('success', __('Amount successfully transfer updated.'));
+            return redirect()->route('admin.bank-transfer.index')->with('success', __('Amount successfully transfer updated.'));
         }
         else
         {
@@ -172,7 +171,7 @@ class BankTransferController extends Controller
     public function destroy(BankTransfer $transfer)
     {
 
-        if(\Auth::user()->can('delete bank transfer'))
+        if(\Auth::user()->can('delete-bank_transfer'))
         {
             if($transfer->created_by == \Auth::user()->creatorId())
             {
@@ -181,7 +180,7 @@ class BankTransferController extends Controller
                 Utility::bankAccountBalance($transfer->from_account, $transfer->amount, 'credit');
                 Utility::bankAccountBalance($transfer->to_account, $transfer->amount, 'debit');
 
-                return redirect()->route('bank-transfer.index')->with('success', __('Amount transfer successfully deleted.'));
+                return redirect()->route('admin.bank-transfer.index')->with('success', __('Amount transfer successfully deleted.'));
             }
             else
             {

@@ -5,10 +5,6 @@
 
 @section('scripts')
     <script>
-        // $(document).ready(function() {
-        //     var w_id = $('#warehouse_id').val();
-        //     getProduct(w_id);
-        // });
         $(document).on('change', 'select[name=from_warehouse]', function() {
             var warehouse_id = $(this).val();
             $.ajax({
