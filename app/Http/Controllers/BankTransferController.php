@@ -103,10 +103,10 @@ class BankTransferController extends Controller
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
-    public function show()
-    {
-        return redirect()->route('admin.bank-transfer.index');
-    }
+    // public function show()
+    // {
+    //     return redirect()->route('admin.bank-transfer.index');
+    // }
 
     public function edit(BankTransfer $transfer,$id)
     {
@@ -168,9 +168,10 @@ class BankTransferController extends Controller
     }
 
 
-    public function destroy(BankTransfer $transfer)
+    public function destroy($id)
     {
-
+        dd($id);
+        $transfer = BankTransfer::find($id);
         if(\Auth::user()->can('delete-bank_transfer'))
         {
             if($transfer->created_by == \Auth::user()->creatorId())

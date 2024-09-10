@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    {{ __('Farmer Detail Create') }}
+    {{ __('Plot Create') }}
 @endsection
 @section('scripts')
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
@@ -252,10 +252,10 @@
                                         {{ Form::label('quantity', __('Quantity (In K.G)'), ['class' => 'form-label']) }}
                                         {{ Form::number('quantity', '', ['class' => 'form-control', 'required' => 'required']) }}
                                     </div> -->
-                        <div class="form-group col-md-6">
+                        {{-- <div class="form-group col-md-6">
                             {{ Form::label('tentative_harvest_quantity', __('Tentative Plant Quantity (In Ton)'), ['class' => 'form-label']) }}
                             {{ Form::number('tentative_harvest_quantity', '', ['class' => 'form-control', 'required' => 'required']) }}
-                        </div>
+                        </div> --}}
                         <div class="col-md-6">
                             <div class="form-group">
                                 {{ Form::label('seed_category_id', __('Seed Category'), ['class' => 'form-label']) }}

@@ -67,7 +67,6 @@
                                                                     <a class="deleteBtn" href="#" data-href="{{ route('admin.bank-account.destroy', $account->id) }}" title="{{ __('Delete') }}">
                                                                         <i class="link-icon"  data-feather="delete"></i>
                                                                     </a>
-                                                                    {!! Form::close() !!}
                                                                 </li>
                                                             @endcan
                                                         </ul>

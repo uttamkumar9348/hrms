@@ -110,11 +110,11 @@
                                         <td>{{ \Auth::user()->priceFormat($transfer->amount) }}</td>
                                         <td>{{ $transfer->reference }}</td>
                                         <td>{{ $transfer->description }}</td>
-                                        @if (Gate::check('edit transfer') || Gate::check('delete transfer'))
+                                        @if (Gate::check('edit-bank_transfer') || Gate::check('delete-bank_transfer'))
                                             <td class="Action">
                                                 <span>
                                                     <ul class="d-flex list-unstyled mb-0 justify-content-center">
-                                                        @can('edit transfer')
+                                                        @can('edit-bank_transfer')
                                                             <li class="me-2">
                                                                 <a href="{{ route('admin.bank-transfer.edit', $transfer->id) }}"
                                                                     title="{{ __('Edit') }}">
@@ -122,21 +122,11 @@
                                                                 </a>
                                                             </li>
                                                         @endcan
-                                                        @can('delete transfer')
+                                                        @can('delete-bank_transfer')
                                                             <li>
-                                                                {!! Form::open([
-                                                                    'method' => 'DELETE',
-                                                                    'route' => ['admin.bank-transfer.destroy', $transfer->id],
-                                                                    'id' => 'delete-form-' . $transfer->id,
-                                                                ]) !!}
-                                                                <a href="#" data-bs-toggle="tooltip"
-                                                                    data-original-title="{{ __('Delete') }}"
-                                                                    title="{{ __('Delete') }}"
-                                                                    data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
-                                                                    data-confirm-yes="document.getElementById('delete-form-{{ $transfer->id }}').submit();">
-                                                                    <i class="link-icon" data-feather="delete"></i>
+                                                                <a class="deleteBtn" href="#" data-href="{{ route('admin.bank-transfer.destroy', $transfer->id) }}" title="{{ __('Delete') }}">
+                                                                    <i class="link-icon"  data-feather="delete"></i>
                                                                 </a>
-                                                                {!! Form::close() !!}
                                                             </li>
                                                         @endcan
                                                     </ul>

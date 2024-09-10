@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    {{ __('Edit Farmer Detail') }}
+    {{ __('Edit Plot') }}
 @endsection
 
 @section('scripts')
@@ -295,17 +295,17 @@
                             {{ Form::text('area_in_acar', $farming_detail->area_in_acar, ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
                         <div class="form-group col-md-6">
-                            {{ Form::label('date_of_harvesting', __('Date of Harvesting'), ['class' => 'form-label']) }}
+                            {{ Form::label('date_of_harvesting', __('Date of Planting'), ['class' => 'form-label']) }}
                             {{ Form::date('date_of_harvesting', $farming_detail->date_of_harvesting, ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
                         <!-- <div class="form-group col-md-6">
                                         {{ Form::label('quantity', __('Quantity'), ['class' => 'form-label']) }}
                                         {{ Form::number('quantity', $farming_detail->quantity, ['class' => 'form-control', 'required' => 'required']) }}
                                     </div> -->
-                        <div class="form-group col-md-6">
-                            {{ Form::label('tentative_harvest_quantity', __('Tentative Harvest Quantity'), ['class' => 'form-label']) }}
+                        {{-- <div class="form-group col-md-6">
+                            {{ Form::label('tentative_harvest_quantity', __('Tentative Plant Quantity (In Ton)'), ['class' => 'form-label']) }}
                             {{ Form::number('tentative_harvest_quantity', $farming_detail->tentative_harvest_quantity, ['class' => 'form-control', 'required' => 'required']) }}
-                        </div>
+                        </div> --}}
                         <div class="col-md-6">
                             <div class="form-group">
                                 {{ Form::label('seed_category_id', __('Seed Category'), ['class' => 'form-label']) }}
@@ -351,7 +351,7 @@
             <div class="modal-footer">
                 <input type="button" value="{{ __('Cancel') }}"
                     onclick="location.href = '{{ route('admin.farmer.farming_detail.index') }}';" class="btn btn-light">
-                <input type="submit" value="{{ __('Update') }}" class="btn  btn-primary">
+                <input type="submit" value="{{ __('Update') }}" class="btn btn-primary">
             </div>
             {{ Form::close() }}
         </div>

@@ -600,6 +600,7 @@ Route::group([
         Route::resource('bank-account', BankAccountController::class);
         Route::get('bank-account/{id}/destroy', [BankAccountController::class,'destroy'])->name('bank-account.destroy');
         Route::get('bank-transfer/index', [BankTransferController::class, 'index'])->name('bank-transfer.index');
+        Route::get('bank-transfer/{id}/destroy', [BankTransferController::class, 'destroy'])->name('bank-transfer.destroy');
         Route::resource('bank-transfer', BankTransferController::class);
         Route::get('customer/{id}/show', [CustomerController::class, 'show'])->name('customer.show');
         Route::resource('customer', CustomerController::class);
