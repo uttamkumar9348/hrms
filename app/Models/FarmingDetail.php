@@ -10,14 +10,15 @@ class FarmingDetail extends Model
     use HasFactory;
     protected $fillable = [
         'farming_id',
-        'name',
         'plot_number',
-        'kata_number',
         'area_in_acar',
         'date_of_harvesting',
-        'quantity',
         'seed_category_id',
         'tentative_harvest_quantity',
+        'croploss',
+        'loss_reason',
+        'loss_area',
+        'total_planting_area',
         'created_by',
         'type',
         'planting_category',

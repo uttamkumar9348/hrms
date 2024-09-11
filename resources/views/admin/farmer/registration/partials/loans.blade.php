@@ -3,13 +3,10 @@
         <thead>
             <tr>
                 <th>{{ __('Farmer Name') }}</th>
-                <th>{{ __('Registration No.') }}</th>
-                <th>{{ __('Agreement No') }}</th>
-                <th>{{ __('Date of Agreement') }}</th>
+                <th>{{ __('G-Code No.') }}</th>
+                <th>{{ __('Invoice Date') }}</th>
+                <th>{{ __('Invoice No') }}</th>
                 <th>{{ __('Category') }}</th>
-                <th>{{ __('Type') }}</th>
-                <th>{{ __('Price') }}</th>
-                <th>{{ __('Quantity') }}</th>
                 <th>{{ __('Amount') }}</th>
             </tr>
         </thead>
@@ -24,50 +21,27 @@
                     $count = count($loan_category_id);
                 @endphp
                 <tr class="font-style">
-                    <td>{{ @$loan->farming->name }}</td>
-                    <td>{{ $loan->registration_number }}</td>
-                    <td>{{ $loan->agreement_number }}</td>
-                    <td>{{ $loan->date }}</td>
+                    <td>{{ $loan->farming->name }}</td>
+                    <td>{{ $loan->farming->g_code }}</td>
+                    <td>{{ date('d-m-Y',strtotime($loan->updated_at)) }}</td>
+                    <td>
+                        @php
+                            $invoice = explode('.',$loan->invoice);
+                        @endphp
+                        {{ $invoice[0] }}</td>
                     <td>
                         @for ($i = 0; $i < $count; $i++)
                             @php
-                                $productcategory = App\Models\ProductServiceCategory::where(
-                                    'id',
-                                    $loan_category_id[$i],
-                                )->first();
+                                $productcategory = App\Models\ProductServiceCategory::where('id',$loan_category_id[$i])->first();
                             @endphp
                             {{ $productcategory->name }}
-                            @if($i < $count - 1),@endif
-                        @endfor
-                    </td>
-
-                    <td>
-                        @for ($i = 0; $i < $count; $i++)
-                            @php
-                                $product = App\Models\ProductService::where(
-                                    'id',
-                                    $loan_type_id[$i],
-                                )->first();
-                            @endphp
-                            {{ $product->name }}
-                            @if($i < $count - 1),@endif
-                        @endfor
-                    </td>
-                    <td>
-                        @for ($i = 0; $i < $count; $i++)
-                            {{ $price_kg[$i] }}@if($i < $count - 1),@endif
-                        @endfor
-                    </td>
-                    <td>
-                        @for ($i = 0; $i < $count; $i++)
-                            {{ $quantity[$i] }}
-                            @if($i < $count - 1),@endif
+                            @if($i < $count - 1)/@endif
                         @endfor
                     </td>
                     <td>
                         @for ($i = 0; $i < $count; $i++)
                             {{ $total_amount[$i] }}
-                            @if($i < $count - 1),@endif
+                            @if($i < $count - 1)/@endif
                         @endfor
                     </td>
                 </tr>

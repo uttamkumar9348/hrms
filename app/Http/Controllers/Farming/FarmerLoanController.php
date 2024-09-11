@@ -196,8 +196,8 @@ class FarmerLoanController extends Controller
     public function invoice_generate($id)
     {
         $farmingloan = FarmerLoan::findorfail($id);
-        $data = $farmingloan;
         if ($farmingloan->invoice_generate_status == 0) {
+            $data = $farmingloan;
             $farming = Farming::findorfail($farmingloan->farming_id);
 
             $pdf = Pdf::loadView('admin.farmer.loan.invoice', compact('data', 'farming'));
@@ -208,7 +208,7 @@ class FarmerLoanController extends Controller
                 File::makeDirectory($path, 0755, true);
             }
 
-            $file_name = time() . 'invoice.pdf';
+            $file_name = time() . '.pdf';
             $pdf->save($path  . $file_name);
             $pdf->download($file_name);
 

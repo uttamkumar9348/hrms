@@ -78,7 +78,7 @@ class FarmingDetailController extends Controller
                     'date_of_harvesting' => 'required',
                     // 'quantity' => 'required',
                     'seed_category_id' => 'required',
-                    'tentative_harvest_quantity' => 'required',
+                    // 'tentative_harvest_quantity' => 'required',
                     'created_by' => 'required',
                 ]);
                 FarmingDetail::create($request->all());
@@ -130,12 +130,9 @@ class FarmingDetailController extends Controller
                 $this->validate($request, [
                     'farming_id' => 'required',
                     'plot_number' => 'required',
-                    // 'kata_number' => 'required',
                     'area_in_acar' => 'required',
                     'date_of_harvesting' => 'required',
-                    // 'quantity' => 'required',
                     'seed_category_id' => 'required',
-                    'tentative_harvest_quantity' => 'required',
                 ]);
                 $farming_detail->update($request->all());
                 return redirect()->back()->with('success', 'Plot Details Updated Successfully.');
@@ -186,5 +183,34 @@ class FarmingDetailController extends Controller
             'zoneHtml' => $zoneHtml,
             'centerHtml' => $centerHtml,
         ]);
+    }
+    public function getFarmingDetailData(Request $request)
+    {
+        $plot_details = FarmingDetail::findorfail($request->id);
+        $farmer = Farming::findorfail($plot_details->farming_id);
+        // dd($farmer->name);
+        return response()->json([
+            'plot_details' => $plot_details,
+            'farmer_name' => $farmer->name
+        ]);
+    }
+    public function servey_data(Request $request) 
+    {
+        if (\Auth::user()->can('edit-plot')) {
+            $farming_detail = FarmingDetail::find($request->id);
+            try {
+                $this->validate($request, [
+                    'croploss' => 'required',
+                    'total_planting_area' => 'required',
+                    'tentative_harvest_quantity' => 'required',
+                ]);
+                $farming_detail->update($request->all());
+                return redirect()->back()->with('success', 'Plot Details Updated Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
     }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\CreditNoteController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DebitNoteController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\Farming\BankDetailsController;
 use App\Http\Controllers\Farming\CuttingOrderController;
 use App\Http\Controllers\Farming\FarmerLoanController;
 use App\Http\Controllers\Farming\FarmingController;
@@ -495,9 +496,14 @@ Route::group([
 
                 //plot details
                 Route::post('get_detail', [FarmingDetailController::class, 'getFarmingDetail'])->name('farming.get_detail');
+                Route::post('servey_data', [FarmingDetailController::class, 'servey_data'])->name('servey_data');
+                Route::post('farming_detail_data', [FarmingDetailController::class, 'getFarmingDetailData'])->name('farming_detail_data');
                 Route::resource('farming_detail', FarmingDetailController::class);
                 Route::get('farming_detail/{id}/destroy', [FarmingDetailController::class, 'destroy'])->name('farming_detail.destroy');
 
+                //Bank Details
+                Route::resource('bank_details', BankDetailsController::class);
+                
                 //cutting order
                 Route::post('update_cutting_order', [CuttingOrderController::class, 'updateCuttingOrder'])->name('farming.update_cutting_order');
                 Route::resource('cutting_order', CuttingOrderController::class);

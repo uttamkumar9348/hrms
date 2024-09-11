@@ -20,7 +20,7 @@ class FarmingPaymentController extends Controller
             $payments = FarmingPayment::where('type', FarmingPayment::SECURITY_DEPOSIT)->where('created_by', Auth::user()->id)->get();
             return view('admin.farmer.payment.index', compact('payments'));
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
 
@@ -38,7 +38,7 @@ class FarmingPaymentController extends Controller
 
             return view('admin.farmer.payment.create', compact('farmings'));
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
 
@@ -48,6 +48,10 @@ class FarmingPaymentController extends Controller
     public function store(Request $request)
     {
         if (\Auth::user()->can('create-security_deposite')) {
+            $farming_payment = FarmingPayment::where('farming_id', $request->farming_id)->where('type',"Security Deposit")->get();
+            if(count($farming_payment) > 0){
+                return redirect()->route('admin.farmer.payment.index')->with('danger', 'Payment Already Added.');
+            }
             try {
                 if ($request->amount != null) {
                     $this->validate($request, [
@@ -85,10 +89,10 @@ class FarmingPaymentController extends Controller
 
                 return redirect()->to(route('admin.farmer.farming_registration.show', $request->farming_id))->with('success', 'Payment Added Successfully.');
             } catch (Exception $e) {
-                return redirect()->back()->with('error', $e->getMessage());
+                return redirect()->back()->with('danger', $e->getMessage());
             }
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
 
@@ -117,7 +121,7 @@ class FarmingPaymentController extends Controller
                 'farmings',
             ));
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
 
@@ -142,7 +146,7 @@ class FarmingPaymentController extends Controller
 
             return redirect()->back()->with('success', 'Farming Payment Updated Successfully.');
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
 
@@ -156,7 +160,7 @@ class FarmingPaymentController extends Controller
             $farmingPayment->delete();
             return redirect()->back()->with('success', 'Farming Payment Deleted Successfully.');
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
     public function bankGuarantee()
@@ -169,7 +173,7 @@ class FarmingPaymentController extends Controller
                 ->get();
             return view('admin.farmer.bank_guarantee.create', compact('farmings'));
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
     public function reimbursement()
@@ -180,7 +184,7 @@ class FarmingPaymentController extends Controller
 
             return view('admin.farmer.reimbursement.index', compact('payments'));
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
     public function reimbursementCreate()
@@ -193,7 +197,7 @@ class FarmingPaymentController extends Controller
                 ->get();
             return view('admin.farmer.reimbursement.create', compact('farmings'));
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
     public function reimbursement_delete($id)
@@ -203,7 +207,7 @@ class FarmingPaymentController extends Controller
             $farmingPayment->delete();
             return redirect()->back()->with('success', 'Farming Payment Deleted Successfully.');
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
     public function editBankGuarantee($id)
@@ -220,7 +224,7 @@ class FarmingPaymentController extends Controller
                 'farmings',
             ));
         } else {
-            return redirect()->back()->with('error', 'Permission denied.');
+            return redirect()->back()->with('danger', 'Permission denied.');
         }
     }
     public function pdfBankGuarantee($id)
