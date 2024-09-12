@@ -1,126 +1,32 @@
 @extends('layouts.master')
 @section('title')
-    {{ __('Plot Create') }}
+    {{ __('Bank Details Create') }}
 @endsection
 @section('scripts')
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#plant_type').hide();
-            $('#ratun_type').hide();
-            $('#planting_category').hide();
-
-            $('#farming_id').change(function() {
-                let farming_id = $(this).val();
-                $.ajax({
-                    url: "{{ route('admin.farmer.farming.get_detail') }}",
-                    method: 'post',
-                    data: {
-                        farming_id: farming_id,
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        $('#block_id').empty();
-                        if (response.blockHtml) {
-                            $('#block_id').append(response.blockHtml);
-                        } else {
-                            $('#block_id').append('<option  value="">Select Block</option>');
-                        }
-                        $('#gram_panchyat_id').empty();
-                        if (response.gpHtml) {
-                            $('#gram_panchyat_id').append(response.gpHtml);
-                        } else {
-                            $('#gram_panchyat_id').append(
-                                '<option  value="">Select Gram Panchyat</option>');
-                        }
-                        $('#village_id').empty();
-                        if (response.villageHtml) {
-                            $('#village_id').append(response.villageHtml);
-                        } else {
-                            $('#village_id').append(
-                                '<option  value="">Select Village</option>');
-                        }
-                        $('#zone_id').empty();
-                        if (response.zoneHtml) {
-                            $('#zone_id').append(response.zoneHtml);
-                        } else {
-                            $('#zone_id').append('<option  value="">Select Zone</option>');
-                        }
-                        $('#center_id').empty();
-                        if (response.centerHtml) {
-                            $('#center_id').append(response.centerHtml);
-                        } else {
-                            $('#center_id').append('<option  value="">Select Center</option>');
-                        }
-                    }
-                });
+            $('input[type=radio][name="finance_category"]').on('change', function(event) {
+                var value = $(this).val();
+                if (value == "Non-loan") {
+                    $('.finance_category_fields').hide();
+                    $('.coperative_fields').hide();
+                    $('.bank_detail_fields').hide();
+                    $('.non_loan_fields').show();
+                } else {
+                    $('.finance_category_fields').show();
+                    $('.non_loan_fields').hide();
+                }
             });
-            $('#can_field_block_id').change(function() {
-                let block_id = $(this).val();
-                $.ajax({
-                    url: "{{ route('admin.farmer.location.get_gram_panchyats') }}",
-                    method: 'post',
-                    data: {
-                        block_id: block_id,
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        gram_panchyats = response.gram_panchyats;
-                        $('#can_field_gram_panchyat_id').empty();
-                        $('#can_field_gram_panchyat_id').append(
-                            '<option  value="">Select Gram Panchyat</option>');
-                        for (i = 0; i < gram_panchyats.length; i++) {
-                            $('#can_field_gram_panchyat_id').append('<option value="' +
-                                gram_panchyats[i]
-                                .id + '">' + gram_panchyats[i].name + '</option>');
-                        }
-                    }
-                });
-            });
-            $('#can_field_gram_panchyat_id').change(function() {
-                let gram_panchyat_id = $(this).val();
-                $.ajax({
-                    url: "{{ route('admin.farmer.location.get_villages') }}",
-                    method: 'post',
-                    data: {
-                        gram_panchyat_id: gram_panchyat_id,
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        villages = response.villages;
-                        $('#can_field_village_id').empty();
-                        $('#can_field_village_id').append(
-                            '<option  value="">Select Village</option>');
-                        for (i = 0; i < villages.length; i++) {
-                            $('#can_field_village_id').append('<option value="' + villages[i]
-                                .id + '">' +
-                                villages[i].name + '</option>');
-                        }
-                    }
-                });
-            });
-            $("input[name=type]").on('click', function(){
-                var type = $(this).val();
-                console.log(type);
-                if(type == "Plant"){
-                    $("#ratun_type").removeAttr("name");
-                    $('#planting_category').show();
-                    $('#plant_type').show();
-                    $('#plant_type').attr('name', "planting_category");
-                    $('#ratun_type').hide();
-                } else if (type == "Ratun"){
-                    $("#plant_type").removeAttr("name");
-                    $('#planting_category').show();
-                    $('#ratun_type').show();
-                    $('#ratun_type').attr('name', "planting_category");
-                    $('#plant_type').hide();
+            $('#loan_type').on('change', function(event) {
+                var value = $(this).val();
+                if (value == "Bank") {
+                    $('.coperative_fields').hide();
+                    $('.bank_detail_fields').show();
+                } else {
+                    $('.bank_detail_fields').hide();
+                    $('.coperative_fields').show();
                 }
             });
         });
@@ -133,14 +39,14 @@
     <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('admin.farmer.farming_detail.index') }}">{{ __('Plot') }}</a>
+            <li class="breadcrumb-item"><a href="{{ route('admin.farmer.bank_details.index') }}">{{ __('Bank Details') }}</a>
             </li>
             <li class="breadcrumb-item">{{ __('Create') }}</li>
         </ol>
     </nav>
 
     <div class="row">
-        {{ Form::open(['url' => 'admin/farmer/farming_detail', 'class' => 'w-100']) }}
+        {{ Form::open(['url' => 'admin/farmer/bank_details', 'class' => 'w-100']) }}
         <div class="col-12">
             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             <input type="hidden" name="created_by" id="created_by" value="{{ Auth::user()->id }}">
@@ -159,135 +65,110 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="form-group col-md-2">
+                            {{ Form::label('finance_category', __('Finance Category'), ['class' => 'form-label']) }}
+                            <br>
+                            <input type="radio" name="finance_category" value="Loan"> Loan
+                            <input type="radio" name="finance_category" value="Non-loan"> Non-loan
+                        </div>
+                        <div class="col-md-6 finance_category_fields" style="display:none;">
                             <div class="form-group">
-                                {{ Form::label('block_id', __('Block'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="block_id" id="block_id"
-                                    placeholder="Select Block" readonly>
-                                    <option value="">{{ __('Select Block') }}</option>
+                                {{ Form::label('loan_type', __('Loan Type'), ['class' => 'form-label']) }}
+                                <select class="form-control select" name="loan_type" id="loan_type"
+                                    placeholder="Select Loan Type">
+                                    <option value="">{{ __('Select') }}</option>
+                                    <option value="Bank">Bank</option>
+                                    <option value="Co-Operative">Co-Operative</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 bank_detail_fields" style="display:none;">
                             <div class="form-group">
-                                {{ Form::label('gram_panchyat_id', __('Gram Panchyat'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="gram_panchyat_id" id="gram_panchyat_id"
-                                    placeholder="Select Gram Panchyat" readonly>
-                                    <option value="">{{ __('Select Gram Panchyat') }}</option>
+                                {{ Form::label('bank', __('Bank'), ['class' => 'form-label']) }}
+                                <select class="form-control select" name="bank" id="bank" placeholder="Select Bank">
+                                    <option value="">{{ __('Select Bank') }}</option>
+                                    <option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
+                                    <option value="Punjab National Bank (PNB)">Punjab National Bank (PNB)</option>
+                                    <option value="Bank of Baroda (BOB)">Bank of Baroda (BOB)</option>
+                                    <option value="Canara Bank">Canara Bank</option>
+                                    <option value="Union Bank of India">Union Bank of India</option>
+                                    <option value="HDFC Bank">HDFC Bank</option>
+                                    <option value="ICICI Bank">ICICI Bank</option>
+                                    <option value="Axis Bank">Axis Bank</option>
+                                    <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+                                    <option value="IndusInd Bank">IndusInd Bank</option>
+                                    <option value="Yes Bank">Yes Bank</option>
+                                    <option value="IDBI Bank">IDBI Bank</option>
+                                    <option value="Central Bank of India">Central Bank of India</option>
+                                    <option value="Indian Bank">Indian Bank</option>
+                                    <option value="Bank of India">Bank of India</option>
+                                    <option value="Oriental Bank of Commerce (OBC)">Oriental Bank of Commerce (OBC)</option>
+                                    <option value="Corporation Bank">Corporation Bank</option>
+                                    <option value="Andhra Bank">Andhra Bank</option>
+                                    <option value="Allahabad Bank">Allahabad Bank</option>
+                                    <option value="Syndicate Bank">Syndicate Bank</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="form-group col-md-6 bank_detail_fields" style="display:none;">
+                            {{ Form::label('account_number', __('Loan Account Number'), ['class' => 'form-label']) }}
+                            {{ Form::text('account_number', '', ['class' => 'form-control']) }}
+                        </div>
+                        <div class="form-group col-md-6 bank_detail_fields" style="display:none;">
+                            {{ Form::label('ifsc_code', __('IFSC Code'), ['class' => 'form-label']) }}
+                            {{ Form::text('ifsc_code', '', ['class' => 'form-control']) }}
+                        </div>
+                        <div class="form-group col-md-6 bank_detail_fields" style="display:none;">
+                            {{ Form::label('branch', __('Branch'), ['class' => 'form-label']) }}
+                            {{ Form::text('branch', '', ['class' => 'form-control']) }}
+                        </div>
+                        <div class="form-group col-md-6 coperative_fields" style="display:none;">
+                            {{ Form::label('name_of_cooperative', __('Co-Operative Name'), ['class' => 'form-label']) }}
+                            {{ Form::text('name_of_cooperative', '', ['class' => 'form-control']) }}
+                        </div>
+                        <div class="form-group col-md-6 coperative_fields" style="display:none;">
+                            {{ Form::label('cooperative_address', __('Co-Operative Branch'), ['class' => 'form-label']) }}
+                            {{ Form::text('cooperative_address', '', ['class' => 'form-control']) }}
+                        </div>
+                        <div class="col-md-6 non_loan_fields" style="display:none;">
                             <div class="form-group">
-                                {{ Form::label('village_id', __('Village'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="village_id" id="village_id"
-                                    placeholder="Select Village" readonly>
-                                    <option value="">{{ __('Select Village') }}</option>
+                                {{ Form::label('bank', __('Bank'), ['class' => 'form-label']) }}
+                                <select class="form-control select" name="non_loan_bank" id="bank" placeholder="Select Bank">
+                                    <option value="">{{ __('Select Bank') }}</option>
+                                    <option value="State Bank of India (SBI)">State Bank of India (SBI)</option>
+                                    <option value="Punjab National Bank (PNB)">Punjab National Bank (PNB)</option>
+                                    <option value="Bank of Baroda (BOB)">Bank of Baroda (BOB)</option>
+                                    <option value="Canara Bank">Canara Bank</option>
+                                    <option value="Union Bank of India">Union Bank of India</option>
+                                    <option value="HDFC Bank">HDFC Bank</option>
+                                    <option value="ICICI Bank">ICICI Bank</option>
+                                    <option value="Axis Bank">Axis Bank</option>
+                                    <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+                                    <option value="IndusInd Bank">IndusInd Bank</option>
+                                    <option value="Yes Bank">Yes Bank</option>
+                                    <option value="IDBI Bank">IDBI Bank</option>
+                                    <option value="Central Bank of India">Central Bank of India</option>
+                                    <option value="Indian Bank">Indian Bank</option>
+                                    <option value="Bank of India">Bank of India</option>
+                                    <option value="Oriental Bank of Commerce (OBC)">Oriental Bank of Commerce (OBC)</option>
+                                    <option value="Corporation Bank">Corporation Bank</option>
+                                    <option value="Andhra Bank">Andhra Bank</option>
+                                    <option value="Allahabad Bank">Allahabad Bank</option>
+                                    <option value="Syndicate Bank">Syndicate Bank</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                {{ Form::label('zone_id', __('Zone'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="zone_id" id="zone_id" readonly
-                                    placeholder="Select Country">
-                                    <option value="">{{ __('Select Zone') }}</option>
-                                </select>
-                            </div>
+                        <div class="form-group col-md-6 non_loan_fields" style="display:none;">
+                            {{ Form::label('account_number', __('Saving Account Number'), ['class' => 'form-label']) }}
+                            {{ Form::text('non_loan_account_number', '', ['class' => 'form-control']) }}
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                {{ Form::label('center_id', __('Center'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="center_id" id="center_id"
-                                    placeholder="Select Center" readonly>
-                                    <option value="">{{ __('Select Center') }}</option>
-                                </select>
-                            </div>
+                        <div class="form-group col-md-6 non_loan_fields" style="display:none;">
+                            {{ Form::label('ifsc_code', __('IFSC Code'), ['class' => 'form-label']) }}
+                            {{ Form::text('non_loan_ifsc_code', '', ['class' => 'form-control']) }}
                         </div>
-                        <div class="form-group col-md-6">
-                            {{ Form::label('plot_number', __('Plot Number'), ['class' => 'form-label']) }}
-                            {{ Form::text('plot_number', $plot_number, ['class' => 'form-control', 'required' => 'required', 'readonly']) }}
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                {{ Form::label('block_id', __('Can Field Block'), ['class' => 'form-label']) }}
-                                <select class="form-control select" id="can_field_block_id" name="can_field_block_id">
-                                    <option value="">{{ __('Select Block') }}</option>
-                                    @foreach ($blocks as $block)
-                                        <option value="{{ $block->id }}">{{ $block->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                {{ Form::label('gram_panchyat_id', __('Can Field Gram Panchyat'), ['class' => 'form-label']) }}
-                                <select class="form-control select" id="can_field_gram_panchyat_id" name="can_field_gram_panchyat_id">
-                                    <option value="">{{ __('Select Gram Panchyat') }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                {{ Form::label('village_id', __('Can Field Village'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="can_field_village_id" id="can_field_village_id"
-                                    placeholder="Select Village">
-                                    <option value="">{{ __('Select Village') }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <!-- <div class="form-group col-md-6">
-                                        {{ Form::label('kata_number', __('Khata Number'), ['class' => 'form-label']) }}
-                                        {{ Form::text('kata_number', '', ['class' => 'form-control', 'required' => 'required']) }}
-                                    </div> -->
-                        <div class="form-group col-md-6">
-                            {{ Form::label('area_in_acar', __('Area in acar'), ['class' => 'form-label']) }}
-                            {{ Form::text('area_in_acar', '', ['class' => 'form-control', 'required' => 'required']) }}
-                        </div>
-                        <div class="form-group col-md-6">
-                            {{ Form::label('date_of_harvesting', __('Date of Planting'), ['class' => 'form-label']) }}
-                            {{ Form::date('date_of_harvesting', '', ['class' => 'form-control', 'required' => 'required']) }}
-                        </div>
-                        <!-- <div class="form-group col-md-6">
-                                        {{ Form::label('quantity', __('Quantity (In K.G)'), ['class' => 'form-label']) }}
-                                        {{ Form::number('quantity', '', ['class' => 'form-control', 'required' => 'required']) }}
-                                    </div> -->
-                        {{-- <div class="form-group col-md-6">
-                            {{ Form::label('tentative_harvest_quantity', __('Tentative Plant Quantity (In Ton)'), ['class' => 'form-label']) }}
-                            {{ Form::number('tentative_harvest_quantity', '', ['class' => 'form-control', 'required' => 'required']) }}
-                        </div> --}}
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                {{ Form::label('seed_category_id', __('Seed Category'), ['class' => 'form-label']) }}
-                                <select class="form-control select" name="seed_category_id" id="seed_category_id" required
-                                    placeholder="Select Seed Category">
-                                    <option value="">{{ __('Select Seed Category') }}</option>
-                                    @foreach ($seed_categories as $seed_category)
-                                        <option value="{{ $seed_category->id }}">{{ $seed_category->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6">
-                            {{ Form::label('type', __('Planting Type'), ['class' => 'form-label']) }} <br>
-                            <input name="type" type="radio" value="Plant"> Plant
-                            <input name="type" type="radio" value="Ratun"> Ratun
-                        </div>
-                        <div class="form-group col-md-6" id="planting_category">
-                            {{ Form::label('type', __('Planting Category'), ['class' => 'form-label']) }}
-                            <select class="form-control select" id="plant_type">
-                                <option value="">{{ __('Select') }}</option>
-                                <option value="Plant">Plant</option>
-                                <option value="Seed">Seed</option>
-                            </select>
-                            <select class="form-control select" id="ratun_type">
-                                <option value="">{{ __('Select') }}</option>
-                                <option value="R-1">R-1</option>
-                                <option value="R-2">R-2</option>
-                                <option value="R-3">R-3</option>
-                                <option value="R-4">R-4</option>
-                                <option value="R-5">R-5</option>
-                            </select>
+                        <div class="form-group col-md-6 non_loan_fields" style="display:none;">
+                            {{ Form::label('branch', __('Branch'), ['class' => 'form-label']) }}
+                            {{ Form::text('non_loan_branch', '', ['class' => 'form-control']) }}
                         </div>
                     </div>
                 </div>
