@@ -121,10 +121,14 @@ class BankDetailsController extends Controller
      */
     public function edit($id)
     {
-        $farmings = Farming::findorfail($id);
-        $farming = Farming::all();
+        if (\Auth::user()->can('edit-bank_detail')) {
+            $farmings = Farming::findorfail($id);
+            $farming = Farming::all();
 
-        return view('admin.farmer.bank_details.edit', compact('farmings', 'farming'));
+            return view('admin.farmer.bank_details.edit', compact('farmings', 'farming'));
+        } else {
+            return redirect()->back()->with('danger', 'Permission denied.');
+        }
     }
 
     /**
@@ -136,7 +140,45 @@ class BankDetailsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (\Auth::user()->can('edit-bank_detail')) {
+            try {
+                $id = $request->farming_id;
+                $farming = Farming::findorfail($id);
+
+                if ($request->finance_category === "Loan") {
+
+                    $farming->finance_category = $request->finance_category;
+                    $farming->non_loan_type = $request->loan_type;
+
+                    if ($request->loan_type === "Bank") {
+
+                        $farming->bank = $request->bank;
+                        $farming->account_number = $request->account_number;
+                        $farming->ifsc_code = $request->ifsc_code;
+                        $farming->branch = $request->branch;
+                    } elseif ($request->loan_type === "Co-Operative") {
+
+                        $farming->name_of_cooperative = $request->name_of_cooperative;
+                        $farming->cooperative_address = $request->cooperative_address;
+                    }
+                } elseif ($request->finance_category === "Non-loan") {
+
+                    $farming->finance_category = $request->finance_category;
+                    $farming->non_loan_type = $request->loan_type;
+                    $farming->bank = $request->non_loan_bank;
+                    $farming->account_number = $request->non_loan_account_number;
+                    $farming->ifsc_code = $request->non_loan_ifsc_code;
+                    $farming->branch = $request->non_loan_branch;
+                }
+                $farming->save();
+
+                return redirect()->to(route('admin.farmer.bank_details.index'))->with('success', 'Bank Details updated Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('danger', 'Permission denied.');
+        }
     }
 
     /**
@@ -147,6 +189,13 @@ class BankDetailsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (\Auth::user()->can('edit-bank_detail')) {
+            $farmings = Farming::findorfail($id);
+            $farmings->delete();
+
+            return redirect()->back()->with('success', 'Bank Details deleted Successfully.');
+        } else {
+            return redirect()->back()->with('danger', 'Permission denied.');
+        }
     }
 }

@@ -503,6 +503,7 @@ Route::group([
 
                 //Bank Details
                 Route::resource('bank_details', BankDetailsController::class);
+                Route::get('bank_details/{id}/destroy', [BankDetailsController::class, 'destroy'])->name('bank_details.destroy');
                 
                 //cutting order
                 Route::post('update_cutting_order', [CuttingOrderController::class, 'updateCuttingOrder'])->name('farming.update_cutting_order');
@@ -605,9 +606,8 @@ Route::group([
         //account system
         Route::resource('bank-account', BankAccountController::class);
         Route::get('bank-account/{id}/destroy', [BankAccountController::class,'destroy'])->name('bank-account.destroy');
-        Route::get('bank-transfer/index', [BankTransferController::class, 'index'])->name('bank-transfer.index');
-        Route::get('bank-transfer/{id}/destroy', [BankTransferController::class, 'destroy'])->name('bank-transfer.destroy');
         Route::resource('bank-transfer', BankTransferController::class);
+        Route::get('bank-transfer/{id}/destroy', [BankTransferController::class, 'destroy'])->name('bank-transfer.destroy');
         Route::get('customer/{id}/show', [CustomerController::class, 'show'])->name('customer.show');
         Route::resource('customer', CustomerController::class);
         //proposal
