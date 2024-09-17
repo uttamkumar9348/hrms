@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\BankBranchController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\BankTransferController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\BudgetController;
@@ -200,6 +202,13 @@ Route::group([
         Route::resource('static-page-contents', StaticPageContentController::class);
         Route::get('static-page-contents/toggle-status/{id}', [StaticPageContentController::class, 'toggleStatus'])->name('static-page-contents.toggle-status');
         Route::get('static-page-contents/delete/{id}', [StaticPageContentController::class, 'delete'])->name('static-page-contents.delete');
+
+        //Banks
+        Route::resource('banks', BankController::class);
+        Route::get('banks/{id}/destroy', [BankController::class, 'destroy'])->name('banks.destroy');
+        
+        //bank_branches
+        Route::resource('bank_branches', BankBranchController::class);
 
         /** Notification route */
         Route::get('notifications/get-nav-notification', [NotificationController::class, 'getNotificationForNavBar'])->name('nav-notifications');

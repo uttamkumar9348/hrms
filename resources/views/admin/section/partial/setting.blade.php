@@ -7,7 +7,9 @@
         request()->routeIs('admin.app-settings.*') ||
         request()->routeIs('admin.feature.*') ||
         request()->routeIs('admin.modules.*') ||
-        request()->routeIs('admin.static-page-contents.*')
+        request()->routeIs('admin.static-page-contents.*') ||
+        request()->routeIs('admin.banks.*') ||
+        request()->routeIs('admin.bank_branches.*')
             ? 'active'
             : '' }}">
         <a class="nav-link" data-bs-toggle="collapse" href="#setting" data-href="#" role="button" aria-expanded="false"
@@ -23,7 +25,9 @@
         request()->routeIs('admin.app-settings.*') ||
         request()->routeIs('admin.feature.*') ||
         request()->routeIs('admin.modules.*') ||
-        request()->routeIs('admin.static-page-contents.*')
+        request()->routeIs('admin.static-page-contents.*') ||
+        request()->routeIs('admin.banks.*') ||
+        request()->routeIs('admin.bank_branches.*')
             ? ''
             : 'collapse' }} "
             id="setting">
@@ -75,6 +79,26 @@
                         class="nav-link {{ request()->routeIs('admin.feature.index') ? 'active' : '' }}"> Feature
                         Control</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ Request::segment(2) == 'banks' || Request::segment(2) == 'bank_branches' ? 'active' : '' }}"
+                        data-bs-toggle="collapse" href="#bank" data-href="#" role="button" aria-expanded="false">
+                        <span> {{ __('Bank') }} </span>
+                        <i class="link-arrow" data-feather="chevron-down"></i>
+                    </a>
+                    <div class="{{ Request::segment(2) == 'banks' || Request::segment(2) == 'bank_branches' ? '' : 'collapse' }}"
+                        id="bank">
+                        <ul class="nav sub-menu">
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::route()->getName() == 'admin.banks.index' || Request::route()->getName() == 'admin.banks.create' || Request::route()->getName() == 'admin.banks.edit' ? ' active' : '' }}"
+                                    href="{{ route('admin.banks.index') }}">{{ __('Banks') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::route()->getName() == 'admin.bank_branches.index' || Request::route()->getName() == 'admin.bank_branches.create' || Request::route()->getName() == 'admin.bank_branches.edit' ? ' active' : '' }}"
+                                    href="{{ route('admin.bank_branches.index') }}">{{ __('Branches') }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 @can('manage-content_management')
                     <li class="nav-item">
                         <a href="{{ route('admin.static-page-contents.index') }}"
@@ -85,6 +109,6 @@
                     </li>
                 @endcan
             </ul>
-        </div>  
+        </div>
     </li>
 @endcanany
