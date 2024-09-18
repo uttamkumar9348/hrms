@@ -105,6 +105,66 @@
                     </div>
                 </li>
                 @endcanany
+                <li class="nav-item">
+                    <a class="nav-link {{ Request::segment(2) == 'banks' || Request::segment(2) == 'bank_branches' ? 'active' : '' }}"
+                        data-bs-toggle="collapse" href="#location" data-href="#" role="button" aria-expanded="false">
+                        <span> {{ __('Location') }} </span>
+                        <i class="link-arrow" data-feather="chevron-down"></i>
+                    </a>
+                    <div class="{{ Request::segment(2) == 'banks' || Request::segment(2) == 'bank_branches' ? '' : 'collapse' }}"
+                        id="location">
+                        <ul class="nav sub-menu">
+                            {{-- @can('manage-bank') --}}
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::route()->getName() == 'admin.country.index' || Request::route()->getName() == 'admin.banks.create' || Request::route()->getName() == 'admin.banks.edit' ? ' active' : '' }}"
+                                    href="{{ route('admin.banks.index') }}">{{ __('Country') }}</a>
+                            </li>
+                            {{-- @endcan --}}
+                            {{-- @can('manage-bank_branch') --}}
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::route()->getName() == 'admin.bank_branches.index' || Request::route()->getName() == 'admin.bank_branches.create' || Request::route()->getName() == 'admin.bank_branches.edit' ? ' active' : '' }}"
+                                    href="{{ route('admin.bank_branches.index') }}">{{ __('State') }}</a>
+                            </li>
+                            {{-- @endcan --}}
+                            {{-- @can('manage-bank_branch') --}}
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::route()->getName() == 'admin.bank_branches.index' || Request::route()->getName() == 'admin.bank_branches.create' || Request::route()->getName() == 'admin.bank_branches.edit' ? ' active' : '' }}"
+                                    href="{{ route('admin.bank_branches.index') }}">{{ __('District') }}</a>
+                            </li>
+                            {{-- @endcan --}}
+                            {{-- @can('manage-bank_branch') --}}
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::route()->getName() == 'admin.bank_branches.index' || Request::route()->getName() == 'admin.bank_branches.create' || Request::route()->getName() == 'admin.bank_branches.edit' ? ' active' : '' }}"
+                                    href="{{ route('admin.bank_branches.index') }}">{{ __('Block') }}</a>
+                            </li>
+                            {{-- @endcan --}}
+                            {{-- @can('manage-bank_branch') --}}
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::route()->getName() == 'admin.bank_branches.index' || Request::route()->getName() == 'admin.bank_branches.create' || Request::route()->getName() == 'admin.bank_branches.edit' ? ' active' : '' }}"
+                                    href="{{ route('admin.bank_branches.index') }}">{{ __('Gram Panchayat') }}</a>
+                            </li>
+                            {{-- @endcan --}}
+                            {{-- @can('manage-bank_branch') --}}
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::route()->getName() == 'admin.bank_branches.index' || Request::route()->getName() == 'admin.bank_branches.create' || Request::route()->getName() == 'admin.bank_branches.edit' ? ' active' : '' }}"
+                                    href="{{ route('admin.bank_branches.index') }}">{{ __('Village') }}</a>
+                            </li>
+                            {{-- @endcan --}}
+                            {{-- @can('manage-bank_branch') --}}
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::route()->getName() == 'admin.bank_branches.index' || Request::route()->getName() == 'admin.bank_branches.create' || Request::route()->getName() == 'admin.bank_branches.edit' ? ' active' : '' }}"
+                                    href="{{ route('admin.bank_branches.index') }}">{{ __('Zone') }}</a>
+                            </li>
+                            {{-- @endcan --}}
+                            {{-- @can('manage-bank_branch') --}}
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::route()->getName() == 'admin.bank_branches.index' || Request::route()->getName() == 'admin.bank_branches.create' || Request::route()->getName() == 'admin.bank_branches.edit' ? ' active' : '' }}"
+                                    href="{{ route('admin.bank_branches.index') }}">{{ __('Center') }}</a>
+                            </li>
+                            {{-- @endcan --}}
+                        </ul>
+                    </div>
+                </li>
                 @can('manage-content_management')
                     <li class="nav-item">
                         <a href="{{ route('admin.static-page-contents.index') }}"

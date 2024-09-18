@@ -41,7 +41,7 @@
                                     <tr class="font-style">
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $data->name }}</td>
-                                        <td>{{ $data->bank->name }}</td>
+                                        <td>{{ ($data->bank_id != 0) ? $data->bank->name : '-' }}</td>
                                         <td>{{ $data->ifsc_code }}</td>
                                         @if (Gate::check('edit-bank_branch') || Gate::check('delete-bank_branch'))
                                             <td class="Action">
