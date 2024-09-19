@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
     {{__('Manage Product-Service & Income-Expense Category')}}
 @endsection
 @section('breadcrumb')

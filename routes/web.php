@@ -23,6 +23,14 @@ use App\Http\Controllers\Farming\SeedCategoryController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\Location\BlockController;
+use App\Http\Controllers\Location\CenterController;
+use App\Http\Controllers\Location\CountryController;
+use App\Http\Controllers\Location\DistrictController;
+use App\Http\Controllers\Location\GramPanchyatController;
+use App\Http\Controllers\Location\StateController;
+use App\Http\Controllers\Location\VillageController;
+use App\Http\Controllers\Location\ZoneController;
 use App\Http\Controllers\ModulesController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionsController;
@@ -518,6 +526,31 @@ Route::group([
                 //cutting order
                 Route::post('update_cutting_order', [CuttingOrderController::class, 'updateCuttingOrder'])->name('farming.update_cutting_order');
                 Route::resource('cutting_order', CuttingOrderController::class);
+            }
+        );
+
+        //location
+        Route::group(
+            [
+                'prefix' => 'location',
+                'as'=>'location.',
+            ], function () {
+                Route::resource('country',CountryController::class);
+                Route::get('country/{id}/destroy',[CountryController::class, 'destroy'])->name('country.destroy');
+                Route::resource('state',StateController::class);
+                Route::get('state/{id}/destroy',[StateController::class, 'destroy'])->name('state.destroy');
+                Route::resource('district',DistrictController::class);
+                Route::get('district/{id}/destroy',[DistrictController::class, 'destroy'])->name('district.destroy');
+                Route::resource('block',BlockController::class);
+                Route::get('block/{id}/destroy',[BlockController::class, 'destroy'])->name('block.destroy');
+                Route::resource('gram_panchyat',GramPanchyatController::class);
+                Route::get('gram_panchyat/{id}/destroy',[GramPanchyatController::class, 'destroy'])->name('gram_panchyat.destroy');
+                Route::resource('village',VillageController::class);
+                Route::get('village/{id}/destroy',[VillageController::class, 'destroy'])->name('village.destroy');
+                Route::resource('zone',ZoneController::class);
+                Route::get('zone/{id}/destroy',[ZoneController::class, 'destroy'])->name('zone.destroy');
+                Route::resource('center',CenterController::class);
+                Route::get('center/{id}/destroy',[CenterController::class, 'destroy'])->name('center.destroy');
             }
         );
 

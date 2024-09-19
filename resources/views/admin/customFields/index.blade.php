@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('page-title')
+@extends('layouts.master')
+@section('title')
     {{__('Manage Custom Field')}}
 @endsection
 @section('breadcrumb')
@@ -17,7 +17,7 @@
     </div>
 @endsection
 
-@section('content')
+@section('main-content')
     <div class="row">
         <div class="col-3">
             @include('layouts.account_setup')
