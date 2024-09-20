@@ -54,14 +54,13 @@ class BankBranchController extends Controller
                 [
                     'bank_id' => 'required',
                     'name' => 'required',
-                    'ifsc_code' => 'required',
                 ]
             );
 
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
-                return redirect()->route('admin.bank_branches.create')->with('error', $messages->first());
+                return redirect()->back()->with('error', $messages->first());
             }
 
             $bank = new Bank_branch();
@@ -120,14 +119,13 @@ class BankBranchController extends Controller
                 [
                     'bank_id' => 'required',
                     'name' => 'required',
-                    'ifsc_code' => 'required',
                 ]
             );
 
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
-                return redirect()->route('admin.bank_branches.create')->with('error', $messages->first());
+                return redirect()->back()->with('error', $messages->first());
             }
 
             $bank_branch = Bank_branch::findorfail($id);

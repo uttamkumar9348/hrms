@@ -17,8 +17,12 @@ class BlockController extends Controller
      */
     public function index()
     {
-        $blocks = Block::all();
-        return view('location.block.index',compact('blocks'));
+        if (\Auth::user()->can('manage-block')) {
+            $blocks = Block::all();
+            return view('admin.location.block.index', compact('blocks'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -28,9 +32,13 @@ class BlockController extends Controller
      */
     public function create()
     {
-        $districts = District::all()->pluck('name', 'id');
-        $districts->prepend('Select District', '');
-        return view('location.block.create',compact('districts'));
+        if (\Auth::user()->can('create-block')) {
+            $districts = District::all()->pluck('name', 'id');
+            $districts->prepend('Select District', '');
+            return view('admin.location.block.create', compact('districts'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -40,17 +48,20 @@ class BlockController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {  
-        try{
-            $this->validate($request,[
-                'name' => 'required',
-                'district_id' => 'required',
-            ]);
-            Block::create($request->all());
-            return redirect()->back()->with('success', 'Block Added Successfully.');
-        }catch (Exception $e)
-        {
-            return redirect()->back()->with('error', $e->getMessage());
+    {
+        if (\Auth::user()->can('create-block')) {
+            try {
+                $this->validate($request, [
+                    'name' => 'required',
+                    'district_id' => 'required',
+                ]);
+                Block::create($request->all());
+                return redirect()->back()->with('success', 'Block Added Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
@@ -73,9 +84,13 @@ class BlockController extends Controller
      */
     public function edit(Block $block)
     {
-        $districts = District::all()->pluck('name', 'id');
-        $districts->prepend('Select District', '');
-        return view('location.block.edit', compact('block','districts'));
+        if (\Auth::user()->can('edit-block')) {
+            $districts = District::all()->pluck('name', 'id');
+            $districts->prepend('Select District', '');
+            return view('admin.location.block.edit', compact('block', 'districts'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -85,11 +100,15 @@ class BlockController extends Controller
      * @param  \App\Models\Block  $block
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-        $block = Block::find($id);
-        $block->update($request->all());
-        return redirect()->back()->with('success', 'Block Updated Successfully.'); 
+        if (\Auth::user()->can('edit-block')) {
+            $block = Block::find($id);
+            $block->update($request->all());
+            return redirect()->back()->with('success', 'Block Updated Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -100,8 +119,12 @@ class BlockController extends Controller
      */
     public function destroy($id)
     {
-        $block = Block::find($id);
-        $block->delete();
-        return redirect()->back()->with('success', 'Block Deleted Successfully.');
+        if (\Auth::user()->can('delete-block')) {
+            $block = Block::find($id);
+            $block->delete();
+            return redirect()->back()->with('success', 'Block Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 }

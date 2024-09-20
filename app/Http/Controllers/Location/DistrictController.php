@@ -17,8 +17,12 @@ class DistrictController extends Controller
      */
     public function index()
     {
-        $districts = District::all();
-        return view('admin.location.district.index',compact('districts'));
+        if (\Auth::user()->can('manage-district')) {
+            $districts = District::all();
+            return view('admin.location.district.index', compact('districts'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -28,9 +32,13 @@ class DistrictController extends Controller
      */
     public function create()
     {
-        $states = State::all()->pluck('name', 'id');
-        $states->prepend('Select State', '');
-        return view('admin.location.district.create',compact('states'));
+        if (\Auth::user()->can('create-district')) {
+            $states = State::all()->pluck('name', 'id');
+            $states->prepend('Select State', '');
+            return view('admin.location.district.create', compact('states'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -41,16 +49,19 @@ class DistrictController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            $this->validate($request,[
-                'name' => 'required',
-                'state_id' => 'required',
-            ]);
-            District::create($request->all());
-            return redirect()->back()->with('success', 'District Added Successfully.');
-        }catch (Exception $e)
-        {
-            return redirect()->back()->with('error', $e->getMessage());
+        if (\Auth::user()->can('create-district')) {
+            try {
+                $this->validate($request, [
+                    'name' => 'required',
+                    'state_id' => 'required',
+                ]);
+                District::create($request->all());
+                return redirect()->route('admin.location.district.index')->with('success', 'District Added Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
@@ -73,9 +84,13 @@ class DistrictController extends Controller
      */
     public function edit(District $district)
     {
-        $states = State::all()->pluck('name', 'id');
-        $states->prepend('Select State', '');
-        return view('admin.location.district.edit', compact('district','states'));
+        if (\Auth::user()->can('edit-district')) {
+            $states = State::all()->pluck('name', 'id');
+            $states->prepend('Select State', '');
+            return view('admin.location.district.edit', compact('district', 'states'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -85,11 +100,15 @@ class DistrictController extends Controller
      * @param  \App\Models\District  $district
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-        $district = District::find($id);
-        $district->update($request->all());
-        return redirect()->back()->with('success', 'District Updated Successfully.'); 
+        if (\Auth::user()->can('edit-district')) {
+            $district = District::find($id);
+            $district->update($request->all());
+            return redirect()->route('admin.location.district.index')->with('success', 'District Updated Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -100,8 +119,12 @@ class DistrictController extends Controller
      */
     public function destroy($id)
     {
-        $district = District::find($id);
-        $district->delete();
-        return redirect()->back()->with('success', 'District Deleted Successfully.');
+        if (\Auth::user()->can('delete-district')) {
+            $district = District::find($id);
+            $district->delete();
+            return redirect()->back()->with('success', 'District Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 }

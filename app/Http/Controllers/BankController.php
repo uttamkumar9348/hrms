@@ -57,7 +57,7 @@ class BankController extends Controller
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
-                return redirect()->route('admin.banks.create')->with('error', $messages->first());
+                return redirect()->back()->with('error', $messages->first());
             }
 
             $bank = new Bank;
@@ -118,7 +118,7 @@ class BankController extends Controller
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
-                return redirect()->route('admin.banks.create')->with('error', $messages->first());
+                return redirect()->back()->with('error', $messages->first());
             }
 
             $bank = Bank::findorfail($id);
