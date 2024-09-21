@@ -2,16 +2,6 @@
 @section('title')
     {{ __('Block') }}
 @endsection
-@section('action-btn')
-    <div class="float-end">
-        <a href="#" data-size="lg" data-url="{{ route('location.block.create') }}" data-ajax-popup="true"
-            data-bs-toggle="tooltip" title="{{ __('Create') }}" data-title="{{ __('Create Block') }}"
-            class="btn btn-sm btn-primary">
-            <i class="ti ti-plus"></i>
-        </a>
-    </div>
-@endsection
-
 @section('main-content')
     @include('admin.section.flash_message')
     <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
@@ -35,40 +25,41 @@
                         <table class="table datatable">
                             <thead>
                                 <tr>
+                                    <th>{{ __('Sl No.') }}</th>
                                     <th>{{ __('Name') }}</th>
                                     <th>{{ __('District') }}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($blocks as $block)
+                                @foreach ($blocks as $key=>$block)
                                     <tr class="font-style">
+                                        <td>{{ $key + 1 }}</td>
                                         <td>{{ $block->name }}</td>
-                                        <td>{{ @$block->district->name }}</td>
+                                        <td>{{ $block->district->name }}</td>
                                         <td class="Action">
-                                            <div class="action-btn bg-info ms-2">
-                                                <a href="#" class="mx-3 btn btn-sm  align-items-center"
-                                                    data-url="{{ route('location.block.edit', $block->id) }}"
-                                                    data-ajax-popup="true" data-size="lg " data-bs-toggle="tooltip"
-                                                    title="{{ __('Edit') }}" data-title="{{ __('Edit Block') }}">
-                                                    <i class="ti ti-pencil text-white"></i>
-                                                </a>
-                                            </div>
-                                            <div class="action-btn bg-danger ms-2">
-                                                {!! Form::open([
-                                                    'method' => 'DELETE',
-                                                    'route' => ['location.block.destroy', $block->id],
-                                                    'id' => 'delete-form-' . $block->id,
-                                                ]) !!}
-                                                <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para"
-                                                    data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
-                                                        class="ti ti-trash text-white"></i></a>
-                                                {!! Form::close() !!}
-                                            </div>
+                                            <ul class="d-flex list-unstyled mb-0">
+                                                @can('edit-block')
+                                                <li class="me-2">
+                                                    <a href="{{ route('admin.location.block.edit', $block->id) }}"
+                                                        title="{{ __('Edit') }}">
+                                                        <i class="link-icon" data-feather="edit"></i>
+                                                    </a>
+                                                </li>
+                                                @endcan
+                                                @can('delete-block')
+                                                <li>
+                                                    <a class="deleteBtn" href="#"
+                                                        data-href="{{ route('admin.location.block.destroy', $block->id) }}"
+                                                        title="{{ __('Delete') }}">
+                                                        <i class="link-icon" data-feather="delete"></i>
+                                                    </a>
+                                                </li>
+                                                @endcan
+                                            </ul>
                                         </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>

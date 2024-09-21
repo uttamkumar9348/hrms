@@ -14,8 +14,12 @@ class SeedCategoryController extends Controller
      */
     public function index()
     {
-        $seed_categories = SeedCategory::all();
-        return view('admin.farmer.seed_category.index',compact('seed_categories'));
+        if (\Auth::user()->can('manage-seed_category')) {
+            $seed_categories = SeedCategory::all();
+            return view('admin.farmer.seed_category.index', compact('seed_categories'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -23,7 +27,11 @@ class SeedCategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.farmer.seed_category.create');
+        if (\Auth::user()->can('create-seed_category')) {
+            return view('admin.farmer.seed_category.create');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -31,15 +39,20 @@ class SeedCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            $this->validate($request,[
-                'name' => 'required',
-            ]);
-            SeedCategory::create($request->all());
-            return redirect()->route('admin.farmer.seed_category.index')->with('success', 'Seed Category Added Successfully.');
-        }catch (Exception $e)
-        {
-            return redirect()->back()->with('error', $e->getMessage());
+        if (\Auth::user()->can('create-seed_category')) {
+            try {
+                $this->validate($request, [
+                    'name' => 'required',
+                    'category' => 'required',
+                    'type' => 'required',
+                ]);
+                SeedCategory::create($request->all());
+                return redirect()->route('admin.farmer.seed_category.index')->with('success', 'Seed Category Added Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
@@ -56,17 +69,25 @@ class SeedCategoryController extends Controller
      */
     public function edit(SeedCategory $seedCategory)
     {
-        return view('admin.farmer.seed_category.edit', compact('seedCategory'));
+        if (\Auth::user()->can('edit-seed_category')) {
+            return view('admin.farmer.seed_category.edit', compact('seedCategory'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-        $seedCategory = SeedCategory::find($id);
-        $seedCategory->update($request->all());
-        return redirect()->route('admin.farmer.seed_category.index')->with('success', 'Seed Category Updated Successfully.'); 
+        if (\Auth::user()->can('edit-seed_category')) {
+            $seedCategory = SeedCategory::find($id);
+            $seedCategory->update($request->all());
+            return redirect()->route('admin.farmer.seed_category.index')->with('success', 'Seed Category Updated Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -74,8 +95,12 @@ class SeedCategoryController extends Controller
      */
     public function destroy($id)
     {
-        $seedCategory = SeedCategory::find($id);
-        $seedCategory->delete();
-        return redirect()->back()->with('success', 'Seed Category Deleted Successfully.');
+        if (\Auth::user()->can('delete-seed_category')) {
+            $seedCategory = SeedCategory::find($id);
+            $seedCategory->delete();
+            return redirect()->back()->with('success', 'Seed Category Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 }

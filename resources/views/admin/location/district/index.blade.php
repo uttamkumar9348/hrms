@@ -40,12 +40,15 @@
                                         <td>{{ @$district->state->name }}</td>
                                         <td class="Action">
                                             <ul class="d-flex list-unstyled mb-0">
+                                                @can('edit-district')
                                                 <li class="me-2">
                                                     <a href="{{ route('admin.location.district.edit', $district->id) }}"
                                                         title="{{ __('Edit') }}">
                                                         <i class="link-icon" data-feather="edit"></i>
                                                     </a>
                                                 </li>
+                                                @endcan
+                                                @can('delete-district')
                                                 <li>
                                                     <a class="deleteBtn" href="#"
                                                         data-href="{{ route('admin.location.district.destroy', $district->id) }}"
@@ -53,6 +56,7 @@
                                                         <i class="link-icon" data-feather="delete"></i>
                                                     </a>
                                                 </li>
+                                                @endcan
                                             </ul>
                                         </td>
                                     </tr>

@@ -22,6 +22,7 @@ use App\Http\Controllers\Farming\GuarantorController;
 use App\Http\Controllers\Farming\SeedCategoryController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\IrrigationController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\Location\BlockController;
 use App\Http\Controllers\Location\CenterController;
@@ -730,6 +731,9 @@ Route::group([
         //taxes
         Route::resource('taxes', TaxController::class);
         Route::get('print-setting', [SystemController::class, 'printIndex'])->name('print.setting');
+        //irrigation
+        Route::resource('irrigation', IrrigationController::class);
+        Route::get('irrigation/{id}/destroy', [IrrigationController::class, 'destroy'])->name('irrigation.destroy');
     });
 });
 

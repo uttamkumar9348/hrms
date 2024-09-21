@@ -15,8 +15,12 @@ class CenterController extends Controller
      */
     public function index()
     {
-        $centers = Center::all();
-        return view('location.center.index',compact('centers'));
+        if (\Auth::user()->can('manage-center')) {
+            $centers = Center::all();
+            return view('admin.location.center.index', compact('centers'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -24,9 +28,13 @@ class CenterController extends Controller
      */
     public function create()
     {
-        $zones = Zone::all()->pluck('name', 'id');
-        $zones->prepend('Select Zone', '');
-        return view('location.center.create',compact('zones'));
+        if (\Auth::user()->can('create-center')) {
+            $zones = Zone::all()->pluck('name', 'id');
+            $zones->prepend('Select Zone', '');
+            return view('admin.location.center.create', compact('zones'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -34,16 +42,19 @@ class CenterController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            $this->validate($request,[
-                'name' => 'required',
-                'zone_id' => 'required',
-            ]);
-            Center::create($request->all());
-            return redirect()->back()->with('success', 'Center Added Successfully.');
-        }catch (Exception $e)
-        {
-            return redirect()->back()->with('error', $e->getMessage());
+        if (\Auth::user()->can('create-center')) {
+            try {
+                $this->validate($request, [
+                    'name' => 'required',
+                    'zone_id' => 'required',
+                ]);
+                Center::create($request->all());
+                return redirect()->route('admin.location.center.index')->with('success', 'Center Added Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
@@ -60,19 +71,27 @@ class CenterController extends Controller
      */
     public function edit(Center $center)
     {
-        $zones = Zone::all()->pluck('name', 'id');
-        $zones->prepend('Select Zone', '');
-        return view('location.center.edit', compact('center','zones'));
+        if (\Auth::user()->can('edit-center')) {
+            $zones = Zone::all()->pluck('name', 'id');
+            $zones->prepend('Select Zone', '');
+            return view('admin.location.center.edit', compact('center', 'zones'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-        $center = Center::find($id);
-        $center->update($request->all());
-        return redirect()->back()->with('success', 'Center Updated Successfully.'); 
+        if (\Auth::user()->can('edit-center')) {
+            $center = Center::find($id);
+            $center->update($request->all());
+            return redirect()->route('admin.location.center.index')->with('success', 'Center Updated Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -80,8 +99,12 @@ class CenterController extends Controller
      */
     public function destroy($id)
     {
-        $center = Center::find($id);
-        $center->delete();
-        return redirect()->back()->with('success', 'Center Deleted Successfully.');
+        if (\Auth::user()->can('delete-center')) {
+            $center = Center::find($id);
+            $center->delete();
+            return redirect()->back()->with('success', 'Center Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 }

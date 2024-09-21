@@ -17,8 +17,12 @@ class GramPanchyatController extends Controller
      */
     public function index()
     {
-        $gram_panchyats = GramPanchyat::all();
-        return view('location.gram_panchyat.index',compact('gram_panchyats'));
+        if (\Auth::user()->can('manage-gram_panchyat')) {
+            $gram_panchyats = GramPanchyat::all();
+            return view('admin.location.gram_panchyat.index', compact('gram_panchyats'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -28,9 +32,13 @@ class GramPanchyatController extends Controller
      */
     public function create()
     {
-        $blocks = Block::all()->pluck('name', 'id');
-        $blocks->prepend('Select Block', '');
-        return view('location.gram_panchyat.create',compact('blocks'));
+        if (\Auth::user()->can('create-gram_panchyat')) {
+            $blocks = Block::all()->pluck('name', 'id');
+            $blocks->prepend('Select Block', '');
+            return view('admin.location.gram_panchyat.create', compact('blocks'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -41,16 +49,19 @@ class GramPanchyatController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            $this->validate($request,[
-                'name' => 'required',
-                'block_id' => 'required',
-            ]);
-            GramPanchyat::create($request->all());
-            return redirect()->back()->with('success', 'Gram Panchyat Added Successfully.');
-        }catch (Exception $e)
-        {
-            return redirect()->back()->with('error', $e->getMessage());
+        if (\Auth::user()->can('create-gram_panchyat')) {
+            try {
+                $this->validate($request, [
+                    'name' => 'required',
+                    'block_id' => 'required',
+                ]);
+                GramPanchyat::create($request->all());
+                return redirect()->route('admin.location.gram_panchyat.index')->with('success', 'Gram Panchyat Added Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
@@ -73,9 +84,13 @@ class GramPanchyatController extends Controller
      */
     public function edit(GramPanchyat $gramPanchyat)
     {
-        $blocks = Block::all()->pluck('name', 'id');
-        $blocks->prepend('Select Block', '');
-        return view('location.gram_panchyat.edit', compact('gramPanchyat','blocks'));
+        if (\Auth::user()->can('edit-gram_panchyat')) {
+            $blocks = Block::all()->pluck('name', 'id');
+            $blocks->prepend('Select Block', '');
+            return view('admin.location.gram_panchyat.edit', compact('gramPanchyat', 'blocks'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -85,11 +100,15 @@ class GramPanchyatController extends Controller
      * @param  \App\Models\GramPanchyat  $gramPanchyat
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-        $gramPanchyat = GramPanchyat::find($id);
-        $gramPanchyat->update($request->all());
-        return redirect()->back()->with('success', 'Gram Panchyat Updated Successfully.'); 
+        if (\Auth::user()->can('edit-gram_panchyat')) {
+            $gramPanchyat = GramPanchyat::find($id);
+            $gramPanchyat->update($request->all());
+            return redirect()->route('admin.location.gram_panchyat.index')->with('success', 'Gram Panchyat Updated Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -100,8 +119,12 @@ class GramPanchyatController extends Controller
      */
     public function destroy($id)
     {
-        $gramPanchyat = GramPanchyat::find($id);
-        $gramPanchyat->delete();
-        return redirect()->back()->with('success', 'Gram Panchyat Deleted Successfully.');
+        if (\Auth::user()->can('delete-gram_panchyat')) {
+            $gramPanchyat = GramPanchyat::find($id);
+            $gramPanchyat->delete();
+            return redirect()->back()->with('success', 'Gram Panchyat Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 }

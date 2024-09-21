@@ -56,7 +56,7 @@ class BlockController extends Controller
                     'district_id' => 'required',
                 ]);
                 Block::create($request->all());
-                return redirect()->back()->with('success', 'Block Added Successfully.');
+                return redirect()->route('admin.location.block.index')->with('success', 'Block Added Successfully.');
             } catch (Exception $e) {
                 return redirect()->back()->with('error', $e->getMessage());
             }
@@ -105,7 +105,7 @@ class BlockController extends Controller
         if (\Auth::user()->can('edit-block')) {
             $block = Block::find($id);
             $block->update($request->all());
-            return redirect()->back()->with('success', 'Block Updated Successfully.');
+            return redirect()->route('admin.location.block.index')->with('success', 'Block Updated Successfully.');
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }

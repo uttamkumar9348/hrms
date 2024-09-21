@@ -17,8 +17,12 @@ class VillageController extends Controller
      */
     public function index()
     {
-        $villages = Village::all();
-        return view('location.village.index',compact('villages'));
+        if (\Auth::user()->can('manage-village')) {
+            $villages = Village::all();
+            return view('admin.location.village.index', compact('villages'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -28,9 +32,13 @@ class VillageController extends Controller
      */
     public function create()
     {
-        $gram_panchyats = GramPanchyat::all()->pluck('name', 'id');
-        $gram_panchyats->prepend('Select GP', '');
-        return view('location.village.create',compact('gram_panchyats'));
+        if (\Auth::user()->can('create-village')) {
+            $gram_panchyats = GramPanchyat::all()->pluck('name', 'id');
+            $gram_panchyats->prepend('Select GP', '');
+            return view('admin.location.village.create', compact('gram_panchyats'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -40,17 +48,20 @@ class VillageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {  
-        try{
-            $this->validate($request,[
-                'name' => 'required',
-                'gram_panchyat_id' => 'required',
-            ]);
-            Village::create($request->all());
-            return redirect()->back()->with('success', 'Village Added Successfully.');
-        }catch (Exception $e)
-        {
-            return redirect()->back()->with('error', $e->getMessage());
+    {
+        if (\Auth::user()->can('create-village')) {
+            try {
+                $this->validate($request, [
+                    'name' => 'required',
+                    'gram_panchyat_id' => 'required',
+                ]);
+                Village::create($request->all());
+                return redirect()->route('admin.location.village.index')->with('success', 'Village Added Successfully.');
+            } catch (Exception $e) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
@@ -73,9 +84,13 @@ class VillageController extends Controller
      */
     public function edit(Village $village)
     {
-        $gram_panchyats = GramPanchyat::all()->pluck('name', 'id');
-        $gram_panchyats->prepend('Select GP', '');
-        return view('location.village.edit', compact('village','gram_panchyats'));
+        if (\Auth::user()->can('edit-village')) {
+            $gram_panchyats = GramPanchyat::all()->pluck('name', 'id');
+            $gram_panchyats->prepend('Select GP', '');
+            return view('admin.location.village.edit', compact('village', 'gram_panchyats'));
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -85,11 +100,15 @@ class VillageController extends Controller
      * @param  \App\Models\Village  $village
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
-        $village = Village::find($id);
-        $village->update($request->all());
-        return redirect()->back()->with('success', 'Village Updated Successfully.'); 
+        if (\Auth::user()->can('edit-village')) {
+            $village = Village::find($id);
+            $village->update($request->all());
+            return redirect()->route('admin.location.village.index')->with('success', 'Village Updated Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 
     /**
@@ -100,8 +119,12 @@ class VillageController extends Controller
      */
     public function destroy($id)
     {
-        $village = Village::find($id);
-        $village->delete();
-        return redirect()->back()->with('success', 'Village Deleted Successfully.');
+        if (\Auth::user()->can('delete-village')) {
+            $village = Village::find($id);
+            $village->delete();
+            return redirect()->back()->with('success', 'Village Deleted Successfully.');
+        } else {
+            return redirect()->back()->with('error', __('Permission denied.'));
+        }
     }
 }

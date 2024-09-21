@@ -53,7 +53,7 @@
                     <a href="{{ route('admin.location.country.index') }}" class="btn btn-light">
                         Cancel
                     </a>
-                    <input type="submit" value="{{ __('Edit') }}" class="btn  btn-primary">
+                    <input type="submit" value="{{ __('Update') }}" class="btn  btn-primary">
                 </div>
                 {{ Form::close() }}
             </div>
