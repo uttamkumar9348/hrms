@@ -93,7 +93,7 @@
                     </ul>
                 </div>
             </li>
-            @if (Gate::check('manage invoice') || Gate::check('manage revenue') || Gate::check('manage credit note'))
+            {{-- @if (Gate::check('manage invoice') || Gate::check('manage revenue') || Gate::check('manage credit note'))
                 <li
                     class="nav-item {{ Request::segment(2) == 'customer' || Request::segment(2) == 'proposal' || Request::segment(2) == 'invoice' || Request::segment(2) == 'revenue' || Request::segment(2) == 'credit-note' ? 'active' : '' }}">
                     <a class="nav-link" data-bs-toggle="collapse" href="#sales" data-href="#" role="button"
@@ -229,12 +229,11 @@
                     <a class="nav-link" href="{{ route('admin.taxes.index') }}">{{ __('Accounting Setup') }}</a>
                 </li>
             @endif
-
             @if (Gate::check('manage print settings'))
                 <li class="nav-item {{ Request::route()->getName() == 'print-setting' ? ' active' : '' }}">
                     <a class="nav-link" href="{{ route('admin.print.setting') }}">{{ __('Print Settings') }}</a>
                 </li>
-            @endif
+            @endif --}}
         </ul>
     </div>
 </li>

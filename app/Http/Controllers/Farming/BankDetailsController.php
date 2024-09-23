@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Farming;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bank;
 use App\Models\Block;
 use App\Models\Farming;
 use App\Models\FarmingDetail;
@@ -46,8 +47,9 @@ class BankDetailsController extends Controller
                 ->where('farmings.created_by', Auth::user()->id)
                 ->orWhere('users.supervisor_id', Auth::user()->id)
                 ->get();
+            $banks = Bank::all();
 
-            return view('admin.farmer.bank_details.create', compact('farmings'));
+            return view('admin.farmer.bank_details.create', compact('farmings', 'banks'));
         } else {
             return redirect()->back()->with('danger', 'Permission denied.');
         }

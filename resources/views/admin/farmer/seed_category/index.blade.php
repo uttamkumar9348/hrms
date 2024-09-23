@@ -24,16 +24,22 @@
                         <table class="table datatable">
                             <thead>
                                 <tr>
+                                    <th>{{ __('Sl No.') }}</th>
                                     <th>{{ __('Name') }}</th>
+                                    <th>{{ __('Category') }}</th>
+                                    <th>{{ __('Type') }}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($seed_categories as $seed_category)
+                                @foreach ($seed_categories as $key=>$seed_category)
                                     <tr class="font-style">
+                                        <td>{{ $key + 1 }}</td>
                                         <td>{{ $seed_category->name }}</td>
+                                        <td>{{ $seed_category->category }}</td>
+                                        <td>{{ $seed_category->type }}</td>
                                         <td class="Action">
-                                            <ul class="d-flex list-unstyled mb-0 justify-content-center">
+                                            <ul class="d-flex list-unstyled mb-0">
                                                 <li class="me-2">
                                                     <a href="{{ route('admin.farmer.seed_category.edit', $seed_category->id) }}"
                                                         data-bs-toggle="tooltip" title="{{ __('Edit') }}">
@@ -41,7 +47,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a data-href="{{ route('admin.farmer.seed_category.destroy', $seed_category->id) }}"
+                                                    <a href="" data-href="{{ route('admin.farmer.seed_category.destroy', $seed_category->id) }}"
                                                         class="deleteBtn" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                                                         <i class="link-icon" data-feather="delete"></i>
                                                     </a>

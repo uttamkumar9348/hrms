@@ -13,6 +13,7 @@ use App\Models\FarmingDetail;
 use App\Models\FarmingPayment;
 use App\Models\GramPanchyat;
 use App\Models\Guarantor;
+use App\Models\Irrigation;
 use App\Models\SeedCategory;
 use App\Models\State;
 use App\Models\Village;
@@ -47,7 +48,9 @@ class FarmingController extends Controller
         if (\Auth::user()->can('create-farmer_registration')) {
             $countries = Country::all();
             $zones = Zone::all();
-            return view('admin.farmer.registration.create', compact('countries', 'zones'));
+            $irrigations = Irrigation::all();
+
+            return view('admin.farmer.registration.create', compact('countries', 'zones', 'irrigations'));
         } else {
             return redirect()->back()->with('error', 'Permission denied.');
         }
@@ -262,6 +265,31 @@ class FarmingController extends Controller
             'block' => $block->name,
             'gram_panchyat' => $gram_panchyat->name,
             'village' => $village->name,
+        ]);
+    }
+
+    public function get_zone_center(Request $request)
+    {
+        $village = Village::findorfail($request->village_id);
+        $zone = Zone::findorfail($village->zone_id);
+        $center = Center::findorfail($village->center_id);
+
+        return response()->json([
+            'zone' => $zone,
+            'center' => $center,
+        ]);
+    }
+
+    public function get_bank_branches(Request $request)
+    {
+        dd($request->all());
+        $village = Village::findorfail($request->village_id);
+        $zone = Zone::findorfail($village->zone_id);
+        $center = Center::findorfail($village->center_id);
+
+        return response()->json([
+            'zone' => $zone,
+            'center' => $center,
         ]);
     }
 

@@ -29,6 +29,8 @@
                                     <th>{{ __('Sl No.') }}</th>
                                     <th>{{ __('Name') }}</th>
                                     <th>{{ __('Gram Panchyat') }}</th>
+                                    <th>{{ __('Zone') }}</th>
+                                    <th>{{ __('Center') }}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>
@@ -37,7 +39,9 @@
                                     <tr class="font-style">
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $village->name }}</td>
-                                        <td>{{ @$village->gram_panchyat->name }}</td>
+                                        <td>{{ $village->gram_panchyat->name }}</td>
+                                        <td>{{ ($village->zone_id != '') ? $village->zone->name:'-' }}</td>
+                                        <td>{{ ($village->center_id != '') ? $village->center->name:'-' }}</td>
                                         <td class="Action">
                                             <ul class="d-flex list-unstyled mb-0">
                                                 <li class="me-2">

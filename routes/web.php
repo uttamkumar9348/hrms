@@ -476,6 +476,8 @@ Route::group([
                 Route::post('location/get_villages', [FarmingController::class, 'getVillages'])->name('location.get_villages');
                 Route::post('location/get_centers', [FarmingController::class, 'getCenters'])->name('location.get_centers');
                 Route::post('location/get_country_state', [FarmingController::class, 'get_country_state'])->name('location.get_country_state');
+                Route::post('location/get_zone_center', [FarmingController::class, 'get_zone_center'])->name('location.get_zone_center');
+                Route::post('location/get_bank_branches', [FarmingController::class, 'get_bank_branches'])->name('location.get_bank_branches');
 
                 //registration
                 Route::get('farming_registration/validate/{id}', [FarmingController::class, 'validateProfile'])->name('farming_registration.validate');

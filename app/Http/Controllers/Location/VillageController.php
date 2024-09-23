@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Location;
 
 use App\Http\Controllers\Controller;
+use App\Models\Center;
 use App\Models\GramPanchyat;
 use App\Models\Village;
+use App\Models\Zone;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -35,7 +37,12 @@ class VillageController extends Controller
         if (\Auth::user()->can('create-village')) {
             $gram_panchyats = GramPanchyat::all()->pluck('name', 'id');
             $gram_panchyats->prepend('Select GP', '');
-            return view('admin.location.village.create', compact('gram_panchyats'));
+            $zones = Zone::all()->pluck('name', 'id');
+            $zones->prepend('Select Zone', '');
+            $centers = Center::all()->pluck('name', 'id');
+            $centers->prepend('Select Center', '');
+
+            return view('admin.location.village.create', compact('gram_panchyats', 'zones', 'centers'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -54,6 +61,8 @@ class VillageController extends Controller
                 $this->validate($request, [
                     'name' => 'required',
                     'gram_panchyat_id' => 'required',
+                    'zone_id' => 'required',
+                    'center_id' => 'required',
                 ]);
                 Village::create($request->all());
                 return redirect()->route('admin.location.village.index')->with('success', 'Village Added Successfully.');
@@ -87,7 +96,12 @@ class VillageController extends Controller
         if (\Auth::user()->can('edit-village')) {
             $gram_panchyats = GramPanchyat::all()->pluck('name', 'id');
             $gram_panchyats->prepend('Select GP', '');
-            return view('admin.location.village.edit', compact('village', 'gram_panchyats'));
+            $zones = Zone::all()->pluck('name', 'id');
+            $zones->prepend('Select Zone', '');
+            $centers = Center::all()->pluck('name', 'id');
+            $centers->prepend('Select Center', '');
+
+            return view('admin.location.village.edit', compact('village', 'gram_panchyats', 'zones', 'centers'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }

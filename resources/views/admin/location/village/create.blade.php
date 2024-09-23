@@ -2,7 +2,32 @@
 @section('title')
     {{ __('Create Village') }}
 @endsection
-
+@section('scripts')
+<script>
+    $('#zone_id').change(function() {
+        let zone_id = $(this).val();
+        $.ajax({
+            url: "{{ route('admin.farmer.location.get_centers') }}",
+            method: 'post',
+            data: {
+                zone_id: zone_id,
+            },
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            success: function(response) {
+                centers = response.centers;
+                $('#center_id').empty();
+                $('#center_id').append('<option  value="">Select Center</option>');
+                for (i = 0; i < centers.length; i++) {
+                    $('#center_id').append('<option value="' + centers[i].id + '">' +
+                        centers[i].name + '</option>');
+                }
+            }
+        });
+    });
+</script>
+@endsection
 @section('main-content')
     @include('admin.section.flash_message')
     <nav class="page-breadcrumb d-flex align-items-center justify-content-between">
@@ -38,13 +63,23 @@
                     {{-- end for ai module --}}
                     <div class="row">
                         <div class="form-group col-md-6">
+                            {{ Form::label('gram_panchyat_id', __('Gram Panchyat'), ['class' => 'form-label']) }}<span
+                                class="text-danger">*</span>
+                            {{ Form::select('gram_panchyat_id', $gram_panchyats, null, ['class' => 'form-control select', 'required' => 'required']) }}
+                        </div>
+                        <div class="form-group col-md-6">
                             {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
                             {{ Form::text('name', '', ['class' => 'form-control', 'required' => 'required']) }}
                         </div>
                         <div class="form-group col-md-6">
-                            {{ Form::label('gram_panchyat_id', __('Gram Panchyat'), ['class' => 'form-label']) }}<span
+                            {{ Form::label('zone_id', __('Zone'), ['class' => 'form-label']) }}<span
                                 class="text-danger">*</span>
-                            {{ Form::select('gram_panchyat_id', $gram_panchyats, null, ['class' => 'form-control select', 'required' => 'required']) }}
+                            {{ Form::select('zone_id', $zones, null, ['class' => 'form-control select', 'required' => 'required']) }}
+                        </div>
+                        <div class="form-group col-md-6">
+                            {{ Form::label('center_id', __('Center'), ['class' => 'form-label']) }}<span
+                                class="text-danger">*</span>
+                            {{ Form::select('center_id', $centers, null, ['class' => 'form-control select', 'required' => 'required']) }}
                         </div>
                     </div>
                 </div>

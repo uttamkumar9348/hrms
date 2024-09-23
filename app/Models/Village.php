@@ -15,4 +15,14 @@ class Village extends Model
     {
         return $this->belongsTo(GramPanchyat::class,'gram_panchyat_id');
     }
+
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class,'zone_id');
+    }
+
+    public function center()
+    {
+        return $this->belongsTo(Center::class,'center_id');
+    }
 }
